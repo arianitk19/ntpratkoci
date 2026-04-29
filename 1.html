@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="sq" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NTP Ratkoci | Mobile App</title>
+    
+    <meta name="theme-color" content="#020617">
+    <link rel="manifest" href="manifest.json">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#020617',
+                        primary: '#10b981',
+                        surface: '#0f172a',
+                    },
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { --nav-height: 76px; }
+        body { background-color: #020617; color: #f8fafc; -webkit-tap-highlight-color: transparent; }
+        
+        /* Smooth View Transitions */
+        .view { display: none; opacity: 0; }
+        .view.active { display: block; opacity: 1; }
+
+        /* Prevent Layout Shifts */
+        .safe-area-bottom { padding-bottom: calc(var(--nav-height) + 20px); }
+        
+        /* Modern Scroll */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* Components */
+        .glass { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .nav-active { color: #10b981; }
+        .nav-active i { transform: translateY(-4px); transition: transform 0.3s ease; }
+
+        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        
+        /* Intro Overlay */
+        #intro-screen { z-index: 100; background: #020617; }
+        
+        /* Custom Checkbox/Toggle for Settings */
+        .toggle-dot { transition: all 0.3s ease; }
+        input:checked ~ .toggle-dot { transform: translateX(100%); background-color: #10b981; }
+    </style>
+</head>
+<body class="font-sans antialiased select-none">
+
+    <div id="intro-screen" class="fixed inset-0 flex flex-col items-center justify-center p-8 text-center">
+        <div id="intro-logo" class="w-20 h-20 bg-primary/10 rounded-[2rem] flex items-center justify-center mb-6 opacity-0">
+            <i data-lucide="shopping-bag" class="w-10 h-10 text-primary"></i>
+        </div>
+        <h1 id="intro-text" class="text-4xl font-extrabold tracking-tighter opacity-0 translate-y-4">NTP RATKOCI</h1>
+        <p id="intro-sub" class="text-gray-500 text-sm mt-2 opacity-0">Cilësi dhe Besim në çdo blerje</p>
+    </div>
+
+    <header class="fixed top-0 w-full z-40 bg-dark/80 backdrop-blur-md border-b border-white/5 px-6 py-4 flex justify-between items-center">
+        <span class="font-black text-lg tracking-tighter uppercase">NTP <span class="text-primary">Ratkoci</span></span>
+        <button onclick="toggleSettings()" class="w-10 h-10 rounded-xl glass flex items-center justify-center active:scale-90 transition-transform">
+            <i data-lucide="settings" class="w-5 h-5 text-gray-400"></i>
+        </button>
+    </header>
+
+    <div id="settings-modal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-dark/90 backdrop-blur-md" onclick="toggleSettings()"></div>
+        <div class="absolute bottom-0 w-full glass rounded-t-[2.5rem] p-8 pb-12 transition-transform translate-y-full" id="settings-content">
+            <div class="w-12 h-1 bg-white/10 rounded-full mx-auto mb-8"></div>
+            <h3 class="text-xl font-bold mb-6">Cilësimet</h3>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center p-4 rounded-2xl bg-white/5">
+                    <span class="text-sm font-medium">Dark Mode</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked class="sr-only">
+                        <div class="w-11 h-6 bg-gray-700 rounded-full"></div>
+                        <div class="toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full"></div>
+                    </label>
+                </div>
+                <button onclick="toggleSettings()" class="w-full py-4 bg-primary text-dark font-bold rounded-2xl mt-4">Ruaj Ndryshimet</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="pt-20 safe-area-bottom">
+        
+        <div id="view-hyrja" class="view active px-6">
+            <div class="rounded-[2.5rem] overflow-hidden relative h-48 mb-6 group">
+                <div class="absolute inset-0 bg-gradient-to-t from-dark to-transparent z-10"></div>
+                <div class="absolute inset-0 bg-primary/20 flex items-center justify-center text-gray-500 italic text-xs">Foto e Marketit</div>
+                <div class="absolute bottom-6 left-6 z-20">
+                    <h2 class="text-2xl font-black">Mirësevini</h2>
+                    <p class="text-xs text-gray-400">Zbuloni ofertat më të reja sot.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="p-5 glass rounded-3xl">
+                    <i data-lucide="award" class="text-primary mb-3"></i>
+                    <h4 class="font-bold text-sm">Premium</h4>
+                    <p class="text-[10px] text-gray-500">Cilësia e garantuar</p>
+                </div>
+                <div class="p-5 glass rounded-3xl">
+                    <i data-lucide="truck" class="text-primary mb-3"></i>
+                    <h4 class="font-bold text-sm">Shpejt</h4>
+                    <p class="text-[10px] text-gray-500">Shërbim efikas</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-pijet" class="view px-6">
+            <div class="flex gap-2 overflow-x-auto no-scrollbar mb-6" id="filter-pijet">
+                </div>
+            <div class="product-grid" id="grid-pijet"></div>
+        </div>
+
+        <div id="view-snacks" class="view px-6">
+            <div class="flex gap-2 overflow-x-auto no-scrollbar mb-6" id="filter-snacks"></div>
+            <div class="product-grid" id="grid-snacks"></div>
+        </div>
+
+        <div id="view-sweets" class="view px-6">
+            <div class="flex gap-2 overflow-x-auto no-scrollbar mb-6" id="filter-sweets"></div>
+            <div class="product-grid" id="grid-sweets"></div>
+        </div>
+
+        <div id="view-orari" class="view px-6">
+            <div class="glass p-8 rounded-[2.5rem] mb-6">
+                <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+                    <i data-lucide="clock-4" class="text-primary w-5 h-5"></i> Orari i Punës
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between border-b border-white/5 pb-2">
+                        <span class="text-gray-400 text-sm">E Hënë - E Diel</span>
+                        <span class="font-bold text-sm">08:00 - 21:00</span>
+                    </div>
+                    <p class="text-[10px] text-gray-500 italic mt-4 uppercase tracking-widest text-center">Hapur çdo ditë për ju</p>
+                </div>
+            </div>
+
+            <div class="glass p-8 rounded-[2.5rem]">
+                <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                    <i data-lucide="map-pin" class="text-primary w-5 h-5"></i> Lokacioni
+                </h3>
+                <p class="text-sm text-gray-400 mb-6 leading-relaxed">Ndodhemi në fshatin Ratkoc, Rahovec. Na vizitoni për një përvojë unike blerjeje.</p>
+                <button class="w-full py-4 bg-white/5 rounded-2xl text-xs font-bold flex items-center justify-center gap-2 border border-white/5">
+                    <i data-lucide="navigation" class="w-4 h-4"></i> Shiko në Maps
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <div id="product-modal" class="fixed inset-0 z-[70] hidden p-6 flex items-center justify-center">
+        <div class="absolute inset-0 bg-dark/95 backdrop-blur-xl" onclick="closeProduct()"></div>
+        <div class="relative w-full max-w-sm glass rounded-[3rem] p-8 text-center transition-all scale-95 opacity-0" id="modal-box">
+            <div class="w-full aspect-square bg-white/5 rounded-3xl mb-6 flex items-center justify-center text-gray-600 italic text-sm">Foto reale</div>
+            <h3 id="modal-title" class="text-2xl font-bold mb-2"></h3>
+            <p id="modal-price" class="text-primary font-black text-xl mb-6"></p>
+            <button onclick="closeProduct()" class="w-full py-4 bg-primary text-dark font-bold rounded-2xl">Mbyll</button>
+        </div>
+    </div>
+
+    <nav class="fixed bottom-0 w-full z-50 bg-dark/80 backdrop-blur-xl border-t border-white/5 px-4 h-[76px]">
+        <div class="max-w-md mx-auto h-full flex items-center justify-between">
+            <button onclick="navigate('hyrja')" class="nav-btn flex flex-col items-center gap-1 w-1/5 text-gray-500 nav-active" id="btn-hyrja">
+                <i data-lucide="home" class="w-5 h-5"></i>
+                <span class="text-[10px] font-bold">Hyrja</span>
+            </button>
+            <button onclick="navigate('pijet')" class="nav-btn flex flex-col items-center gap-1 w-1/5 text-gray-500" id="btn-pijet">
+                <i data-lucide="cup-soda" class="w-5 h-5"></i>
+                <span class="text-[10px] font-bold">Pijet</span>
+            </button>
+            <button onclick="navigate('snacks')" class="nav-btn flex flex-col items-center gap-1 w-1/5 text-gray-500" id="btn-snacks">
+                <i data-lucide="cookie" class="w-5 h-5"></i>
+                <span class="text-[10px] font-bold">Snacks</span>
+            </button>
+            <button onclick="navigate('sweets')" class="nav-btn flex flex-col items-center gap-1 w-1/5 text-gray-500" id="btn-sweets">
+                <i data-lucide="ice-cream" class="w-5 h-5"></i>
+                <span class="text-[10px] font-bold">Ëmbëlsira</span>
+            </button>
+            <button onclick="navigate('orari')" class="nav-btn flex flex-col items-center gap-1 w-1/5 text-gray-500" id="btn-orari">
+                <i data-lucide="clock" class="w-5 h-5"></i>
+                <span class="text-[10px] font-bold">Orari</span>
+            </button>
+        </div>
+    </nav>
+
+    <script>
+        // --- DATA ENGINE ---
+        const data = {
+            pijet: {
+                filters: ["Të gjitha", "Energjike", "Lëngje", "Ujë", "Gazuara"],
+                items: [
+                    { name: "Coca Cola", price: "0.70€", cat: "Gazuara" ,  img: "Images/Gemini_Generated_Image_uz0y8cuz0y8cuz0y.png"},
+                    { name: "Fanta Orange", price: "0.70€", cat: "Gazuara" },
+                    { name: "Fanta Exotic", price: "0.70€", cat: "Gazuara" },
+                    { name: "Golden Eagle", price: "0.50€", cat: "Energjike" },
+                    { name: "Ujë Ana", price: "0.25€", cat: "Ujë" },
+                    { name: "Jaffa Cherry", price: "0.50€", cat: "Lëngje" },
+                    { name: "Sprite", price: "0.70€", cat: "Gazuara" },
+                    { name: "Schweppes", price: "0.80€", cat: "Gazuara" },
+                    { name: "Go+", price: "0.50€", cat: "Energjike" },
+                    { name: "B52", price: "0.50€", cat: "Energjike" },
+                    { name: "Ujë Ana", price: "0.30€", cat: "Ujë" },
+                    { name: "Bravo", price: "0.60€", cat: "Lëngje" },
+                    { name: "Pfanner", price: "1.20€", cat: "Lëngje" },
+                    { name: "Lemon Soda", price: "0.80€", cat: "Gazuara" },
+                    { name: "Ivi Orange", price: "0.70€", cat: "Gazuara" },
+                    { name: "Ujë Mineral", price: "0.40€", cat: "Ujë" },
+                    { name: "Frutti Mix", price: "0.50€", cat: "Lëngje" },
+                    { name: "Relax Peach", price: "0.50€", cat: "Lëngje" },
+                    { name: "Powerade", price: "1.20€", cat: "Energjike" },
+                    { name: "7UP", price: "0.70€", cat: "Gazuara" }
+                ]
+            },
+            snacks: {
+                filters: ["Të gjitha", "Chips", "Smoka", "Kikirika", "Sticks"],
+                items: [
+                    { name: "Vipa Paprika", price: "0.30€", cat: "Chips" },
+                    { name: "Vipa Classic", price: "0.30€", cat: "Chips" },
+                    { name: "Smok Grill", price: "0.15€", cat: "Smoka" },
+                    { name: "Kikirika Me Kripë", price: "0.30€", cat: "Kikirika" },
+                    { name: "Vipa Sticks", price: "0.40€", cat: "Sticks" },
+                    { name: "Patos", price: "0.30€", cat: "Chips" },
+                    { name: "Patos i vogël", price: "0.40€", cat: "Chips" },
+                    { name: "Smoka Kids", price: "0.10€", cat: "Smoka" },
+                    { name: "Vipa Hot", price: "0.30€", cat: "Chips" },
+                    { name: "Shkopinjë", price: "0.15€", cat: "Sticks" },
+                    { name: "Fripsy Pulë", price: "0.30€", cat: "Chips" },
+                    { name: "Bake Rolls", price: "0.70€", cat: "Snacks" },
+                    { name: "Kikirika", price: "0.60€", cat: "Kikirika" },
+                    { name: "Vipa XL", price: "1.30€", cat: "Chips" },
+                    { name: "Fripsy me Djath", price: "0.30€", cat: "Sticks" },
+                    { name: "Bake Rolls", price: "0.30€", cat: "Snacks" },
+                    { name: "Mogyi", price: "0.80€", cat: "Kikirika" },
+                    { name: "Chio Chips", price: "1.30€", cat: "Chips" },
+                    { name: "Star Snacks", price: "0.50€", cat: "Snacks" },
+                    { name: "Corn Mix", price: "0.30€", cat: "Snacks" }
+                ]
+            },
+            sweets: {
+                filters: ["Të gjitha", "Çokollata", "Biskota", "Kek"],
+                items: [
+                    { name: "Pop Kek Çokolladë", price: "0.30€", cat: "Çokollata" },
+                    { name: "Alpella Cake", price: "0.30€", cat: "Çokollata" },
+                    { name: "Today Snowball", price: "0.30€", cat: "Çokollata" },
+                    { name: "Kek Çokolladë", price: "0.40€", cat: "Kek" },
+                    { name: "Twingo", price: "0.20€", cat: "Çokollata" },
+                    { name: "Bar Cake", price: "0.20€", cat: "Çokollata" },
+                    { name: "Biskrem", price: "0.40€", cat: "Biskota" },
+                    { name: "7 days", price: "0.50€", cat: "Kek" },
+                    { name: "Metro", price: "0.40€", cat: "Çokollata" },
+                    { name: "Albeni", price: "0.40€", cat: "Çokollata" },
+                    { name: "Biskota me Çokollatë", price: "0.20€", cat: "Biskota" },
+                    { name: "Bono Croissant", price: "0.50€", cat: "Kek" },
+                    { name: "Twisted roll", price: "0.20€", cat: "Çokollata" },
+                    { name: "Lion Bar", price: "0.20€", cat: "Çokollata" },
+                    { name: "Wafers", price: "0.20€", cat: "Biskota" },
+                    { name: "Petit Beurre", price: "1.30€", cat: "Biskota" },
+                    { name: "Ferrero Rocher", price: "0.40€", cat: "Çokollata" },
+                    { name: "Topsa Love You", price: "0.70€", cat: "Çokollata" },
+                    { name: "Biskota Rolls", price: "0.20€", cat: "Biskota" },
+                    { name: "Kek Portokalli", price: "0.30€", cat: "Kek" }
+                ]
+            }
+        };
+
+        // --- APP ENGINE ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initIntro();
+            lucide.createIcons();
+            renderAllSections();
+        });
+
+        function initIntro() {
+            const tl = gsap.timeline({ onComplete: () => {
+                gsap.to("#intro-screen", { opacity: 0, duration: 0.8, pointerEvents: 'none' });
+            }});
+            tl.to("#intro-logo", { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" })
+              .to("#intro-text", { opacity: 1, y: 0, duration: 0.8 }, "-=0.5")
+              .to("#intro-sub", { opacity: 1, duration: 0.8 }, "-=0.3");
+        }
+
+        function renderAllSections() {
+            ["pijet", "snacks", "sweets"].forEach(section => {
+                renderFilters(section);
+                renderItems(section, "Të gjitha");
+            });
+        }
+
+        function renderFilters(section) {
+            const container = document.getElementById(`filter-${section}`);
+            data[section].filters.forEach(f => {
+                const btn = document.createElement('button');
+                btn.className = `filter-btn-${section} px-6 py-2.5 rounded-2xl glass text-xs font-bold whitespace-nowrap transition-all ${f === "Të gjitha" ? 'bg-primary text-dark border-primary' : 'text-gray-400'}`;
+                btn.innerText = f;
+                btn.onclick = () => {
+                    document.querySelectorAll(`.filter-btn-${section}`).forEach(b => {
+                        b.classList.remove('bg-primary', 'text-dark', 'border-primary');
+                        b.classList.add('text-gray-400');
+                    });
+                    btn.classList.add('bg-primary', 'text-dark', 'border-primary');
+                    btn.classList.remove('text-gray-400');
+                    renderItems(section, f);
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function renderItems(section, filter) {
+            const container = document.getElementById(`grid-${section}`);
+            container.innerHTML = '';
+            
+            const filteredItems = filter === "Të gjitha" 
+                ? data[section].items 
+                : data[section].items.filter(i => i.cat === filter);
+
+            filteredItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = "glass p-4 rounded-[2rem] active:scale-95 transition-all cursor-pointer";
+                div.onclick = () => openProduct(item.name, item.price);
+                div.innerHTML = `
+                    <div class="w-full aspect-square bg-white/5 rounded-2xl mb-4 flex items-center justify-center text-gray-700 italic text-[8px]">Foto</div>
+                    <h4 class="font-bold text-[11px] truncate mb-1">${item.name}</h4>
+                    <p class="text-primary font-black text-xs">${item.price}</p>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // --- NAVIGATION ---
+        function navigate(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(`view-${viewId}`).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
+            document.getElementById(`btn-${viewId}`).classList.add('nav-active');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // --- MODALS ---
+        function toggleSettings() {
+            const modal = document.getElementById('settings-modal');
+            const content = document.getElementById('settings-content');
+            if(modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                setTimeout(() => content.classList.remove('translate-y-full'), 10);
+            } else {
+                content.classList.add('translate-y-full');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        }
+
+        function openProduct(name, price) {
+            const modal = document.getElementById('product-modal');
+            const box = document.getElementById('modal-box');
+            document.getElementById('modal-title').innerText = name;
+            document.getElementById('modal-price').innerText = price;
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                box.classList.remove('scale-95', 'opacity-0');
+            }, 10);
+        }
+
+        function closeProduct() {
+            const modal = document.getElementById('product-modal');
+            const box = document.getElementById('modal-box');
+            box.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        // Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js');
+        }
+    </script>
+</body>
+</html>
