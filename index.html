@@ -383,10 +383,14 @@
             setTimeout(() => modal.classList.add('hidden'), 300);
         }
 
-        // Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js');
-        }
+       // Ky kod i thotë index.html që të ndezë Service Worker-in
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+            .then(reg => console.log('NTP Ratkoci App: Aktiv'))
+            .catch(err => console.log('Gabim në regjistrim:', err));
+    });
+}
     </script>
 </body>
 </html>
