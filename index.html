@@ -31,24 +31,46 @@
 
     <style>
         :root { --nav-height: 76px; }
-        body { background-color: #020617; color: #f8fafc; -webkit-tap-highlight-color: transparent; }
+        body { 
+            background-color: #020617; 
+            color: #f8fafc; 
+            -webkit-tap-highlight-color: transparent; 
+            overflow-x: hidden;
+        }
         
         /* Smooth View Transitions */
-        .view { display: none; opacity: 0; }
-        .view.active { display: block; opacity: 1; }
+        .view { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .view.active { display: block; opacity: 1; transform: translateY(0); }
 
         /* Prevent Layout Shifts */
-        .safe-area-bottom { padding-bottom: calc(var(--nav-height) + 20px); }
+        .safe-area-bottom { padding-bottom: calc(var(--nav-height) + 40px); }
         
         /* Modern Scroll */
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
         /* Components */
-        .glass { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .nav-active { color: #10b981; }
-        .nav-active i { transform: translateY(-4px); transition: transform 0.3s ease; }
+        .glass { 
+            background: rgba(30, 41, 59, 0.4); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-active { color: #10b981; position: relative; }
+        .nav-active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            width: 4px;
+            height: 4px;
+            background: #10b981;
+            border-radius: 50%;
+        }
+        .nav-active i { transform: translateY(-2px); transition: transform 0.3s ease; }
 
-        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
         
         /* Intro Overlay */
         #intro-screen { z-index: 100; background: #020617; }
@@ -56,143 +78,171 @@
         /* Custom Checkbox/Toggle for Settings */
         .toggle-dot { transition: all 0.3s ease; }
         input:checked ~ .toggle-dot { transform: translateX(100%); background-color: #10b981; }
+
+        /* Product Card Animation */
+        .product-card {
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .product-card:active { transform: scale(0.95); }
+
+        /* Category Click State */
+        .category-pill {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
     </style>
 </head>
 <body class="font-sans antialiased select-none">
 
     <div id="intro-screen" class="fixed inset-0 flex flex-col items-center justify-center p-8 text-center">
-        <div id="intro-logo" class="w-20 h-20 bg-primary/10 rounded-[2rem] flex items-center justify-center mb-6 opacity-0">
-            <i data-lucide="shopping-bag" class="w-10 h-10 text-primary"></i>
+        <div id="intro-logo" class="w-24 h-24 bg-primary/10 rounded-[2.5rem] flex items-center justify-center mb-6 opacity-0 scale-50">
+            <i data-lucide="shopping-bag" class="w-12 h-12 text-primary"></i>
         </div>
-        <h1 id="intro-text" class="text-4xl font-extrabold tracking-tighter opacity-0 translate-y-4">NTP RATKOCI</h1>
+        <h1 id="intro-text" class="text-4xl font-extrabold tracking-tighter opacity-0 translate-y-4">NTP <span class="text-primary">RATKOCI</span></h1>
         <p id="intro-sub" class="text-gray-500 text-sm mt-2 opacity-0">Cilësi dhe Besim në çdo blerje</p>
     </div>
 
-    <header class="fixed top-0 w-full z-40 bg-dark/80 backdrop-blur-md border-b border-white/5 px-6 py-4 flex justify-between items-center">
-        <span class="font-black text-lg tracking-tighter uppercase">NTP <span class="text-primary">Ratkoci</span></span>
-        <button onclick="toggleSettings()" class="w-10 h-10 rounded-xl glass flex items-center justify-center active:scale-90 transition-transform">
-            <i data-lucide="settings" class="w-5 h-5 text-gray-400"></i>
+    <header class="fixed top-0 w-full z-40 bg-dark/60 backdrop-blur-xl border-b border-white/5 px-6 py-5 flex justify-between items-center">
+        <div class="flex flex-col">
+            <span class="font-black text-xl tracking-tighter uppercase leading-none">NTP <span class="text-primary">Ratkoci</span></span>
+            <span class="text-[10px] text-gray-500 font-bold tracking-widest uppercase mt-1">Premium Market</span>
+        </div>
+        <button onclick="toggleSettings()" class="w-11 h-11 rounded-2xl glass flex items-center justify-center active:scale-90 transition-transform">
+            <i data-lucide="settings-2" class="w-5 h-5 text-gray-300"></i>
         </button>
     </header>
 
     <div id="settings-modal" class="fixed inset-0 z-[60] hidden">
-        <div class="absolute inset-0 bg-dark/90 backdrop-blur-md" onclick="toggleSettings()"></div>
-        <div class="absolute bottom-0 w-full glass rounded-t-[2.5rem] p-8 pb-12 transition-transform translate-y-full" id="settings-content">
-            <div class="w-12 h-1 bg-white/10 rounded-full mx-auto mb-8"></div>
-            <h3 class="text-xl font-bold mb-6">Cilësimet</h3>
-            <div class="space-y-4">
-                <div class="flex justify-between items-center p-4 rounded-2xl bg-white/5">
-                    <span class="text-sm font-medium">Dark Mode</span>
+        <div class="absolute inset-0 bg-dark/95 backdrop-blur-md" onclick="toggleSettings()"></div>
+        <div class="absolute bottom-0 w-full glass rounded-t-[3rem] p-8 pb-12 transition-transform translate-y-full" id="settings-content">
+            <div class="w-16 h-1.5 bg-white/10 rounded-full mx-auto mb-10"></div>
+            <h3 class="text-2xl font-bold mb-8">Personalizimi</h3>
+            <div class="space-y-6">
+                <div class="flex justify-between items-center p-5 rounded-3xl bg-white/5 border border-white/5">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                            <i data-lucide="moon" class="w-5 h-5"></i>
+                        </div>
+                        <span class="font-semibold">Dark Mode</span>
+                    </div>
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" checked class="sr-only">
-                        <div class="w-11 h-6 bg-gray-700 rounded-full"></div>
-                        <div class="toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full"></div>
+                        <div class="w-12 h-6 bg-gray-800 rounded-full"></div>
+                        <div class="toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full shadow-lg"></div>
                     </label>
                 </div>
-                <button onclick="toggleSettings()" class="w-full py-4 bg-primary text-dark font-bold rounded-2xl mt-4">Ruaj Ndryshimet</button>
+                <button onclick="toggleSettings()" class="w-full py-5 bg-primary text-dark font-black rounded-3xl mt-4 shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">RUHAJ KONFIGURIMIN</button>
             </div>
         </div>
     </div>
 
-    <main class="pt-20 safe-area-bottom">
+    <main class="pt-28 safe-area-bottom">
         
         <div id="view-hyrja" class="view active px-6">
-            <div class="rounded-[2.5rem] overflow-hidden relative h-48 mb-6 group">
-                <div class="absolute inset-0 bg-gradient-to-t from-dark to-transparent z-10"></div>
-                <div class="absolute inset-0 bg-primary/20 flex items-center justify-center text-gray-500 italic text-xs">Foto e Marketit</div>
-                <div class="absolute bottom-6 left-6 z-20">
-                    <h2 class="text-2xl font-black">Mirësevini</h2>
-                    <p class="text-xs text-gray-400">Zbuloni ofertat më të reja sot.</p>
+            <div class="rounded-[2.8rem] overflow-hidden relative h-56 mb-8 group glass border-none">
+                <div class="absolute inset-0 bg-gradient-to-t from-dark via-dark/40 to-transparent z-10"></div>
+                <img src="Images/Gemini_Generated_Image_uz0y8cuz0y8cuz0y.png" class="absolute inset-0 w-full h-full object-cover" onerror="this.style.display='none'">
+                <div class="absolute inset-0 bg-primary/10 flex items-center justify-center text-gray-500 italic text-xs"></div>
+                <div class="absolute bottom-8 left-8 z-20">
+                    <span class="bg-primary px-3 py-1 rounded-full text-[9px] font-black text-dark uppercase mb-3 inline-block">Ekskluzive</span>
+                    <h2 class="text-3xl font-black leading-none">Mirësevini</h2>
+                    <p class="text-sm text-gray-400 mt-2">Zbuloni ofertat më të reja në Ratkoc.</p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 mb-8">
-                <div class="p-5 glass rounded-3xl">
-                    <i data-lucide="award" class="text-primary mb-3"></i>
+            <div class="grid grid-cols-2 gap-4 mb-10">
+                <div class="p-6 glass rounded-[2.5rem] border-primary/10">
+                    <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+                        <i data-lucide="award" class="text-primary w-5 h-5"></i>
+                    </div>
                     <h4 class="font-bold text-sm">Premium</h4>
-                    <p class="text-[10px] text-gray-500">Cilësia e garantuar</p>
+                    <p class="text-[10px] text-gray-500 mt-1">Cilësi e klasit të parë</p>
                 </div>
-                <div class="p-5 glass rounded-3xl">
-                    <i data-lucide="truck" class="text-primary mb-3"></i>
+                <div class="p-6 glass rounded-[2.5rem]">
+                    <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+                        <i data-lucide="truck" class="text-primary w-5 h-5"></i>
+                    </div>
                     <h4 class="font-bold text-sm">Shpejt</h4>
-                    <p class="text-[10px] text-gray-500">Shërbim efikas</p>
+                    <p class="text-[10px] text-gray-500 mt-1">Shërbim i menjëhershëm</p>
                 </div>
             </div>
         </div>
 
         <div id="view-pijet" class="view px-6">
-            <div class="flex gap-2 overflow-x-auto no-scrollbar mb-6" id="filter-pijet">
-                </div>
+            <div class="flex gap-3 overflow-x-auto no-scrollbar mb-8 py-2" id="filter-pijet"></div>
             <div class="product-grid" id="grid-pijet"></div>
         </div>
 
         <div id="view-snacks" class="view px-6">
-            <div class="flex gap-2 overflow-x-auto no-scrollbar mb-6" id="filter-snacks"></div>
+            <div class="flex gap-3 overflow-x-auto no-scrollbar mb-8 py-2" id="filter-snacks"></div>
             <div class="product-grid" id="grid-snacks"></div>
         </div>
 
         <div id="view-sweets" class="view px-6">
-            <div class="flex gap-2 overflow-x-auto no-scrollbar mb-6" id="filter-sweets"></div>
+            <div class="flex gap-3 overflow-x-auto no-scrollbar mb-8 py-2" id="filter-sweets"></div>
             <div class="product-grid" id="grid-sweets"></div>
         </div>
 
         <div id="view-orari" class="view px-6">
-            <div class="glass p-8 rounded-[2.5rem] mb-6">
-                <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
-                    <i data-lucide="clock-4" class="text-primary w-5 h-5"></i> Orari i Punës
-                </h3>
-                <div class="space-y-4">
-                    <div class="flex justify-between border-b border-white/5 pb-2">
-                        <span class="text-gray-400 text-sm">E Hënë - E Diel</span>
-                        <span class="font-bold text-sm">08:00 - 21:00</span>
+            <div class="glass p-8 rounded-[3rem] mb-6 border-white/10">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-xl font-bold flex items-center gap-3">
+                        <i data-lucide="clock" class="text-primary w-6 h-6"></i> Orari i Punës
+                    </h3>
+                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                </div>
+                <div class="space-y-5">
+                    <div class="flex justify-between items-center bg-white/5 p-4 rounded-2xl">
+                        <span class="text-gray-400 text-sm font-medium">E Hënë - E Diel</span>
+                        <span class="font-black text-sm text-primary">08:00 - 21:00</span>
                     </div>
-                    <p class="text-[10px] text-gray-500 italic mt-4 uppercase tracking-widest text-center">Hapur çdo ditë për ju</p>
+                    <p class="text-[10px] text-gray-500 italic mt-6 uppercase tracking-[0.2em] text-center font-bold">Hapur për komunitetin</p>
                 </div>
             </div>
 
-            <div class="glass p-8 rounded-[2.5rem]">
-                <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
-                    <i data-lucide="map-pin" class="text-primary w-5 h-5"></i> Lokacioni
+            <div class="glass p-8 rounded-[3rem]">
+                <h3 class="text-xl font-bold mb-5 flex items-center gap-3">
+                    <i data-lucide="map-pin" class="text-primary w-6 h-6"></i> Lokacioni
                 </h3>
-                <p class="text-sm text-gray-400 mb-6 leading-relaxed">Ndodhemi në fshatin Ratkoc, Rahovec. Na vizitoni për një përvojë unike blerjeje.</p>
-                <button class="w-full py-4 bg-white/5 rounded-2xl text-xs font-bold flex items-center justify-center gap-2 border border-white/5">
-                    <i data-lucide="navigation" class="w-4 h-4"></i> Shiko në Maps
+                <p class="text-sm text-gray-400 mb-8 leading-relaxed font-medium">Ndodhemi në qendër të fshatit <span class="text-white">Ratkoc</span>, Rahovec. Lokacioni më i aksesueshëm për ju.</p>
+                <button class="w-full py-5 bg-white/5 rounded-3xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-3 border border-white/10 active:bg-white/10 transition-all">
+                    <i data-lucide="navigation-2" class="w-4 h-4 text-primary"></i> Gjej në Google Maps
                 </button>
             </div>
         </div>
     </main>
 
     <div id="product-modal" class="fixed inset-0 z-[70] hidden p-6 flex items-center justify-center">
-        <div class="absolute inset-0 bg-dark/95 backdrop-blur-xl" onclick="closeProduct()"></div>
-        <div class="relative w-full max-w-sm glass rounded-[3rem] p-8 text-center transition-all scale-95 opacity-0" id="modal-box">
-            <div class="w-full aspect-square bg-white/5 rounded-3xl mb-6 flex items-center justify-center text-gray-600 italic text-sm">Foto reale</div>
-            <h3 id="modal-title" class="text-2xl font-bold mb-2"></h3>
-            <p id="modal-price" class="text-primary font-black text-xl mb-6"></p>
-            <button onclick="closeProduct()" class="w-full py-4 bg-primary text-dark font-bold rounded-2xl">Mbyll</button>
+        <div class="absolute inset-0 bg-dark/95 backdrop-blur-2xl" onclick="closeProduct()"></div>
+        <div class="relative w-full max-w-sm glass rounded-[3.5rem] p-10 text-center transition-all scale-90 opacity-0 shadow-2xl border-white/10" id="modal-box">
+            <div id="modal-img-container" class="w-full aspect-square bg-white/5 rounded-[2.5rem] mb-8 flex items-center justify-center overflow-hidden border border-white/5">
+                </div>
+            <h3 id="modal-title" class="text-3xl font-black mb-2 tracking-tight"></h3>
+            <p id="modal-price" class="text-primary font-black text-2xl mb-10 tracking-tighter"></p>
+            <button onclick="closeProduct()" class="w-full py-5 bg-primary text-dark font-black rounded-[2rem] shadow-xl shadow-primary/20 active:scale-95 transition-transform">MBYLL</button>
         </div>
     </div>
 
-    <nav class="fixed bottom-0 w-full z-50 bg-dark/80 backdrop-blur-xl border-t border-white/5 px-4 h-[76px]">
+    <nav class="fixed bottom-0 w-full z-50 bg-dark/60 backdrop-blur-2xl border-t border-white/5 px-6 h-[86px]">
         <div class="max-w-md mx-auto h-full flex items-center justify-between">
-            <button onclick="navigate('hyrja')" class="nav-btn flex flex-col items-center gap-1 w-1/5 text-gray-500 nav-active" id="btn-hyrja">
-                <i data-lucide="home" class="w-5 h-5"></i>
-                <span class="text-[10px] font-bold">Hyrja</span>
+            <button onclick="navigate('hyrja')" class="nav-btn flex flex-col items-center gap-1.5 w-1/5 text-gray-500 nav-active transition-all" id="btn-hyrja">
+                <i data-lucide="home" class="w-6 h-6"></i>
+                <span class="text-[9px] font-black uppercase tracking-tighter">Hyrja</span>
             </button>
-            <button onclick="navigate('pijet')" class="nav-btn flex flex-col items-center gap-1 w-1/5 text-gray-500" id="btn-pijet">
-                <i data-lucide="cup-soda" class="w-5 h-5"></i>
-                <span class="text-[10px] font-bold">Pijet</span>
+            <button onclick="navigate('pijet')" class="nav-btn flex flex-col items-center gap-1.5 w-1/5 text-gray-500 transition-all" id="btn-pijet">
+                <i data-lucide="glass-water" class="w-6 h-6"></i>
+                <span class="text-[9px] font-black uppercase tracking-tighter">Pijet</span>
             </button>
-            <button onclick="navigate('snacks')" class="nav-btn flex flex-col items-center gap-1 w-1/5 text-gray-500" id="btn-snacks">
-                <i data-lucide="cookie" class="w-5 h-5"></i>
-                <span class="text-[10px] font-bold">Snacks</span>
+            <button onclick="navigate('snacks')" class="nav-btn flex flex-col items-center gap-1.5 w-1/5 text-gray-500 transition-all" id="btn-snacks">
+                <i data-lucide="popcorn" class="w-6 h-6"></i>
+                <span class="text-[9px] font-black uppercase tracking-tighter">Snacks</span>
             </button>
-            <button onclick="navigate('sweets')" class="nav-btn flex flex-col items-center gap-1 w-1/5 text-gray-500" id="btn-sweets">
-                <i data-lucide="ice-cream" class="w-5 h-5"></i>
-                <span class="text-[10px] font-bold">Ëmbëlsira</span>
+            <button onclick="navigate('sweets')" class="nav-btn flex flex-col items-center gap-1.5 w-1/5 text-gray-500 transition-all" id="btn-sweets">
+                <i data-lucide="cookie" class="w-6 h-6"></i>
+                <span class="text-[9px] font-black uppercase tracking-tighter">Sweets</span>
             </button>
-            <button onclick="navigate('orari')" class="nav-btn flex flex-col items-center gap-1 w-1/5 text-gray-500" id="btn-orari">
-                <i data-lucide="clock" class="w-5 h-5"></i>
-                <span class="text-[10px] font-bold">Orari</span>
+            <button onclick="navigate('orari')" class="nav-btn flex flex-col items-center gap-1.5 w-1/5 text-gray-500 transition-all" id="btn-orari">
+                <i data-lucide="map-pinned" class="w-6 h-6"></i>
+                <span class="text-[9px] font-black uppercase tracking-tighter">Lokacioni</span>
             </button>
         </div>
     </nav>
@@ -203,76 +253,87 @@
             pijet: {
                 filters: ["Të gjitha", "Energjike", "Lëngje", "Ujë", "Gazuara"],
                 items: [
-                    { name: "Coca Cola", price: "0.70€", cat: "Gazuara" ,  img: "Images/Gemini_Generated_Image_uz0y8cuz0y8cuz0y.png"},
-                    { name: "Fanta Orange", price: "0.70€", cat: "Gazuara" },
-                    { name: "Fanta Exotic", price: "0.70€", cat: "Gazuara" },
-                    { name: "Golden Eagle", price: "0.50€", cat: "Energjike" },
-                    { name: "Ujë Ana", price: "0.25€", cat: "Ujë" },
-                    { name: "Jaffa Cherry", price: "0.50€", cat: "Lëngje" },
-                    { name: "Sprite", price: "0.70€", cat: "Gazuara" },
-                    { name: "Schweppes", price: "0.80€", cat: "Gazuara" },
-                    { name: "Go+", price: "0.50€", cat: "Energjike" },
-                    { name: "B52", price: "0.50€", cat: "Energjike" },
-                    { name: "Ujë Ana", price: "0.30€", cat: "Ujë" },
-                    { name: "Bravo", price: "0.60€", cat: "Lëngje" },
-                    { name: "Pfanner", price: "1.20€", cat: "Lëngje" },
-                    { name: "Lemon Soda", price: "0.80€", cat: "Gazuara" },
-                    { name: "Ivi Orange", price: "0.70€", cat: "Gazuara" },
-                    { name: "Ujë Mineral", price: "0.40€", cat: "Ujë" },
-                    { name: "Frutti Mix", price: "0.50€", cat: "Lëngje" },
-                    { name: "Relax Peach", price: "0.50€", cat: "Lëngje" },
-                    { name: "Powerade", price: "1.20€", cat: "Energjike" },
-                    { name: "7UP", price: "0.70€", cat: "Gazuara" }
+                    { name: "Coca Cola", price: "0.70€", cat: "Gazuara", img: "Images/cocacola.jpg" },
+                    { name: "Fanta Orange", price: "0.70€", cat: "Gazuara", img: "Images/fanta.png" },
+                    { name: "Fanta Exotic", price: "0.70€", cat: "Gazuara", img: "Images/fantaexotic.jpg" },
+                    { name: "Fanta Tropical", price: "0.70€", cat: "Gazuara", img: "Images/fantatropical.png" },
+                    { name: "Schweppes", price: "0.70€", cat: "Gazuara", img: "Images/schweppes.png" },
+                    { name: "Lemon Soda", price: "0.70€", cat: "Gazuara", img: "Images/lemonsoda.jpg" },
+                    { name: "Golden Eagle", price: "0.50€", cat: "Energjike", img: "Images/goldeneagle.jpg" },
+                    { name: "Lynx", price: "0.50€", cat: "Energjike", img: "Images/lynx.jpg" },
+                    { name: "Jaffa Pjeshk", price: "0.60€", cat: "Lëngje", img: "Images/jaffapjeshke.jpg" },
+                    { name: "Jaffa Boronice", price: "0.60€", cat: "Lëngje", img: "Images/jaffaboronice1.jpg" },
+                    { name: "Sola Multivitamin", price: "0.80€", cat: "Lëngje", img: "Images/sola.jpg" },
+                    { name: "Sola Icetea", price: "0.70€", cat: "Lëngje", img: "Images/solaicetea.jpg" },
+                    { name: "Frostea", price: "0.60€", cat: "Lëngje", img: "Images/frostea.jpg" },
+                    { name: "Jaffa 0.33l", price: "0.60€", cat: "Lëngje", img: "Images/solaicetea.jpg" },
+                    { name: "Relax", price: "0.60€", cat: "Lëngje", img: "Images/solaicetea.jpg" },
+                    { name: "Ujë Ana 0.5", price: "0.25€", cat: "Ujë", img: "Images/uje-ana-5.png" },
+                    { name: "Ujë Miros 0.5", price: "0.25€", cat: "Ujë", img: "Images/ujemiros.jpg" },
+                    { name: "Ujë Mineral", price: "0.40€", cat: "Ujë", img: "Images/uje-mineral.png" },
+                    { name: "Frutti Pjeshkë", price: "0.40€", cat: "Lëngje", img: "Images/fruttipjeshke.jpg" },
+                    { name: "Jaffa", price: "0.25", cat: "Lëngje", img: "Images/jaffa0.25.jpg" },
+                    { name: "Rc Cola", price: "0.40€", cat: "Gazuara", img: "Images/rccola.jpg" },
+                    { name: "Red Rain", price: "0.30€", cat: "Energjike", img: "Images/redrain.jpg" },
+                    { name: "Big Eagle", price: "0.30€", cat: "Energjike", img: "Images/bigeagle.jpg" }, 
+                    { name: "Coca Cola 2l", price: "1.70€", cat: "Gazuara", img: "Images/cocacola2l.jpg" },
+                    { name: "Fanta 2l", price: "1.70€", cat: "Gazuara", img: "Images/fanta2l.jpg" },
+                    { name: "Jaffa 1l", price: "1.30€", cat: "Lëngje", img: "Images/ivi.png" },
+                    { name: "Sola 1.5l", price: "1.40€", cat: "Lëngje", img: "Images/sola2l.jpg" },
+                    { name: "Relax 1.5l", price: "1.10€", cat: "Gazuara", img: "Images/relax1.5l.jpg" },
+                    { name: "Ujë Ana 1.5l", price: "0.50€", cat: "Ujë", img: "Images/uje1.5lana.jpg" },
+                    { name: "Birrë Peja", price: "0.80€", cat: "Gazuara", img: "Images/birrapeja.jpg" },
+                    { name: "Birrë Peja Kanaçe", price: "1€", cat: "Gazuara", img: "Images/kanaqe.jpg" },
                 ]
             },
             snacks: {
                 filters: ["Të gjitha", "Chips", "Smoka", "Kikirika", "Sticks"],
                 items: [
-                    { name: "Vipa Paprika", price: "0.30€", cat: "Chips" },
-                    { name: "Vipa Classic", price: "0.30€", cat: "Chips" },
-                    { name: "Smok Grill", price: "0.15€", cat: "Smoka" },
-                    { name: "Kikirika Me Kripë", price: "0.30€", cat: "Kikirika" },
-                    { name: "Vipa Sticks", price: "0.40€", cat: "Sticks" },
-                    { name: "Patos", price: "0.30€", cat: "Chips" },
-                    { name: "Patos i vogël", price: "0.40€", cat: "Chips" },
-                    { name: "Smoka Kids", price: "0.10€", cat: "Smoka" },
-                    { name: "Vipa Hot", price: "0.30€", cat: "Chips" },
-                    { name: "Shkopinjë", price: "0.15€", cat: "Sticks" },
-                    { name: "Fripsy Pulë", price: "0.30€", cat: "Chips" },
-                    { name: "Bake Rolls", price: "0.70€", cat: "Snacks" },
-                    { name: "Kikirika", price: "0.60€", cat: "Kikirika" },
-                    { name: "Vipa XL", price: "1.30€", cat: "Chips" },
-                    { name: "Fripsy me Djath", price: "0.30€", cat: "Sticks" },
-                    { name: "Bake Rolls", price: "0.30€", cat: "Snacks" },
-                    { name: "Mogyi", price: "0.80€", cat: "Kikirika" },
-                    { name: "Chio Chips", price: "1.30€", cat: "Chips" },
-                    { name: "Star Snacks", price: "0.50€", cat: "Snacks" },
-                    { name: "Corn Mix", price: "0.30€", cat: "Snacks" }
+                    { name: "Vipa Paprika", price: "0.30€", cat: "Chips", img: "Images/vipa-paprika.png" },
+                    { name: "Vipa Classic", price: "0.30€", cat: "Chips", img: "Images/vipa-classic.png" },
+                    { name: "Smok Grill", price: "0.15€", cat: "Smoka", img: "Images/smok-grill.png" },
+                    { name: "Kikirika Me Kripë", price: "0.30€", cat: "Kikirika", img: "Images/kikirika-kripe.png" },
+                    { name: "Vipa Sticks", price: "0.40€", cat: "Sticks", img: "Images/vipa-sticks.png" },
+                    { name: "Patos", price: "0.30€", cat: "Chips", img: "Images/patos.png" },
+                    { name: "Patos i vogël", price: "0.40€", cat: "Chips", img: "Images/patos-vogel.png" },
+                    { name: "Smoka Kids", price: "0.10€", cat: "Smoka", img: "Images/smoka-kids.png" },
+                    { name: "Vipa Hot", price: "0.30€", cat: "Chips", img: "Images/vipa-hot.png" },
+                    { name: "Shkopinjë", price: "0.15€", cat: "Sticks", img: "Images/shkopinje.png" },
+                    { name: "Fripsy Pulë", price: "0.30€", cat: "Chips", img: "Images/fripsy-pule.png" },
+                    { name: "Bake Rolls", price: "0.70€", cat: "Snacks", img: "Images/bake-rolls.png" },
+                    { name: "Kikirika", price: "0.60€", cat: "Kikirika", img: "Images/kikirika.png" },
+                    { name: "Vipa XL", price: "1.30€", cat: "Chips", img: "Images/vipa-xl.png" },
+                    { name: "Fripsy me Djath", price: "0.30€", cat: "Sticks", img: "Images/fripsy-djath.png" },
+                    { name: "Bake Rolls", price: "0.30€", cat: "Snacks", img: "Images/bake-rolls-small.png" },
+                    { name: "Mogyi", price: "0.80€", cat: "Kikirika", img: "Images/mogyi.png" },
+                    { name: "Chio Chips", price: "1.30€", cat: "Chips", img: "Images/chio.png" },
+                    { name: "Star Snacks", price: "0.50€", cat: "Snacks", img: "Images/star.png" },
+                    { name: "Corn Mix", price: "0.30€", cat: "Snacks", img: "Images/corn-mix.png" }
                 ]
             },
             sweets: {
                 filters: ["Të gjitha", "Çokollata", "Biskota", "Kek"],
                 items: [
-                    { name: "Pop Kek Çokolladë", price: "0.30€", cat: "Çokollata" },
-                    { name: "Alpella Cake", price: "0.30€", cat: "Çokollata" },
-                    { name: "Today Snowball", price: "0.30€", cat: "Çokollata" },
-                    { name: "Kek Çokolladë", price: "0.40€", cat: "Kek" },
-                    { name: "Twingo", price: "0.20€", cat: "Çokollata" },
-                    { name: "Bar Cake", price: "0.20€", cat: "Çokollata" },
-                    { name: "Biskrem", price: "0.40€", cat: "Biskota" },
-                    { name: "7 days", price: "0.50€", cat: "Kek" },
-                    { name: "Metro", price: "0.40€", cat: "Çokollata" },
-                    { name: "Albeni", price: "0.40€", cat: "Çokollata" },
-                    { name: "Biskota me Çokollatë", price: "0.20€", cat: "Biskota" },
-                    { name: "Bono Croissant", price: "0.50€", cat: "Kek" },
-                    { name: "Twisted roll", price: "0.20€", cat: "Çokollata" },
-                    { name: "Lion Bar", price: "0.20€", cat: "Çokollata" },
-                    { name: "Wafers", price: "0.20€", cat: "Biskota" },
-                    { name: "Petit Beurre", price: "1.30€", cat: "Biskota" },
-                    { name: "Ferrero Rocher", price: "0.40€", cat: "Çokollata" },
-                    { name: "Topsa Love You", price: "0.70€", cat: "Çokollata" },
-                    { name: "Biskota Rolls", price: "0.20€", cat: "Biskota" },
-                    { name: "Kek Portokalli", price: "0.30€", cat: "Kek" }
+                    { name: "Pop Kek Çokolladë", price: "0.30€", cat: "Çokollata", img: "Images/popkek.png" },
+                    { name: "Alpella Cake", price: "0.30€", cat: "Çokollata", img: "Images/alpella.png" },
+                    { name: "Today Snowball", price: "0.30€", cat: "Çokollata", img: "Images/today.png" },
+                    { name: "Kek Çokolladë", price: "0.40€", cat: "Kek", img: "Images/kek.png" },
+                    { name: "Twingo", price: "0.20€", cat: "Çokollata", img: "Images/twingo.png" },
+                    { name: "Bar Cake", price: "0.20€", cat: "Çokollata", img: "Images/bar-cake.png" },
+                    { name: "Biskrem", price: "0.40€", cat: "Biskota", img: "Images/biskrem.png" },
+                    { name: "7 days", price: "0.50€", cat: "Kek", img: "Images/7days.png" },
+                    { name: "Metro", price: "0.40€", cat: "Çokollata", img: "Images/metro.png" },
+                    { name: "Albeni", price: "0.40€", cat: "Çokollata", img: "Images/albeni.png" },
+                    { name: "Biskota me Çokollatë", price: "0.20€", cat: "Biskota", img: "Images/biskota-shoko.png" },
+                    { name: "Bono Croissant", price: "0.50€", cat: "Kek", img: "Images/bono.png" },
+                    { name: "Twisted roll", price: "0.20€", cat: "Çokollata", img: "Images/twisted.png" },
+                    { name: "Lion Bar", price: "0.20€", cat: "Çokollata", img: "Images/lion.png" },
+                    { name: "Wafers", price: "0.20€", cat: "Biskota", img: "Images/wafers.png" },
+                    { name: "Petit Beurre", price: "1.30€", cat: "Biskota", img: "Images/petit.png" },
+                    { name: "Ferrero Rocher", price: "0.40€", cat: "Çokollata", img: "Images/ferrero.png" },
+                    { name: "Topsa Love You", price: "0.70€", cat: "Çokollata", img: "Images/topsa.png" },
+                    { name: "Biskota Rolls", price: "0.20€", cat: "Biskota", img: "Images/biskota-rolls.png" },
+                    { name: "Kek Portokalli", price: "0.30€", cat: "Kek", img: "Images/kek-portokall.png" }
                 ]
             }
         };
@@ -286,11 +347,11 @@
 
         function initIntro() {
             const tl = gsap.timeline({ onComplete: () => {
-                gsap.to("#intro-screen", { opacity: 0, duration: 0.8, pointerEvents: 'none' });
+                gsap.to("#intro-screen", { opacity: 0, duration: 1, ease: "power4.out", pointerEvents: 'none' });
             }});
-            tl.to("#intro-logo", { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" })
-              .to("#intro-text", { opacity: 1, y: 0, duration: 0.8 }, "-=0.5")
-              .to("#intro-sub", { opacity: 1, duration: 0.8 }, "-=0.3");
+            tl.to("#intro-logo", { opacity: 1, scale: 1, duration: 1.2, ease: "elastic.out(1, 0.5)" })
+              .to("#intro-text", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.6")
+              .to("#intro-sub", { opacity: 1, duration: 0.8 }, "-=0.4");
         }
 
         function renderAllSections() {
@@ -304,7 +365,7 @@
             const container = document.getElementById(`filter-${section}`);
             data[section].filters.forEach(f => {
                 const btn = document.createElement('button');
-                btn.className = `filter-btn-${section} px-6 py-2.5 rounded-2xl glass text-xs font-bold whitespace-nowrap transition-all ${f === "Të gjitha" ? 'bg-primary text-dark border-primary' : 'text-gray-400'}`;
+                btn.className = `category-pill filter-btn-${section} px-6 py-3 rounded-2xl glass text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all ${f === "Të gjitha" ? 'bg-primary text-dark border-primary' : 'text-gray-400'}`;
                 btn.innerText = f;
                 btn.onclick = () => {
                     document.querySelectorAll(`.filter-btn-${section}`).forEach(b => {
@@ -313,7 +374,12 @@
                     });
                     btn.classList.add('bg-primary', 'text-dark', 'border-primary');
                     btn.classList.remove('text-gray-400');
-                    renderItems(section, f);
+                    
+                    // Smooth re-render animation
+                    gsap.to(`#grid-${section}`, { opacity: 0, y: 10, duration: 0.2, onComplete: () => {
+                        renderItems(section, f);
+                        gsap.to(`#grid-${section}`, { opacity: 1, y: 0, duration: 0.3 });
+                    }});
                 };
                 container.appendChild(btn);
             });
@@ -329,12 +395,16 @@
 
             filteredItems.forEach(item => {
                 const div = document.createElement('div');
-                div.className = "glass p-4 rounded-[2rem] active:scale-95 transition-all cursor-pointer";
-                div.onclick = () => openProduct(item.name, item.price);
+                div.className = "product-card glass p-4 rounded-[2.5rem] cursor-pointer border-white/5";
+                div.onclick = () => openProduct(item);
                 div.innerHTML = `
-                    <div class="w-full aspect-square bg-white/5 rounded-2xl mb-4 flex items-center justify-center text-gray-700 italic text-[8px]">Foto</div>
-                    <h4 class="font-bold text-[11px] truncate mb-1">${item.name}</h4>
-                    <p class="text-primary font-black text-xs">${item.price}</p>
+                    <div class="w-full aspect-square bg-white/5 rounded-[1.8rem] mb-4 flex items-center justify-center overflow-hidden">
+                        <img src="${item.img || ''}" class="w-full h-full object-cover" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%23ffffff10%22/></svg>'">
+                    </div>
+                    <div class="px-2">
+                        <h4 class="font-bold text-[12px] truncate mb-1">${item.name}</h4>
+                        <p class="text-primary font-black text-sm tracking-tighter">${item.price}</p>
+                    </div>
                 `;
                 container.appendChild(div);
             });
@@ -342,13 +412,22 @@
 
         // --- NAVIGATION ---
         function navigate(viewId) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(`view-${viewId}`).classList.add('active');
+            const views = document.querySelectorAll('.view');
+            const targetView = document.getElementById(`view-${viewId}`);
+            
+            views.forEach(v => {
+                v.classList.remove('active');
+            });
+            
+            targetView.classList.add('active');
             
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
             document.getElementById(`btn-${viewId}`).classList.add('nav-active');
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Re-trigger lucide for safety
+            lucide.createIcons();
         }
 
         // --- MODALS ---
@@ -364,33 +443,37 @@
             }
         }
 
-        function openProduct(name, price) {
+        function openProduct(item) {
             const modal = document.getElementById('product-modal');
             const box = document.getElementById('modal-box');
-            document.getElementById('modal-title').innerText = name;
-            document.getElementById('modal-price').innerText = price;
+            const imgContainer = document.getElementById('modal-img-container');
+            
+            document.getElementById('modal-title').innerText = item.name;
+            document.getElementById('modal-price').innerText = item.price;
+            
+            imgContainer.innerHTML = `<img src="${item.img || ''}" class="w-full h-full object-cover" onerror="this.style.display='none'">`;
             
             modal.classList.remove('hidden');
             setTimeout(() => {
-                box.classList.remove('scale-95', 'opacity-0');
+                box.classList.remove('scale-90', 'opacity-0');
             }, 10);
         }
 
         function closeProduct() {
             const modal = document.getElementById('product-modal');
             const box = document.getElementById('modal-box');
-            box.classList.add('scale-95', 'opacity-0');
+            box.classList.add('scale-90', 'opacity-0');
             setTimeout(() => modal.classList.add('hidden'), 300);
         }
 
-       // Ky kod i thotë index.html që të ndezë Service Worker-in
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-            .then(reg => console.log('NTP Ratkoci App: Aktiv'))
-            .catch(err => console.log('Gabim në regjistrim:', err));
-    });
-}
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('NTP Ratkoci App: Aktiv'))
+                    .catch(err => console.log('PWA Error:', err));
+            });
+        }
     </script>
 </body>
 </html>
