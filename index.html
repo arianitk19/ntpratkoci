@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NTP Ratkoci | Mobile App</title>
+    <title>NTP Ratkoci</title>
     
     <meta name="theme-color" content="#020617">
     <link rel="manifest" href="manifest.json">
@@ -104,7 +104,7 @@
     <header class="fixed top-0 w-full z-40 bg-dark/60 backdrop-blur-xl border-b border-white/5 px-6 py-5 flex justify-between items-center">
         <div class="flex flex-col">
             <span class="font-black text-xl tracking-tighter uppercase leading-none">NTP <span class="text-primary">Ratkoci</span></span>
-            <span class="text-[10px] text-gray-500 font-bold tracking-widest uppercase mt-1">Premium Market</span>
+            <span class="text-[10px] text-gray-500 font-bold tracking-widest uppercase mt-1">Ratkoc</span>
         </div>
         <button onclick="toggleSettings()" class="w-11 h-11 rounded-2xl glass flex items-center justify-center active:scale-90 transition-transform">
             <i data-lucide="settings-2" class="w-5 h-5 text-gray-300"></i>
@@ -145,7 +145,7 @@
                 <div class="absolute bottom-8 left-8 z-20">
                     <span class="bg-primary px-3 py-1 rounded-full text-[9px] font-black text-dark uppercase mb-3 inline-block">Ekskluzive</span>
                     <h2 class="text-3xl font-black leading-none">Mirësevini</h2>
-                    <p class="text-sm text-gray-400 mt-2">Zbuloni ofertat më të reja në Ratkoc.</p>
+                    <p class="text-sm text-gray-400 mt-2">Zbuloni marketin në Ratkoc.</p>
                 </div>
             </div>
 
@@ -290,51 +290,52 @@
             snacks: {
                 filters: ["Të gjitha", "Chips", "Smoka", "Kikirika", "Sticks"],
                 items: [
-                    { name: "Vipa Paprika", price: "0.30€", cat: "Chips", img: "Images/vipa-paprika.png" },
-                    { name: "Vipa Classic", price: "0.30€", cat: "Chips", img: "Images/vipa-classic.png" },
-                    { name: "Smok Grill", price: "0.15€", cat: "Smoka", img: "Images/smok-grill.png" },
-                    { name: "Kikirika Me Kripë", price: "0.30€", cat: "Kikirika", img: "Images/kikirika-kripe.png" },
-                    { name: "Vipa Sticks", price: "0.40€", cat: "Sticks", img: "Images/vipa-sticks.png" },
-                    { name: "Patos", price: "0.30€", cat: "Chips", img: "Images/patos.png" },
-                    { name: "Patos i vogël", price: "0.40€", cat: "Chips", img: "Images/patos-vogel.png" },
-                    { name: "Smoka Kids", price: "0.10€", cat: "Smoka", img: "Images/smoka-kids.png" },
-                    { name: "Vipa Hot", price: "0.30€", cat: "Chips", img: "Images/vipa-hot.png" },
-                    { name: "Shkopinjë", price: "0.15€", cat: "Sticks", img: "Images/shkopinje.png" },
-                    { name: "Fripsy Pulë", price: "0.30€", cat: "Chips", img: "Images/fripsy-pule.png" },
-                    { name: "Bake Rolls", price: "0.70€", cat: "Snacks", img: "Images/bake-rolls.png" },
-                    { name: "Kikirika", price: "0.60€", cat: "Kikirika", img: "Images/kikirika.png" },
-                    { name: "Vipa XL", price: "1.30€", cat: "Chips", img: "Images/vipa-xl.png" },
-                    { name: "Fripsy me Djath", price: "0.30€", cat: "Sticks", img: "Images/fripsy-djath.png" },
-                    { name: "Bake Rolls", price: "0.30€", cat: "Snacks", img: "Images/bake-rolls-small.png" },
-                    { name: "Mogyi", price: "0.80€", cat: "Kikirika", img: "Images/mogyi.png" },
-                    { name: "Chio Chips", price: "1.30€", cat: "Chips", img: "Images/chio.png" },
-                    { name: "Star Snacks", price: "0.50€", cat: "Snacks", img: "Images/star.png" },
-                    { name: "Corn Mix", price: "0.30€", cat: "Snacks", img: "Images/corn-mix.png" }
+                     { name: "Vipa Chips", price: "0.30€", cat: "Chips", img: "Images/vipachips.jpg" },
+                    { name: "Vipa Maxxi", price: "0.30€", cat: "Chips", img: "Images/vipamaxi.jpg" },            
+                    { name: "Fripsy", price: "0.30€", cat: "Sticks", img: "Images/fripsychicken.jpg" },
+                    { name: "Patos Rolls", price: "0.30€", cat: "Chipsa", img: "Images/patosrolls.jpg" },
+                    { name: "Patos Tacos", price: "0.30€", cat: "Chipsa", img: "Images/patostaco.jpg" },
+                    { name: "Patos", price: "0.40€", cat: "Chips", img: "Images/patostacos.jpg" },
+                    { name: "Vipa Dinos", price: "0.30€", cat: "Chips", img: "Images/vipadinos.jpg" },
+                    { name: "Vipa Sticks Chicken", price: "0.20€", cat: "Sticks", img: "Images/vipasticks.jpg" },
+                    { name: "Vipa Sticks Hot Dog", price: "0.20€", cat: "Sticks", img: "Images/vipahotdog.jpg" },
+                    { name: "Vipa Kikirik", price: "0.15€", cat: "Sticks", img: "Images/vipakikirik.jpg" },
+                    { name: "Vipa Smoka", price: "0.15€", cat: "Smoka", img: "Images/vipa0.15.jpg" },
+                    { name: "Fripsy", price: "0.30€", cat: "Chips", img: "Images/funkyrotate.png" },
+                    { name: "Kikirika", price: "0.30€", cat: "Kikirika", img: "Images/gonuts.png" },
+                    { name: "Eti Crax Sticks", price: "0.50€", cat: "Sticks", img: "Images/eticrax.jpg" },
+                    { name: "Bambusa", price: "1.30€", cat: "Kikirika", img: "Images/funkykikirik.png" },
+                    { name: "Opps BBQ", price: "0.30€", cat: "Sticks", img: "Images/opps bbq.png" },
+                    { name: "Opps Hot", price: "0.30€", cat: "Sticks", img: "Images/oppshot.png" },
+                    { name: "Gold Snacks", price: "0.10€", cat: "Smoka", img: "Images/goldysnacks1.png" },
                 ]
             },
             sweets: {
                 filters: ["Të gjitha", "Çokollata", "Biskota", "Kek"],
                 items: [
-                    { name: "Pop Kek Çokolladë", price: "0.30€", cat: "Çokollata", img: "Images/popkek.png" },
-                    { name: "Alpella Cake", price: "0.30€", cat: "Çokollata", img: "Images/alpella.png" },
-                    { name: "Today Snowball", price: "0.30€", cat: "Çokollata", img: "Images/today.png" },
-                    { name: "Kek Çokolladë", price: "0.40€", cat: "Kek", img: "Images/kek.png" },
-                    { name: "Twingo", price: "0.20€", cat: "Çokollata", img: "Images/twingo.png" },
-                    { name: "Bar Cake", price: "0.20€", cat: "Çokollata", img: "Images/bar-cake.png" },
-                    { name: "Biskrem", price: "0.40€", cat: "Biskota", img: "Images/biskrem.png" },
-                    { name: "7 days", price: "0.50€", cat: "Kek", img: "Images/7days.png" },
-                    { name: "Metro", price: "0.40€", cat: "Çokollata", img: "Images/metro.png" },
-                    { name: "Albeni", price: "0.40€", cat: "Çokollata", img: "Images/albeni.png" },
-                    { name: "Biskota me Çokollatë", price: "0.20€", cat: "Biskota", img: "Images/biskota-shoko.png" },
-                    { name: "Bono Croissant", price: "0.50€", cat: "Kek", img: "Images/bono.png" },
-                    { name: "Twisted roll", price: "0.20€", cat: "Çokollata", img: "Images/twisted.png" },
-                    { name: "Lion Bar", price: "0.20€", cat: "Çokollata", img: "Images/lion.png" },
-                    { name: "Wafers", price: "0.20€", cat: "Biskota", img: "Images/wafers.png" },
-                    { name: "Petit Beurre", price: "1.30€", cat: "Biskota", img: "Images/petit.png" },
-                    { name: "Ferrero Rocher", price: "0.40€", cat: "Çokollata", img: "Images/ferrero.png" },
-                    { name: "Topsa Love You", price: "0.70€", cat: "Çokollata", img: "Images/topsa.png" },
-                    { name: "Biskota Rolls", price: "0.20€", cat: "Biskota", img: "Images/biskota-rolls.png" },
-                    { name: "Kek Portokalli", price: "0.30€", cat: "Kek", img: "Images/kek-portokall.png" }
+                  { name: "Pop Kek Çokolladë", price: "0.30€", cat: "Çokollata", img: "Images/popkekqokollade.jpg" },
+                    { name: "Pop Kek Banane", price: "0.30€", cat: "Çokollata", img: "Images/popkekbanane.jpg" },
+                    { name: "Pop Kek Kokos", price: "0.30€", cat: "Çokollata", img: "Images/popkekcocos.jpg" },
+                    { name: "Alpella Çokolladë", price: "0.30€", cat: "Çokollata", img: "Images/alpellaqokollad.jpg" },
+                    { name: "Alpella Cokolladë e bardhë", price: "0.30€", cat: "Çokollata", img: "Images/alpellawhite.png" },
+                    { name: "Alpella Kek", price: "0.40€", cat: "Kek", img: "Images/alpellacake.jpg" },
+                    { name: "Today Snowball", price: "0.30€", cat: "Çokollata", img: "Images/todaysnowball.jpg" },
+                    { name: "Today Snowball White", price: "0.40€", cat: "Çokollata", img: "Images/todaywhite.jpg" },
+                    { name: "Today Snowball Black", price: "0.30€", cat: "Çokollata", img: "Images/todayblack.jpg" },
+                    { name: "Today Çokolladë", price: "0.30€", cat: "Çokollata", img: "Images/todaycake.jpg" },
+                    { name: "Today Tiramisu", price: "0.40€", cat: "Çokollata", img: "Images/todaytiramisu.jpg" },
+                    { name: "Today Panda", price: "0.30€", cat: "Çokollata", img: "Images/todaypanda.jpg" },
+                    { name: "Today Pistachio", price: "0.40€", cat: "Çokollata", img: "Images/todaypistachio.jpg" },
+                    { name: "Today Gusto", price: "0.40€", cat: "Çokollata", img: "Images/todaygusto.jpg" },
+                    { name: "Today Souffle", price: "0.40€", cat: "Çokollata", img: "Images/todaysuffle.jpg" },
+                    { name: "Today Goldies", price: "0.30€", cat: "Çokollata", img: "Images/todaygoldies.jpg" },
+                    { name: "Today Cup of cake", price: "0.20€", cat: "Kek", img: "Images/todaycupcake.jpg" },
+                    { name: "Today Cherry", price: "0.30€", cat: "Çokollata", img: "Images/todaycherry.jpg" },
+                    { name: "Today Aloha", price: "0.20€", cat: "Kek", img: "Images/todayaloha.jpg" },
+                    { name: "Topsa Love You", price: "0.70€", cat: "Biskota", img: "Images/loveyou.jpg" },
+                    { name: "Today Roll", price: "0.20€", cat: "Biskota", img: "Images/todayroll.png" },
+                    { name: "Figaro", price: "0.30€", cat: "Biskota", img: "Images/figaro1.jpg" },
+                    { name: "Nuss", price: "0.20€", cat: "Çokollada", img: "Images/nuss.jpg" }
                 ]
             }
         };
