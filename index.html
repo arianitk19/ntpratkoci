@@ -182,33 +182,79 @@
             <div class="product-grid" id="grid-sweets"></div>
         </div>
 
-        <div id="view-orari" class="view px-6">
-            <div class="glass p-8 rounded-[3rem] mb-6 border-white/10">
-                <div class="flex items-center justify-between mb-8">
-                    <h3 class="text-xl font-bold flex items-center gap-3">
-                        <i data-lucide="clock" class="text-primary w-6 h-6"></i> Orari i Punës
-                    </h3>
-                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+        <div id="view-orari" class="view px-6 space-y-8">
+    <!-- CARD 1: ORARI INTELIGJENT -->
+    <div class="glass p-10 rounded-[3.5rem] border border-white/10 relative overflow-hidden bg-gradient-to-br from-white/5 to-transparent">
+        <!-- Element Dekorativ pasiv -->
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 rounded-full blur-3xl"></div>
+        
+        <div class="relative z-10">
+            <div class="flex flex-col items-center text-center mb-10">
+                <div class="w-16 h-16 rounded-3xl bg-primary flex items-center justify-center mb-4 shadow-2xl shadow-primary/40">
+                    <i data-lucide="clock-4" class="text-dark w-8 h-8"></i>
                 </div>
-                <div class="space-y-5">
-                    <div class="flex justify-between items-center bg-white/5 p-4 rounded-2xl">
-                        <span class="text-gray-400 text-sm font-medium">E Hënë - E Diel</span>
-                        <span class="font-black text-sm text-primary">08:00 - 21:00</span>
-                    </div>
-                    <p class="text-[10px] text-gray-500 italic mt-6 uppercase tracking-[0.2em] text-center font-bold">Hapur për komunitetin</p>
+                <h3 class="text-3xl font-black tracking-tighter text-white">ORARI ZYRTAR</h3>
+                <div id="live-countdown" class="mt-2 px-4 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-primary uppercase tracking-[0.2em]">
+                    Duke sinkronizuar...
                 </div>
             </div>
 
-            <div class="glass p-8 rounded-[3rem]">
-                <h3 class="text-xl font-bold mb-5 flex items-center gap-3">
-                    <i data-lucide="map-pin" class="text-primary w-6 h-6"></i> Lokacioni
-                </h3>
-                <p class="text-sm text-gray-400 mb-8 leading-relaxed font-medium">Ndodhemi në qendër të fshatit <span class="text-white">Ratkoc</span>, Rahovec. Lokacioni më i aksesueshëm për ju.</p>
-                <button class="w-full py-5 bg-white/5 rounded-3xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-3 border border-white/10 active:bg-white/10 transition-all">
-                    <i data-lucide="navigation-2" class="w-4 h-4 text-primary"></i> Gjej në Google Maps
-                </button>
+            <div class="grid grid-cols-1 gap-3">
+                <!-- Row Unike për gjithë javën -->
+                <div class="flex items-center justify-between p-6 rounded-[2.5rem] bg-dark/40 border border-white/5 backdrop-blur-md">
+                    <div class="space-y-1">
+                        <span class="block text-[10px] font-black text-gray-500 uppercase tracking-widest">E Hënë — E Diel</span>
+                        <span class="block text-sm font-bold text-white">Çdo ditë të javës</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="block text-2xl font-black text-primary tracking-tighter">08:00 — 21:00</span>
+                        <span id="status-indicator" class="text-[9px] font-bold uppercase text-green-500">Hapur aktualisht</span>
+                    </div>
+                </div>
             </div>
+
+            <p class="mt-8 text-[11px] text-gray-400 text-center leading-relaxed font-medium px-4">
+                Përkushtuar shërbimit tuaj pa ndërprerje, duke ofruar qasje të plotë në çdo kohë, <span class="text-white">përfshirë edhe fundjavat.</span>
+            </p>
         </div>
+    </div>
+
+    <!-- CARD 2: LOKACIONI ELITE -->
+    <div class="glass p-10 rounded-[3.5rem] border border-white/10 relative overflow-hidden shadow-2xl">
+        <div class="flex flex-col gap-6">
+            <div class="space-y-2">
+                <h3 class="text-2xl font-black tracking-tighter text-white flex items-center gap-3">
+                    <i data-lucide="map-pin" class="text-primary w-6 h-6"></i> DESTINACIONI
+                </h3>
+                <div class="h-1 w-12 bg-primary rounded-full"></div>
+            </div>
+
+            <p class="text-lg text-gray-300 leading-snug font-medium italic tracking-tight">
+                "Në zemër të <span class="text-white font-bold not-italic">Ratkocit</span>, aty ku tradita e mikpritjes takon standardin modern të shërbimit."
+            </p>
+
+            <div class="py-6 border-y border-white/5">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center">
+                        <i data-lucide="navigation" class="text-primary w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">Adresa e saktë</span>
+                        <span class="text-sm font-bold text-white">Rruga Kryesore, Ratkoc, Rahovec</span>
+                    </div>
+                </div>
+            </div>
+
+            <a href="https://maps.app.goo.gl/opmRt7ZMNaM1Nw726" target="_blank" 
+               class="group relative w-full overflow-hidden py-6 bg-white text-dark rounded-3xl font-black uppercase tracking-[0.2em] text-xs flex items-center justify-center gap-3 transition-all hover:bg-primary active:scale-95 shadow-xl shadow-white/5">
+                <span class="relative z-10 flex items-center gap-2">
+                    <i data-lucide="map" class="w-4 h-4"></i> Navigo drejt Lokacionit
+                </span>
+                <div class="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+            </a>
+        </div>
+    </div>
+</div>
     </main>
 
     <div id="product-modal" class="fixed inset-0 z-[70] hidden p-6 flex items-center justify-center">
@@ -476,6 +522,50 @@
                     .catch(err => console.log('PWA Error:', err));
             });
         }
+
+
+
+
+
+      function updateLiveStatus() {
+    const now = new Date();
+    const hour = now.getHours();
+    const minute = now.getMinutes();
+    const currentTime = hour + minute / 60;
+
+    const countdownElement = document.getElementById('live-countdown');
+    const statusIndicator = document.getElementById('status-indicator');
+    
+    const openTime = 8.0;   // 08:00
+    const closeTime = 21.0; // 21:00
+
+    if (currentTime >= openTime && currentTime < closeTime) {
+        // Llogarit sa orë kanë mbetur deri në mbyllje
+        const remainingHours = Math.floor(closeTime - currentTime);
+        const remainingMinutes = Math.round((closeTime - currentTime - remainingHours) * 60);
+        
+        statusIndicator.innerText = "Hapur aktualisht";
+        statusIndicator.className = "text-[9px] font-bold uppercase text-green-500";
+        countdownElement.innerHTML = `<span class="text-white">Mbyllemi pas:</span> ${remainingHours} orë e ${remainingMinutes} min`;
+    } else {
+        statusIndicator.innerText = "Mbyllur";
+        statusIndicator.className = "text-[9px] font-bold uppercase text-red-500";
+        
+        // Llogarit sa kohë deri në hapje (nëse është pas orës 21:00)
+        let hoursToOpen = openTime - currentTime;
+        if (hoursToOpen < 0) hoursToOpen += 24;
+        
+        const h = Math.floor(hoursToOpen);
+        const m = Math.round((hoursToOpen - h) * 60);
+        
+        countdownElement.innerHTML = `<span class="text-white font-bold">Hapemi pas:</span> ${h} orë e ${m} min`;
+    }
+}
+
+// Ekzekutohet menjëherë
+updateLiveStatus();
+// Rifreskohet çdo minutë
+setInterval(updateLiveStatus, 60000);
     </script>
 </body>
 </html>
