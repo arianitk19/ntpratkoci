@@ -131,93 +131,113 @@
             
 
 <script>
-    // 1. LOGJIKA E SHFAQJES (Toggle)
-    function toggleAI() {
-        const panel = document.getElementById('ai-panel');
-        const container = document.getElementById('ai-container');
-        const overlay = document.getElementById('ai-overlay');
-        const trigger = document.getElementById('ai-trigger');
+// SINGLE SOURCE OF TRUTH - Burimi i të dhënave
+const NTP_CONFIG = {
+    name: "NTP Ratkoci",
+    hours: { open: 8, close: 21 },
+    location: "Ratkoc, Rahovec",
+    categories: {
+        pije: ["Coca Cola", "Fanta", "Lëngje Jaffa", "Ujë natyral"],
+        snacks: ["Vipa Chips", "Stobi Flips", "Kikirikë"],
+        sweets: ["Today Cake", "Eurovafel", "Choco Biscuit"]
+    }
+};
 
-        if (panel.classList.contains('hidden')) {
-            panel.classList.remove('hidden');
-            trigger.classList.add('scale-0', 'opacity-0');
-            setTimeout(() => {
-                overlay.classList.add('opacity-100');
-                container.classList.remove('translate-y-full', 'opacity-0');
-            }, 10);
-        } else {
-            container.classList.add('translate-y-full', 'opacity-0');
-            overlay.classList.remove('opacity-100');
-            setTimeout(() => {
-                panel.classList.add('hidden');
-                trigger.classList.remove('scale-0', 'opacity-0');
-            }, 500);
+// 1. MOTORI I BISEDËS (AI ENGINE)
+const AIAssistant = {
+    // Detektimi i qëllimit (Intent Detection)
+    getIntent(input) {
+        const text = input.toLowerCase();
+        if (this.contains(text, ['orar', 'hapur', 'mbyllur', 'ora', 'kur punoni'])) return 'ORARI';
+        if (this.contains(text, ['ku jeni', 'adresa', 'lokacioni', 'vendi', 'ratkoc'])) return 'LOKACIONI';
+        if (this.contains(text, ['pije', 'lëng', 'ujë', 'diçka për të pirë'])) return 'PIJE';
+        if (this.contains(text, ['ushqim', 'snacks', 'chips', 'diçka për të ngrënë'])) return 'SNACKS';
+        if (this.contains(text, ['ëmbël', 'sweets', 'cake', 'today'])) return 'SWEETS';
+        if (this.contains(text, ['përshëndetje', 'tung', 'hi', 'çka bën'])) return 'HELLO';
+        return 'UNKNOWN';
+    },
+
+    contains(text, keywords) {
+        return keywords.some(key => text.includes(key));
+    },
+
+    // Gjenerimi i përgjigjes dinamike
+    generateResponse(intent) {
+        switch (intent) {
+            case 'ORARI':
+                const now = new Date();
+                const hour = now.getHours();
+                const isOpen = hour >= NTP_CONFIG.hours.open && hour < NTP_CONFIG.hours.close;
+                return isOpen 
+                    ? `Aktualisht jemi të hapur dhe ju mirëpresim! Punojmë deri në orën 21:00 të mbrëmjes.` 
+                    : `Për momentin jemi të mbyllur. Ju mirëpresim nesër duke filluar nga ora 08:00 e mëngjesit.`;
+            
+            case 'LOKACIONI':
+                return `NTP Ratkoci ndodhet në zemër të fshatit Ratkoc, Rahovec. Mund të na gjeni lehtësisht në rrugën kryesore.`;
+            
+            case 'PIJE':
+                return `Kemi një përzgjedhje të pasur pijesh si: ${NTP_CONFIG.categories.pije.join(", ")}. Cila ju shijon më shumë?`;
+            
+            case 'SNACKS':
+                return `Për një snack të shpejtë ju sugjerojmë: ${NTP_CONFIG.categories.snacks.join(", ")}. Një kombinim perfekt me pijet tona!`;
+            
+            case 'SWEETS':
+                return `Nëse dëshironi diçka të ëmbël, provoni: ${NTP_CONFIG.categories.sweets.join(", ")}. Janë produkte shumë të freskëta.`;
+            
+            case 'HELLO':
+                return `Përshëndetje! Jam asistenti juaj virtual i NTP Ratkoci. Si mund t'ju ndihmoj me orarin ose produktet tona sot?`;
+            
+            default:
+                return `Më falni, por nuk e kuptova kërkesën tuaj plotësisht. Mund t'ju ndihmoj me detaje rreth orarit, lokacionit tonë në Ratkoc ose listën e produkteve.`;
         }
     }
+};
 
-    document.getElementById('ai-trigger').onclick = toggleAI;
+// 2. MOTORI I ZËRIT (PREMIUM)
+function speakAlbanian(text) {
+    if (!window.speechSynthesis) return;
+    
+    window.speechSynthesis.cancel();
+    
+    // Optimizimi i shqiptimit
+    const voiceText = text
+        .replace(/08:00/g, "tetë të mëngjesit")
+        .replace(/21:00/g, "nëntë të mbrëmjes")
+        .replace(/€/g, "euro")
+        .replace(/NTP/g, "N T P");
 
-    // 2. MOTORI I ZËRIT SHQIP (Optimized)
-    function speakAlbanian(text) {
-        window.speechSynthesis.cancel();
-        
-        // Zëvendësimi i simboleve për lexim më të pastër
-        const cleanText = text.replace(":", " e ").replace("€", " euro").replace("-", " deri në ");
-        
-        const msg = new SpeechSynthesisUtterance(cleanText);
-        let voices = window.speechSynthesis.getVoices();
-        
-        // Kërkimi i zërit më të mirë fonetik për shqipen
-        msg.voice = voices.find(v => v.lang.includes('sq')) || voices.find(v => v.lang.includes('it')) || voices[0];
-        msg.lang = 'sq-AL';
-        msg.rate = 0.9; 
-        msg.pitch = 1.0;
+    const msg = new SpeechSynthesisUtterance(voiceText);
+    const voices = window.speechSynthesis.getVoices();
+    
+    // Prioriteti: Zëri Shqip -> Italisht (më i afërti fonetikisht) -> Default
+    msg.voice = voices.find(v => v.lang.includes('sq')) || voices.find(v => v.lang.includes('it')) || voices[0];
+    msg.lang = 'sq-AL';
+    msg.rate = 0.95; 
+    msg.pitch = 1.0;
 
-        msg.onstart = () => document.getElementById('voice-status').classList.remove('hidden');
-        msg.onend = () => document.getElementById('voice-status').classList.add('hidden');
+    window.speechSynthesis.speak(msg);
+}
 
-        window.speechSynthesis.speak(msg);
-    }
+// 3. MENAXHIMI I VEPRIMEVE (UI Interaction)
+async function handleAction() {
+    const input = document.getElementById('ai-input');
+    const val = input.value.trim();
+    if(!val) return;
 
-    // 3. LOGJIKA E BISEDËS
-    function handleAction() {
-        const input = document.getElementById('ai-input');
-        const val = input.value.trim();
-        if(!val) return;
+    // Reset UI state
+    document.getElementById('onboarding')?.classList.add('hidden');
+    addMsg(val, 'user');
+    input.value = '';
 
-        document.getElementById('onboarding').classList.add('hidden');
-        addMsg(val, 'user');
-        input.value = '';
+    // Efekti i "Mendimit" (Produktiviteti)
+    const intent = AIAssistant.getIntent(val);
+    const response = AIAssistant.generateResponse(intent);
 
-        setTimeout(() => {
-            let response = "";
-            const t = val.toLowerCase();
-
-            if(t.includes("orar")) response = "NTP Ratkoci është hapur çdo ditë nga ora tetë e mëngjesit deri në orën nëntë të mbrëmjes.";
-            else if(t.includes("produkt")) response = "Kemi furnizime të freskëta me pije, snacks dhe artikuj ushqimorë. Na vizitoni në market!";
-            else response = "Mund t'ju ndihmoj me informata për orarin, produktet ose lokacionin tonë në Ratkoc.";
-
-            addMsg(response, 'ai');
-            speakAlbanian(response);
-        }, 600);
-    }
-
-    function addMsg(text, type) {
-        const box = document.getElementById('messages-container');
-        const div = document.createElement('div');
-        div.className = `flex ${type === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2`;
-        div.innerHTML = `<div class="${type === 'user' ? 'bg-primary text-dark font-bold' : 'bg-white/5 text-gray-200 border border-white/10'} px-6 py-3 rounded-[2rem] max-w-[85%] text-sm">${text}</div>`;
-        box.appendChild(div);
-        document.getElementById('chat-flow').scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
-    }
-
-    function quickAsk(q) {
-        document.getElementById('ai-input').value = q;
-        handleAction();
-    }
-
-    document.getElementById('send-btn').onclick = handleAction;
-    document.getElementById('ai-input').onkeypress = (e) => e.key === 'Enter' && handleAction();
+    setTimeout(() => {
+        addMsg(response, 'ai');
+        speakAlbanian(response);
+    }, 550);
+}
 </script>
 
 
