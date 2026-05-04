@@ -111,29 +111,60 @@
         </button>
     </header>
 
-    <div id="settings-modal" class="fixed inset-0 z-[60] hidden">
-        <div class="absolute inset-0 bg-dark/95 backdrop-blur-md" onclick="toggleSettings()"></div>
-        <div class="absolute bottom-0 w-full glass rounded-t-[3rem] p-8 pb-12 transition-transform translate-y-full" id="settings-content">
-            <div class="w-16 h-1.5 bg-white/10 rounded-full mx-auto mb-10"></div>
-            <h3 class="text-2xl font-bold mb-8">Personalizimi</h3>
-            <div class="space-y-6">
-                <div class="flex justify-between items-center p-5 rounded-3xl bg-white/5 border border-white/5">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                            <i data-lucide="moon" class="w-5 h-5"></i>
-                        </div>
-                        <span class="font-semibold">Dark Mode</span>
+  <div id="settings-modal" class="fixed inset-0 z-[60] hidden">
+    <div class="absolute inset-0 bg-dark/95 backdrop-blur-md" onclick="toggleSettings()"></div>
+    <div class="absolute bottom-0 w-full glass rounded-t-[3rem] p-8 pb-12 transition-transform translate-y-full max-h-[90vh] overflow-y-auto" id="settings-content">
+        
+        <div class="w-16 h-1.5 bg-white/10 rounded-full mx-auto mb-10"></div>
+        <h3 class="text-2xl font-bold mb-8">Personalizimi</h3>
+        
+        <div class="space-y-4">
+            <!-- Dark Mode -->
+            <div class="flex justify-between items-center p-5 rounded-3xl bg-white/5 border border-white/5">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+                        <i data-lucide="moon" class="w-5 h-5"></i>
                     </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" checked class="sr-only">
-                        <div class="w-12 h-6 bg-gray-800 rounded-full"></div>
-                        <div class="toggle-dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full shadow-lg"></div>
-                    </label>
+                    <span class="font-semibold">Tema e Errët</span>
                 </div>
-                <button onclick="toggleSettings()" class="w-full py-5 bg-primary text-dark font-black rounded-3xl mt-4 shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform">RUHAJ KONFIGURIMIN</button>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="dark-mode-toggle" checked class="sr-only peer">
+                    <div class="w-12 h-6 bg-white/10 peer-checked:bg-primary rounded-full transition-colors"></div>
+                    <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-6"></div>
+                </label>
             </div>
+
+            <!-- Madhësia e Tekstit -->
+            <div class="flex flex-col gap-4 p-5 rounded-3xl bg-white/5 border border-white/5">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">
+                        <i data-lucide="type" class="w-5 h-5"></i>
+                    </div>
+                    <span class="font-semibold">Madhësia e Shkrimit</span>
+                </div>
+                <input type="range" id="font-size-slider" min="14" max="20" value="16" class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-primary">
+            </div>
+
+            <!-- Ngjyra Kryesore (Accent Color) -->
+            <div class="flex flex-col gap-4 p-5 rounded-3xl bg-white/5 border border-white/5">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                        <i data-lucide="palette" class="w-5 h-5"></i>
+                    </div>
+                    <span class="font-semibold">Ngjyra e Temës</span>
+                </div>
+                <div class="flex gap-4 justify-between">
+                    <button onclick="changeAccent('#bef264')" class="w-8 h-8 rounded-full bg-[#bef264] border-2 border-white/20"></button>
+                    <button onclick="changeAccent('#60a5fa')" class="w-8 h-8 rounded-full bg-[#60a5fa] border-2 border-white/20"></button>
+                    <button onclick="changeAccent('#f87171')" class="w-8 h-8 rounded-full bg-[#f87171] border-2 border-white/20"></button>
+                    <button onclick="changeAccent('#c084fc')" class="w-8 h-8 rounded-full bg-[#c084fc] border-2 border-white/20"></button>
+                </div>
+            </div>
+
+            <button onclick="toggleSettings()" class="w-full py-5 bg-primary text-dark font-black rounded-3xl mt-6 shadow-lg shadow-primary/20 active:scale-[0.98] transition-transform uppercase">Ruaj Ndryshimet</button>
         </div>
     </div>
+</div>
 
     <main class="pt-28 safe-area-bottom">
         
@@ -653,18 +684,55 @@
             lucide.createIcons();
         }
 
-        // --- MODALS ---
-        function toggleSettings() {
-            const modal = document.getElementById('settings-modal');
-            const content = document.getElementById('settings-content');
-            if(modal.classList.contains('hidden')) {
-                modal.classList.remove('hidden');
-                setTimeout(() => content.classList.remove('translate-y-full'), 10);
-            } else {
-                content.classList.add('translate-y-full');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            }
-        }
+
+
+// --- LOGJIKA E SETTINGS ---
+
+// 1. Dark Mode Toggle
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+darkModeToggle.addEventListener('change', () => {
+    if(darkModeToggle.checked) {
+        document.documentElement.classList.add('dark');
+        document.body.style.backgroundColor = "#0a0a0a"; // Ngjyra jote dark
+    } else {
+        document.documentElement.classList.remove('dark');
+        document.body.style.backgroundColor = "#f3f4f6"; // Ngjyra light
+    }
+});
+
+// 2. Madhësia e Shkrimit Live
+const fontSlider = document.getElementById('font-size-slider');
+fontSlider.addEventListener('input', (e) => {
+    const size = e.target.value + 'px';
+    document.documentElement.style.fontSize = size;
+    // Kjo do të ndryshojë çdo gjë që përdor njësi 'rem' ose 'em'
+});
+
+// 3. Ndryshimi i Ngjyrës Accent (Primary)
+function changeAccent(color) {
+    // Supozojmë se përdor variabël CSS --primary për ngjyrën tënde kryesore
+    document.documentElement.style.setProperty('--primary', color);
+    
+    // Nëse përdor Tailwind, duhet të kesh të konfiguruar variablat në tailwind.config.js
+    // p.sh. colors: { primary: 'var(--primary)' }
+}
+
+// --- FUNKSIONI EKZISTUES I MODALIT ---
+function toggleSettings() {
+    const modal = document.getElementById('settings-modal');
+    const content = document.getElementById('settings-content');
+    
+    if(modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        // Refresh ikonat nëse përdor Lucide
+        if(window.lucide) lucide.createIcons(); 
+        setTimeout(() => content.classList.remove('translate-y-full'), 10);
+    } else {
+        content.classList.add('translate-y-full');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+}
+        
 
         function openProduct(item) {
             const modal = document.getElementById('product-modal');
