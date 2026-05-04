@@ -172,133 +172,141 @@
 
 
 
-              <!-- KATEGORIA: DUHANI (SMART CARD) -->
+             
+          <!-- SEKTORI HORIZONTAL ELITE -->
 <div class="px-6 mb-8">
-    <div onclick="openTobaccoGallery()" 
-         class="group relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#111] to-[#070707] border border-white/5 p-8 cursor-pointer transition-all duration-500 hover:border-luxury/40 shadow-2xl active:scale-[0.98]">
+    <div onclick="openTobaccoPerfect()" 
+         class="group relative overflow-hidden rounded-[2rem] glass border border-white/10 p-4 cursor-pointer transition-all duration-500 hover:border-primary/40 active:scale-[0.98]">
         
-        <!-- Efekti Vizual (Glow) -->
-        <div class="absolute -right-20 -top-20 w-64 h-64 bg-luxury/5 blur-[80px] rounded-full group-hover:bg-luxury/15 transition-all duration-700"></div>
-
         <div class="relative z-10 flex items-center justify-between">
-            <div class="flex items-center gap-6">
-                <!-- Icon me Background Shkëlqyes -->
-                <div class="w-16 h-16 rounded-2xl bg-black border border-white/10 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Z"/>
-                        <path d="M4 8h16"/>
-                        <path d="M9 12h6"/>
-                        <path d="M9 16h6"/>
-                    </svg>
+            <div class="flex items-center gap-4">
+                <!-- Icon e vogël dhe elegante -->
+                <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                    <i data-lucide="sparkles" class="text-primary w-6 h-6"></i>
                 </div>
                 <div>
-                    <span class="block text-[10px] font-black text-luxury uppercase tracking-[0.4em] mb-1 opacity-70">Premium Selection</span>
-                    <h3 class="text-2xl font-black text-white tracking-tighter uppercase">Duhani & Aksesorët</h3>
-                    <p class="text-xs text-gray-500 mt-1 font-medium">Mbi 12 lloje të markave botërore</p>
+                    <h3 class="text-lg font-black text-white tracking-tighter uppercase leading-none">Duhani <span class="text-primary">&</span> Aksesorët</h3>
+                    <p class="text-[9px] text-gray-500 font-bold uppercase tracking-widest mt-1">Premium Selection • 13 Produkte</p>
                 </div>
             </div>
-            
-            <!-- Butoni "Open" -->
-            <div class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-luxury transition-all duration-500">
-                <i data-lucide="plus" class="text-white group-hover:text-black w-6 h-6 transition-colors"></i>
+
+            <!-- Butoni i qasshëm -->
+            <div class="flex items-center gap-2 bg-white/5 px-4 py-2 rounded-xl border border-white/5 group-hover:bg-primary transition-all">
+                <span class="text-[9px] font-black text-white group-hover:text-dark uppercase">Hape</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-primary group-hover:text-dark"></i>
             </div>
         </div>
     </div>
 </div>
 
-<!-- 2. MODALI I DUHANIT (FULL SCREEN DYNAMIC) -->
-<div id="tobacco-modal" class="fixed inset-0 z-[1000] hidden flex items-center justify-center transition-all duration-500">
-    <!-- Backdrop -->
-    <div class="absolute inset-0 bg-black/95 backdrop-blur-xl opacity-0 transition-opacity duration-500" id="tobacco-overlay" onclick="closeTobaccoGallery()"></div>
+<!-- MODALI I OPTIMIZUAR -->
+<div id="advanced-tobacco-modal" class="fixed inset-0 z-[1000] hidden flex items-center justify-center p-0 md:p-6">
+    <div class="absolute inset-0 bg-dark/95 backdrop-blur-3xl opacity-0 transition-opacity duration-500" id="tobacco-bg-blur"></div>
     
-    <!-- Container -->
-    <div id="tobacco-content" class="relative w-full h-full md:w-[95%] md:h-[90vh] bg-[#050505] md:rounded-[3rem] border-t md:border border-white/10 flex flex-col overflow-hidden translate-y-20 opacity-0 transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1)">
+    <div id="tobacco-panel" class="relative w-full h-full md:max-w-5xl md:h-[90vh] glass md:rounded-[3rem] border-none md:border md:border-white/10 flex flex-col overflow-hidden translate-y-full opacity-0 transition-all duration-700">
         
-        <!-- Header -->
-        <div class="p-8 border-b border-white/5 flex justify-between items-center bg-[#080808]">
-            <div>
-                <h2 class="text-3xl font-black text-white tracking-tighter uppercase">Katalogu i <span class="text-luxury">Duhanit</span></h2>
-                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">Ekskluzive për NTP Ratkoci</p>
+        <!-- Header Kompakt -->
+        <div class="p-6 flex justify-between items-center bg-dark/40 backdrop-blur-xl border-b border-white/5">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
+                    <i data-lucide="layout-grid" class="text-primary w-4 h-4"></i>
+                </div>
+                <h2 class="text-xl font-black text-white tracking-tighter uppercase">Katalogu</h2>
             </div>
-            <button onclick="closeTobaccoGallery()" class="w-12 h-12 rounded-2xl bg-white/5 hover:bg-red-500/20 flex items-center justify-center group transition-all">
-                <i data-lucide="x" class="text-gray-400 group-hover:text-red-500 w-6 h-6"></i>
+            
+            <button onclick="closeTobaccoPerfect()" class="w-10 h-10 rounded-xl glass border border-white/10 flex items-center justify-center hover:bg-red-500/20 group transition-all">
+                <i data-lucide="x" class="text-white group-hover:text-red-500 w-5 h-5"></i>
             </button>
         </div>
 
-        <!-- Grid e Produkteve (Dynamic) -->
-        <div class="flex-1 overflow-y-auto p-8 no-scrollbar">
-            <div id="tobacco-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-                <!-- Produktet do të gjenerohen nga JS -->
+        <!-- Grid me Karta të Vogla (Ideal për 3 kolona në mobile, 5-6 në web) -->
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 no-scrollbar">
+            <div id="perfect-grid" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
+                <!-- Gjenerohet nga JavaScript -->
             </div>
         </div>
     </div>
 </div>
 
+
 <script>
-    // Lista e produkteve (12 lloje)
-    const tobaccoProducts = [
-        { name: "Marlboro Red", brand: "Marlboro", price: "4.50€" },
-        { name: "Marlboro Gold", brand: "Marlboro", price: "4.50€" },
-        { name: "Winston Blue", brand: "Winston", price: "3.80€" },
-        { name: "Winston Red", brand: "Winston", price: "3.80€" },
-        { name: "Lucky Strike", brand: "Lucky Strike", price: "3.50€" },
-        { name: "Kent Blue", brand: "Kent", price: "4.00€" },
-        { name: "Sobranie Black", brand: "Sobranie", price: "5.50€" },
-        { name: "Dunhill International", brand: "Dunhill", price: "5.00€" },
-        { name: "Camel Yellow", brand: "Camel", price: "3.70€" },
-        { name: "Pall Mall Blue", brand: "Pall Mall", price: "3.20€" },
-        { name: "L&M Red", brand: "L&M", price: "3.00€" },
-        { name: "Heets Bronze", brand: "IQOS", price: "4.00€" }
-    ];
+ // Lista e markave me emrat e saktë për rrugëtimin e fotove (Images/emri.jpg)
+const brands = [
+    { name: "Marlboro Touch", type: "Premium" },
+    { name: "Marlboro White", type: "Premium" },
+    { name: "Marlboro Red", type: "Premium" },
+    { name: "Winston", type: "Classic" },
+    { name: "Lucky Strike Blue", type: "Original" },
+    { name: "Lucky Strike Red", type: "Original" },
+    { name: "Lucky Strike Flow", type: "Modern" },
+    { name: "Kent", type: "Premium" },
+    { name: "Rothmans", type: "Classic" },
+    { name: "Chesterfield", type: "Standard" },
+    { name: "Prestige", type: "Local Choice" },
+    { name: "Chesterfield Crown", type: "Elite" },
+    { name: "Ronson", type: "Value" }
+];
 
-    function openTobaccoGallery() {
-        const modal = document.getElementById('tobacco-modal');
-        const overlay = document.getElementById('tobacco-overlay');
-        const content = document.getElementById('tobacco-content');
-        const grid = document.getElementById('tobacco-grid');
+function openTobaccoPerfect() {
+    const modal = document.getElementById('advanced-tobacco-modal');
+    const panel = document.getElementById('tobacco-panel');
+    const bg = document.getElementById('tobacco-bg-blur');
+    const grid = document.getElementById('perfect-grid');
 
-        // Gjenero Kartat
-        grid.innerHTML = tobaccoProducts.map((item, index) => `
-            <div class="group bg-[#0d0d0d] border border-white/5 rounded-[2rem] p-5 hover:border-luxury/30 transition-all duration-500 animate-in fade-in slide-in-from-bottom-4" style="animation-delay: ${index * 50}ms">
-                <div class="aspect-[3/4] bg-gradient-to-b from-white/5 to-transparent rounded-2xl mb-4 flex items-center justify-center relative overflow-hidden">
-                    <!-- Zëvendësoni 'tobacco.png' me fotot tuaja reale -->
-                    <span class="text-[10px] text-gray-700 font-bold uppercase italic opacity-20">No Image</span>
-                    <div class="absolute top-3 left-3 bg-luxury/10 border border-luxury/20 px-2 py-0.5 rounded text-[8px] font-black text-luxury uppercase tracking-widest">In Stock</div>
-                </div>
-                <h4 class="text-white font-bold text-sm tracking-tight leading-tight uppercase h-10 line-clamp-2">${item.name}</h4>
-                <div class="flex items-center justify-between mt-4">
-                    <span class="text-luxury font-black text-sm">${item.price}</span>
-                    <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-luxury/20 transition-colors">
-                        <i data-lucide="shopping-bag" class="w-4 h-4 text-gray-500 group-hover:text-luxury"></i>
-                    </div>
+    // Gjenerimi i kartave kompakte
+    grid.innerHTML = brands.map((b, i) => `
+        <div class="group relative glass rounded-[1.5rem] p-2 border-white/5 hover:border-primary/40 transition-all duration-300 animate-in fade-in slide-in-from-bottom-2" style="animation-delay: ${i * 30}ms">
+            <div class="aspect-square bg-white/5 rounded-[1.2rem] mb-2 flex items-center justify-center overflow-hidden border border-white/5 group-hover:border-primary/20">
+                <img src="Images/${b.name.toLowerCase().replace(/ /g, '')}.jpg" 
+                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
+                     onerror="this.parentElement.innerHTML='<i data-lucide=package class=\'text-white/10 w-5 h-5\'></i>'; if(window.lucide) lucide.createIcons();">
+            </div>
+            <div class="px-1 text-center">
+                <h4 class="text-[10px] md:text-[11px] text-white font-bold leading-tight uppercase truncate">${b.name}</h4>
+                <div class="mt-1">
+                    <span class="text-[7px] font-black text-primary/80 uppercase tracking-tighter">${b.type}</span>
                 </div>
             </div>
-        `).join('');
+        </div>
+    `).join('');
 
-        modal.classList.remove('hidden');
-        setTimeout(() => {
-            overlay.classList.add('opacity-100');
-            content.classList.remove('translate-y-20', 'opacity-0');
-        }, 10);
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden'; // Bllokon scroll-in e faqes kryesore
 
-        if(window.lucide) lucide.createIcons();
-        document.body.style.overflow = 'hidden';
-    }
+    gsap.to(bg, { opacity: 1, duration: 0.4 });
+    gsap.to(panel, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" });
+    
+    if(window.lucide) lucide.createIcons();
+}
 
-    function closeTobaccoGallery() {
-        const overlay = document.getElementById('tobacco-overlay');
-        const content = document.getElementById('tobacco-content');
-        const modal = document.getElementById('tobacco-modal');
+function closeTobaccoPerfect() {
+    const modal = document.getElementById('advanced-tobacco-modal');
+    const panel = document.getElementById('tobacco-panel');
+    const bg = document.getElementById('tobacco-bg-blur');
 
-        content.classList.add('translate-y-20', 'opacity-0');
-        overlay.classList.remove('opacity-100');
-        
-        setTimeout(() => {
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }, 500);
-    }
+    gsap.to(panel, { y: "100%", opacity: 0, duration: 0.5, ease: "power3.in" });
+    gsap.to(bg, { opacity: 0, duration: 0.4, onComplete: () => {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto'; // Rikthen scroll-in
+    }});
+}
 </script>
+                
+<style>
+    /* Siguron që grid-i të mos ketë hapësira të tepërta në ekrane të vogla */
+@media (max-width: 640px) {
+    #perfect-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
+}
+
+/* Animacionet hyrëse */
+.animate-in {
+    animation-duration: 0.4s;
+    animation-fill-mode: both;
+}
+</style>
                 
 
 
