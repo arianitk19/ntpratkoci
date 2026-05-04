@@ -155,161 +155,204 @@
 
 
 
-
-
-<!-- 1. TRIGGER (Floating Action Button) -->
-<div id="ai-trigger" class="fixed bottom-6 right-6 z-[999] w-14 h-14 md:w-16 md:h-16 bg-white text-black rounded-2xl shadow-2xl flex items-center justify-center cursor-pointer hover:scale-110 active:scale-90 transition-all duration-300 group border border-white/20">
-    <i data-lucide="sparkles" class="w-7 h-7 group-hover:rotate-12 transition-transform"></i>
-    <span class="absolute -top-1 -right-1 flex h-4 w-4">
-        <span class="animate-ping absolute h-full w-full rounded-full bg-luxury opacity-75"></span>
-        <span class="relative rounded-full h-4 w-4 bg-luxury"></span>
-    </span>
+<!-- 1. FLOATING TRIGGER (DIZAJN MEKANIK) -->
+<div id="ai-trigger" class="fixed bottom-6 right-6 z-[999] group cursor-pointer transition-all duration-500 active:scale-90">
+    <div class="relative w-16 h-16 bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center justify-center overflow-hidden border border-white/20">
+        <div class="absolute inset-0 bg-gradient-to-tr from-luxury/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <i data-lucide="sparkles" class="w-8 h-8 text-black relative z-10 group-hover:rotate-12 transition-transform duration-500"></i>
+        <!-- Unaza Pulsuese -->
+        <div class="absolute inset-0 rounded-2xl border-2 border-luxury/50 scale-100 group-hover:scale-150 group-hover:opacity-0 transition-all duration-700"></div>
+    </div>
 </div>
 
-<!-- 2. ASISTENTI PANEL -->
-<div id="ai-panel" class="fixed inset-0 z-[1000] hidden flex items-end md:items-center md:justify-end md:pr-12 transition-all">
-    <div class="absolute inset-0 bg-black/40 backdrop-blur-md opacity-0 transition-opacity duration-500" id="ai-overlay" onclick="toggleAI()"></div>
+<!-- 2. AI PANEL (ARKITEKTURA DINAMIKE) -->
+<div id="ai-panel" class="fixed inset-0 z-[1000] pointer-events-none flex items-end md:items-center md:justify-end md:pr-12">
+    <!-- Backdrop me Blur të shkallëzuar -->
+    <div id="ai-overlay" class="absolute inset-0 bg-black/40 backdrop-blur-md opacity-0 transition-opacity duration-500 pointer-events-none"></div>
     
-    <div id="ai-container" class="relative w-full h-[85vh] md:w-[400px] md:h-[650px] bg-[#080a0f]/95 backdrop-blur-2xl rounded-t-[2.5rem] md:rounded-[2.5rem] flex flex-col shadow-[-20px_0_50px_rgba(0,0,0,0.5)] border-t md:border border-white/10 translate-y-full opacity-0 transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1)">
+    <div id="ai-container" class="relative w-full h-[92vh] md:w-[420px] md:h-[700px] bg-[#050505] rounded-t-[3rem] md:rounded-[3rem] flex flex-col shadow-[-20px_0_80px_rgba(0,0,0,0.8)] border-t md:border border-white/10 translate-y-full pointer-events-auto transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1)">
         
-        <!-- Handle për Mobile (Vizuale) -->
-        <div class="md:hidden w-12 h-1 bg-white/20 rounded-full mx-auto mt-4"></div>
-
-        <!-- Header -->
-        <div class="p-6 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-luxury/10 rounded-xl flex items-center justify-center border border-luxury/20">
-                    <i data-lucide="bot" class="text-luxury w-6 h-6"></i>
+        <!-- Header (Mekanik) -->
+        <div class="p-6 border-b border-white/5 bg-gradient-to-b from-white/[0.03] to-transparent">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <div class="w-12 h-12 bg-luxury rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(251,191,36,0.3)]">
+                            <i data-lucide="bot" class="text-black w-7 h-7"></i>
+                        </div>
+                        <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-4 border-[#050505] rounded-full"></span>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-black text-white tracking-tighter uppercase leading-none">Ratkoci <span class="text-luxury italic">Core</span></h2>
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] mt-1">Sistemi i Automatizuar</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-base font-black text-white tracking-tight uppercase">Ratkoci AI</h2>
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                        <span class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Online Tani</span>
+                <button onclick="toggleAI()" class="w-10 h-10 rounded-xl hover:bg-red-500/10 flex items-center justify-center transition-all group">
+                    <i data-lucide="chevron-down" class="w-6 h-6 text-gray-500 group-hover:text-red-500 group-hover:translate-y-1 transition-all"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Flow (Dinamik) -->
+        <div id="chat-flow" class="flex-1 overflow-y-auto px-6 py-8 space-y-6 no-scrollbar" style="scroll-behavior: smooth;">
+            <div id="messages-wrapper" class="space-y-6">
+                <!-- Mesazhi i parë mekanik -->
+                <div class="ai-msg flex justify-start animate-in fade-in slide-in-from-left-4 duration-500">
+                    <div class="bg-white/5 border border-white/10 p-5 rounded-[2rem] rounded-tl-none max-w-[85%] shadow-xl">
+                        <p class="text-sm text-gray-200 leading-relaxed">Sistemi u aktivizua. Unë jam njësia juaj mbështetëse për <span class="text-luxury font-bold">NTP Ratkoci</span>. Çfarë informacioni ju nevojitet?</p>
                     </div>
                 </div>
             </div>
-            <button onclick="toggleAI()" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-red-500/20 group transition-all flex items-center justify-center">
-                <i data-lucide="x" class="w-5 h-5 text-gray-500 group-hover:text-red-500"></i>
-            </button>
+            <div id="typing-indicator" class="hidden flex gap-2 ml-2">
+                <span class="w-1.5 h-1.5 bg-luxury/50 rounded-full animate-bounce"></span>
+                <span class="w-1.5 h-1.5 bg-luxury/50 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                <span class="w-1.5 h-1.5 bg-luxury/50 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+            </div>
         </div>
 
-        <!-- Chat Area -->
-        <div id="chat-flow" class="flex-1 overflow-y-auto px-6 py-2 space-y-6 no-scrollbar overflow-x-hidden">
-            <div id="onboarding" class="space-y-4">
-                <div class="bg-white/5 p-5 rounded-[2rem] border border-white/5">
-                    <p class="text-xs text-gray-400 leading-relaxed font-medium">Përshëndetje! Unë jam asistenti virtual i <span class="text-white">NTP Ratkoci</span>. Si mund t'ju ndihmoj sot?</p>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="quickAsk('Cili është orari?')" class="p-3 bg-white/5 border border-white/5 rounded-2xl hover:bg-luxury/10 hover:border-luxury/20 transition-all text-[10px] font-black text-gray-300 uppercase tracking-tighter flex items-center gap-2">
-                        <i data-lucide="clock" class="w-4 h-4 text-luxury"></i> Orari
-                    </button>
-                    <button onclick="quickAsk('Ku ndodheni?')" class="p-3 bg-white/5 border border-white/5 rounded-2xl hover:bg-luxury/10 hover:border-luxury/20 transition-all text-[10px] font-black text-gray-300 uppercase tracking-tighter flex items-center gap-2">
-                        <i data-lucide="map-pin" class="w-4 h-4 text-luxury"></i> Lokacioni
-                    </button>
-                </div>
-            </div>
-            <div id="messages-container" class="space-y-4 pb-4"></div>
-        </div>
-
-        <!-- Input Section -->
-        <div class="p-6 bg-black/20 border-t border-white/5">
-            <div id="voice-status" class="hidden flex items-center gap-2 mb-3 px-3 py-1.5 bg-luxury/10 border border-luxury/20 rounded-full w-fit">
-                <span class="flex gap-0.5"><span class="w-1 h-3 bg-luxury animate-bounce"></span><span class="w-1 h-3 bg-luxury animate-bounce [animation-delay:0.2s]"></span></span>
-                <span class="text-[9px] font-black text-luxury uppercase italic">AI po flet...</span>
-            </div>
-
-            <div class="flex items-center gap-2 bg-[#12151c] p-1.5 pl-5 rounded-2xl border border-white/10 focus-within:border-luxury/50 transition-all shadow-inner">
-                <input type="text" id="ai-input" placeholder="Pyet diçka..." class="flex-1 bg-transparent border-none outline-none text-sm text-white placeholder:text-gray-600 font-medium">
-                <button id="send-btn" class="w-11 h-11 bg-luxury rounded-xl flex items-center justify-center active:scale-90 transition-all">
-                    <i data-lucide="arrow-up" class="w-5 h-5 text-black"></i>
+        <!-- Footer / Input (I persosur) -->
+        <div class="p-6 bg-[#0a0a0a] border-t border-white/5">
+            <div class="flex items-center gap-3 bg-[#111] p-2 pl-6 rounded-[2rem] border border-white/5 focus-within:border-luxury/30 focus-within:ring-1 focus-within:ring-luxury/10 transition-all shadow-inner">
+                <input type="text" id="ai-input" autocomplete="off" placeholder="Shkruaj komandën..." 
+                       class="flex-1 bg-transparent border-none outline-none text-sm text-white placeholder:text-gray-700 font-medium py-3">
+                
+                <button id="send-btn" class="w-12 h-12 bg-luxury hover:bg-luxury/90 rounded-2xl flex items-center justify-center transition-all active:scale-95 shadow-[0_10px_20px_rgba(251,191,36,0.2)] group">
+                    <i data-lucide="send" class="w-5 h-5 text-black group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
                 </button>
+            </div>
+            <div class="flex justify-center gap-4 mt-4">
+                <button onclick="quickAsk('Orari')" class="text-[9px] font-black text-gray-600 hover:text-luxury uppercase tracking-widest transition-colors">● Orari</button>
+                <button onclick="quickAsk('Lokacioni')" class="text-[9px] font-black text-gray-600 hover:text-luxury uppercase tracking-widest transition-colors">● Lokacioni</button>
+                <button onclick="quickAsk('Kontakt')" class="text-[9px] font-black text-gray-600 hover:text-luxury uppercase tracking-widest transition-colors">● Kontakt</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    const panel = document.getElementById('ai-panel');
-    const container = document.getElementById('ai-container');
-    const overlay = document.getElementById('ai-overlay');
-    const trigger = document.getElementById('ai-trigger');
+/** 
+ * LOGJIKA MEKANIKE E SISTEMIT
+ */
+const UI = {
+    trigger: document.getElementById('ai-trigger'),
+    panel: document.getElementById('ai-panel'),
+    container: document.getElementById('ai-container'),
+    overlay: document.getElementById('ai-overlay'),
+    input: document.getElementById('ai-input'),
+    btn: document.getElementById('send-btn'),
+    wrapper: document.getElementById('messages-wrapper'),
+    flow: document.getElementById('chat-flow'),
+    typing: document.getElementById('typing-indicator')
+};
 
-    function toggleAI() {
-        const isOpen = !panel.classList.contains('hidden');
-        if (!isOpen) {
-            panel.classList.remove('hidden');
-            trigger.classList.add('scale-0', 'opacity-0');
-            setTimeout(() => {
-                overlay.classList.add('opacity-100');
-                container.classList.remove('translate-y-full', 'opacity-0');
-            }, 50);
-        } else {
-            container.classList.add('translate-y-full', 'opacity-0');
-            overlay.classList.remove('opacity-100');
-            setTimeout(() => {
-                panel.classList.add('hidden');
-                trigger.classList.remove('scale-0', 'opacity-0');
-            }, 400);
-        }
-    }
-
-    trigger.onclick = toggleAI;
-
-    function addMsg(text, type) {
-        const box = document.getElementById('messages-container');
-        const div = document.createElement('div');
-        div.className = `flex ${type === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-4 duration-500`;
-        
-        div.innerHTML = `
-            <div class="${type === 'user' ? 'bg-luxury text-black font-bold rounded-tr-none' : 'bg-white/5 text-gray-200 border border-white/10 rounded-tl-none'} px-5 py-3 rounded-[1.5rem] max-w-[85%] text-sm leading-relaxed shadow-xl">
-                ${text}
-            </div>`;
-        
-        box.appendChild(div);
-        const chatFlow = document.getElementById('chat-flow');
-        chatFlow.scrollTo({ top: chatFlow.scrollHeight, behavior: 'smooth' });
-    }
-
-    function handleAction() {
-        const input = document.getElementById('ai-input');
-        const val = input.value.trim();
-        if(!val) return;
-
-        document.getElementById('onboarding').classList.add('opacity-0');
-        setTimeout(() => document.getElementById('onboarding').classList.add('hidden'), 300);
-        
-        addMsg(val, 'user');
-        input.value = '';
-
-        // Simulim përgjigjeje (Këtu mund të lidhni API-n tuaj)
-        setTimeout(() => {
-            let res = "Më vjen keq, nuk ju kuptova. Mund të pyesni për orarin ose produktet?";
-            const t = val.toLowerCase();
-            if(t.includes("orar")) res = "NTP Ratkoci punon çdo ditë: 08:00 - 21:00.";
-            if(t.includes("ku") || t.includes("lokacion")) res = "Ne ndodhemi në qendër të fshatit Ratkoc, buzë rrugës kryesore.";
-            
-            addMsg(res, 'ai');
-            if(window.speechSynthesis) {
-                const msg = new SpeechSynthesisUtterance(res);
-                msg.lang = 'sq-AL';
-                window.speechSynthesis.speak(msg);
-            }
-        }, 800);
-    }
-
-    document.getElementById('send-btn').onclick = handleAction;
-    document.getElementById('ai-input').onkeypress = (e) => e.key === 'Enter' && handleAction();
+// 1. Funksioni i hapjes/mbylljes me kurbë mekanike
+function toggleAI() {
+    const isHidden = UI.panel.style.pointerEvents !== 'auto';
     
-    // Inicializimi i ikonave
-    if(window.lucide) lucide.createIcons();
+    if (isHidden) {
+        UI.panel.style.pointerEvents = 'auto';
+        UI.overlay.style.pointerEvents = 'auto';
+        UI.trigger.style.transform = 'scale(0) rotate(90deg)';
+        UI.trigger.style.opacity = '0';
+        
+        UI.overlay.classList.add('opacity-100');
+        UI.container.classList.remove('translate-y-full');
+        UI.container.classList.add('translate-y-0');
+        setTimeout(() => UI.input.focus(), 600);
+    } else {
+        UI.container.classList.add('translate-y-full');
+        UI.overlay.classList.remove('opacity-100');
+        UI.panel.style.pointerEvents = 'none';
+        UI.overlay.style.pointerEvents = 'none';
+        
+        setTimeout(() => {
+            UI.trigger.style.transform = 'scale(1) rotate(0deg)';
+            UI.trigger.style.opacity = '1';
+        }, 400);
+    }
+}
+
+UI.trigger.onclick = toggleAI;
+
+// 2. Procesimi Dinamik i Mesazheve
+function createMessage(text, side) {
+    const div = document.createElement('div');
+    div.className = `flex ${side === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-${side === 'user' ? 'right' : 'left'}-4 duration-500`;
+    
+    const content = side === 'user' 
+        ? `bg-luxury text-black font-bold rounded-[2rem] rounded-tr-none shadow-[0_10px_30px_rgba(251,191,36,0.2)]` 
+        : `bg-white/5 border border-white/10 text-gray-200 rounded-[2rem] rounded-tl-none shadow-xl`;
+
+    div.innerHTML = `<div class="${content} px-6 py-4 max-w-[85%] text-sm leading-relaxed">${text}</div>`;
+    UI.wrapper.appendChild(div);
+    UI.flow.scrollTo({ top: UI.flow.scrollHeight, behavior: 'smooth' });
+}
+
+async function processInput() {
+    const query = UI.input.value.trim();
+    if (!query) return;
+
+    // Shto mesazhin e përdoruesit
+    createMessage(query, 'user');
+    UI.input.value = '';
+    
+    // Trego që po mendon
+    UI.typing.classList.remove('hidden');
+    
+    // Inteligjenca artificiale (Simulim i shpejtë dhe funksional)
+    setTimeout(() => {
+        UI.typing.classList.add('hidden');
+        let response = "";
+        const q = query.toLowerCase();
+
+        if (q.includes("orar")) response = "NTP Ratkoci shërben çdo ditë: 08:00 - 21:00. Ju mirëpresim!";
+        else if (q.includes("ku") || q.includes("lokacion")) response = "Ndodhemi në qendër të Ratkocit. Mund të na gjeni lehtësisht buzë rrugës kryesore.";
+        else if (q.includes("produkt")) response = "Katalogu ynë përfshin ushqime, pije dhe produkte higjienike të cilësisë së lartë.";
+        else response = "Kërkesa u regjistrua. Për ndihmë specifike, mund të pyesni për orarin, produktet ose vendndodhjen.";
+
+        createMessage(response, 'ai');
+        
+        // Opsionale: Leximi me zë
+        if ('speechSynthesis' in window) {
+            const synth = window.speechSynthesis;
+            const utter = new SpeechSynthesisUtterance(response);
+            utter.lang = 'sq-AL';
+            utter.rate = 1.0;
+            synth.speak(utter);
+        }
+    }, 1000);
+}
+
+// 3. Event Listeners (Navigimi & Input)
+UI.btn.onclick = processInput;
+UI.input.onkeydown = (e) => { if (e.key === 'Enter') processInput(); };
+
+function quickAsk(text) {
+    UI.input.value = text;
+    processInput();
+}
+
+// Inicializimi i ikonave
+if (window.lucide) lucide.createIcons();
 </script>
 
 <style>
+    /* Zhdukja e Scrollbar për pastërti vizuale */
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    /* Animacioni Cubic-Bezier për ndjesi mekanike */
     .cubic-bezier { transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+    
+    /* Përshtatja për telefonat me notch/home bar */
+    @media (max-width: 768px) {
+        #ai-container {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+    }
 </style>
+
+
 
             
 
