@@ -129,210 +129,41 @@
             </div>
 
             
-
-<script>
-// SINGLE SOURCE OF TRUTH - Burimi i të dhënave
-const NTP_CONFIG = {
-    name: "NTP Ratkoci",
-    hours: { open: 8, close: 21 },
-    location: "Ratkoc, Rahovec",
-    categories: {
-        pije: ["Coca Cola", "Fanta", "Lëngje Jaffa", "Ujë natyral"],
-        snacks: ["Vipa Chips", "Stobi Flips", "Kikirikë"],
-        sweets: ["Today Cake", "Eurovafel", "Choco Biscuit"]
-    }
-};
-
-// 1. MOTORI I BISEDËS (AI ENGINE)
-const AIAssistant = {
-    // Detektimi i qëllimit (Intent Detection)
-    getIntent(input) {
-        const text = input.toLowerCase();
-        if (this.contains(text, ['orar', 'hapur', 'mbyllur', 'ora', 'kur punoni'])) return 'ORARI';
-        if (this.contains(text, ['ku jeni', 'adresa', 'lokacioni', 'vendi', 'ratkoc'])) return 'LOKACIONI';
-        if (this.contains(text, ['pije', 'lëng', 'ujë', 'diçka për të pirë'])) return 'PIJE';
-        if (this.contains(text, ['ushqim', 'snacks', 'chips', 'diçka për të ngrënë'])) return 'SNACKS';
-        if (this.contains(text, ['ëmbël', 'sweets', 'cake', 'today'])) return 'SWEETS';
-        if (this.contains(text, ['përshëndetje', 'tung', 'hi', 'çka bën'])) return 'HELLO';
-        return 'UNKNOWN';
-    },
-
-    contains(text, keywords) {
-        return keywords.some(key => text.includes(key));
-    },
-
-    // Gjenerimi i përgjigjes dinamike
-    generateResponse(intent) {
-        switch (intent) {
-            case 'ORARI':
-                const now = new Date();
-                const hour = now.getHours();
-                const isOpen = hour >= NTP_CONFIG.hours.open && hour < NTP_CONFIG.hours.close;
-                return isOpen 
-                    ? `Aktualisht jemi të hapur dhe ju mirëpresim! Punojmë deri në orën 21:00 të mbrëmjes.` 
-                    : `Për momentin jemi të mbyllur. Ju mirëpresim nesër duke filluar nga ora 08:00 e mëngjesit.`;
-            
-            case 'LOKACIONI':
-                return `NTP Ratkoci ndodhet në zemër të fshatit Ratkoc, Rahovec. Mund të na gjeni lehtësisht në rrugën kryesore.`;
-            
-            case 'PIJE':
-                return `Kemi një përzgjedhje të pasur pijesh si: ${NTP_CONFIG.categories.pije.join(", ")}. Cila ju shijon më shumë?`;
-            
-            case 'SNACKS':
-                return `Për një snack të shpejtë ju sugjerojmë: ${NTP_CONFIG.categories.snacks.join(", ")}. Një kombinim perfekt me pijet tona!`;
-            
-            case 'SWEETS':
-                return `Nëse dëshironi diçka të ëmbël, provoni: ${NTP_CONFIG.categories.sweets.join(", ")}. Janë produkte shumë të freskëta.`;
-            
-            case 'HELLO':
-                return `Përshëndetje! Jam asistenti juaj virtual i NTP Ratkoci. Si mund t'ju ndihmoj me orarin ose produktet tona sot?`;
-            
-            default:
-                return `Më falni, por nuk e kuptova kërkesën tuaj plotësisht. Mund t'ju ndihmoj me detaje rreth orarit, lokacionit tonë në Ratkoc ose listën e produkteve.`;
-        }
-    }
-};
-
-// 2. MOTORI I ZËRIT (PREMIUM)
-function speakAlbanian(text) {
-    if (!window.speechSynthesis) return;
-    
-    window.speechSynthesis.cancel();
-    
-    // Optimizimi i shqiptimit
-    const voiceText = text
-        .replace(/08:00/g, "tetë të mëngjesit")
-        .replace(/21:00/g, "nëntë të mbrëmjes")
-        .replace(/€/g, "euro")
-        .replace(/NTP/g, "N T P");
-
-    const msg = new SpeechSynthesisUtterance(voiceText);
-    const voices = window.speechSynthesis.getVoices();
-    
-    // Prioriteti: Zëri Shqip -> Italisht (më i afërti fonetikisht) -> Default
-    msg.voice = voices.find(v => v.lang.includes('sq')) || voices.find(v => v.lang.includes('it')) || voices[0];
-    msg.lang = 'sq-AL';
-    msg.rate = 0.95; 
-    msg.pitch = 1.0;
-
-    window.speechSynthesis.speak(msg);
-}
-
-// 3. MENAXHIMI I VEPRIMEVE (UI Interaction)
-async function handleAction() {
-    const input = document.getElementById('ai-input');
-    const val = input.value.trim();
-    if(!val) return;
-
-    // Reset UI state
-    document.getElementById('onboarding')?.classList.add('hidden');
-    addMsg(val, 'user');
-    input.value = '';
-
-    // Efekti i "Mendimit" (Produktiviteti)
-    const intent = AIAssistant.getIntent(val);
-    const response = AIAssistant.generateResponse(intent);
-
-    setTimeout(() => {
-        addMsg(response, 'ai');
-        speakAlbanian(response);
-    }, 550);
-}
-</script>
-
-
-            <div class="grid grid-cols-2 gap-4 mb-10">
-                <div class="p-6 glass rounded-[2.5rem] border-primary/10">
-                    <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-                        <i data-lucide="award" class="text-primary w-5 h-5"></i>
-                    </div>
-                    <h4 class="font-bold text-sm">Premium</h4>
-                    <p class="text-[10px] text-gray-500 mt-1">Cilësi e klasit të parë</p>
-                </div>
-                <div class="p-6 glass rounded-[2.5rem]">
-                    <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-                        <i data-lucide="truck" class="text-primary w-5 h-5"></i>
-                    </div>
-                    <h4 class="font-bold text-sm">Shpejt</h4>
-                    <p class="text-[10px] text-gray-500 mt-1">Shërbim i menjëhershëm</p>
-                </div>
-            </div>
-        </div>
-
-
-
-<!-- 1. BUTONI TRIGGER (Ky qëndron gjithmonë i shfaqur) -->
-<div id="ai-trigger" class="fixed bottom-10 right-6 z-[999] w-16 h-16 bg-white text-dark rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center justify-center cursor-pointer hover:scale-110 active:scale-95 transition-all duration-300 group border border-white/20">
-    <i data-lucide="sparkles" class="w-8 h-8 group-hover:rotate-12 transition-transform"></i>
-    <span class="absolute -top-1 -right-1 flex h-4 w-4">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-        <span class="relative inline-flex rounded-full h-4 w-4 bg-primary"></span>
-    </span>
-</div>
-
-<!-- 2. PANELI I ASISTENTIT (I fshehur fillimisht) -->
-<div id="ai-panel" class="fixed inset-0 z-[1000] hidden flex items-end md:items-center justify-center p-0 md:p-6 transition-all">
-    <!-- Background Overlay -->
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-xl opacity-0 transition-opacity duration-500" id="ai-overlay" onclick="toggleAI()"></div>
-    
-    <!-- Container -->
-    <div id="ai-container" class="relative w-full h-[90vh] md:max-w-[450px] md:h-[80vh] bg-[#0b0f1a] rounded-t-[3rem] md:rounded-[3rem] flex flex-col overflow-hidden shadow-2xl border-t md:border border-white/10 translate-y-full opacity-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
+           <!-- SEKTORI I VEÇORIVE (BENTO STYLE) -->
+<div class="grid grid-cols-2 gap-4 mb-10 px-1">
+    <!-- Karta: Premium -->
+    <div class="group relative overflow-hidden p-6 rounded-[2.8rem] bg-gradient-to-br from-[#111] to-[#080808] border border-white/5 transition-all duration-500 hover:border-luxury/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+        <!-- Glow efekt në prapavijë -->
+        <div class="absolute -right-4 -top-4 w-20 h-20 bg-luxury/5 blur-2xl rounded-full group-hover:bg-luxury/10 transition-all"></div>
         
-        <!-- Header -->
-        <div class="p-6 border-b border-white/5 flex justify-between items-center bg-white/[0.02]">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
-                    <i data-lucide="bot" class="text-primary w-6 h-6"></i>
-                </div>
-                <div>
-                    <h2 class="text-lg font-black tracking-tight text-white leading-none">NTP RATKOCI</h2>
-                    <span class="text-[10px] text-primary font-bold uppercase tracking-widest">Asistenti Virtual</span>
-                </div>
+        <div class="relative z-10">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-luxury/20 to-transparent flex items-center justify-center mb-5 border border-luxury/10 group-hover:scale-110 transition-transform duration-500">
+                <i data-lucide="award" class="text-luxury w-6 h-6 shadow-sm"></i>
             </div>
-            <button onclick="toggleAI()" class="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
-                <i data-lucide="x" class="w-5 h-5 text-gray-400"></i>
-            </button>
+            <h4 class="font-black text-white text-base tracking-tight uppercase">Cilësi</h4>
+            <div class="w-6 h-[2px] bg-luxury/40 my-2 rounded-full group-hover:w-12 transition-all duration-500"></div>
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest leading-tight">Cilësi e klasit <br>të parë</p>
         </div>
+    </div>
 
-        <!-- Chat Content -->
-        <div id="chat-flow" class="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
-            <!-- Udhëzimet Fillestare -->
-            <div id="onboarding">
-                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em] mb-4">Udhëzime për përdorim:</p>
-                <div class="grid grid-cols-2 gap-3 mb-6">
-                    <button onclick="quickAsk('Cili është orari?')" class="flex flex-col items-center gap-2 p-4 bg-white/5 border border-white/5 rounded-[2rem] hover:bg-primary/10 hover:border-primary/20 transition-all">
-                        <i data-lucide="clock" class="text-primary w-5 h-5"></i>
-                        <span class="text-[11px] font-bold text-gray-300">ORARI</span>
-                    </button>
-                    <button onclick="quickAsk('Më trego produktet')" class="flex flex-col items-center gap-2 p-4 bg-white/5 border border-white/5 rounded-[2rem] hover:bg-primary/10 hover:border-primary/20 transition-all">
-                        <i data-lucide="package" class="text-primary w-5 h-5"></i>
-                        <span class="text-[11px] font-bold text-gray-300">PRODUKTET</span>
-                    </button>
-                </div>
+    <!-- Karta: Shpejt -->
+    <div class="group relative overflow-hidden p-6 rounded-[2.8rem] bg-gradient-to-br from-[#111] to-[#080808] border border-white/5 transition-all duration-500 hover:border-blue-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+        <!-- Glow efekt në prapavijë -->
+        <div class="absolute -right-4 -top-4 w-20 h-20 bg-blue-500/5 blur-2xl rounded-full group-hover:bg-blue-500/10 transition-all"></div>
+        
+        <div class="relative z-10">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-transparent flex items-center justify-center mb-5 border border-blue-500/10 group-hover:scale-110 transition-transform duration-500">
+                <i data-lucide="zap" class="text-blue-400 w-6 h-6 shadow-sm"></i>
             </div>
-            <div id="messages-container" class="space-y-4"></div>
-        </div>
-
-        <!-- Input Section -->
-        <div class="p-6 bg-[#0b0f1a] border-t border-white/5">
-            <div id="voice-status" class="hidden flex items-center gap-2 mb-3 px-4 py-2 bg-primary/10 border border-primary/20 rounded-full w-fit mx-auto">
-                <div class="flex gap-1">
-                    <span class="w-1 h-3 bg-primary animate-bounce"></span>
-                    <span class="w-1 h-3 bg-primary animate-bounce" style="animation-delay: 0.1s"></span>
-                    <span class="w-1 h-3 bg-primary animate-bounce" style="animation-delay: 0.2s"></span>
-                </div>
-                <span class="text-[10px] font-black text-primary uppercase">Asistenti po flet shqip...</span>
-            </div>
-
-            <div class="flex items-center gap-2 bg-white/5 p-2 pl-6 rounded-full border border-white/10 focus-within:border-primary/50 transition-all">
-                <input type="text" id="ai-input" placeholder="Shkruaj ose pyet..." class="flex-1 bg-transparent border-none outline-none text-sm text-white placeholder:text-gray-600">
-                <button id="send-btn" class="w-12 h-12 bg-primary rounded-full flex items-center justify-center active:scale-90 transition-all shadow-lg shadow-primary/20">
-                    <i data-lucide="arrow-up" class="w-6 h-6 text-dark"></i>
-                </button>
-            </div>
+            <h4 class="font-black text-white text-base tracking-tight uppercase">Shpejt</h4>
+            <div class="w-6 h-[2px] bg-blue-500/40 my-2 rounded-full group-hover:w-12 transition-all duration-500"></div>
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest leading-tight">Shërbim i <br>menjëhershëm</p>
         </div>
     </div>
 </div>
+
+
+
         
         <div id="view-pijet" class="view px-6">
             <div class="flex gap-3 overflow-x-auto no-scrollbar mb-8 py-2" id="filter-pijet"></div>
