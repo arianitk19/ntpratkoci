@@ -558,18 +558,45 @@
             lucide.createIcons();
         }
 
-        // --- MODALS ---
-        function toggleSettings() {
-            const modal = document.getElementById('settings-modal');
-            const content = document.getElementById('settings-content');
-            if(modal.classList.contains('hidden')) {
-                modal.classList.remove('hidden');
-                setTimeout(() => content.classList.remove('translate-y-full'), 10);
-            } else {
-                content.classList.add('translate-y-full');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            }
-        }
+       // --- MODALS ENGINE (SUPERIOR VERSION) ---
+function toggleSettings() {
+    const modal = document.getElementById('settings-modal');
+    const content = document.getElementById('settings-content');
+    
+    // Shto Haptic Feedback për pajisjet mobile
+    if (window.navigator && window.navigator.vibrate) {
+        window.navigator.vibrate(10); 
+    }
+
+    if (modal.classList.contains('hidden')) {
+        // HAPJA
+        modal.classList.remove('hidden');
+        // Përdorim një vonesë të vogël që Browser-i të detektojë heqjen e 'hidden' para animacionit
+        requestAnimationFrame(() => {
+            content.classList.remove('translate-y-full');
+        });
+    } else {
+        // MBYLLJA
+        content.classList.add('translate-y-full');
+        // Presim 300ms (kohëzgjatja e tranzicionit CSS) para se të fshehim modalin plotësisht
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+}
+
+// Funksioni për pastrimin e Cache (opsionale, shtoje nëse dëshiron)
+function clearCache() {
+    if (window.navigator && window.navigator.vibrate) {
+        window.navigator.vibrate([30, 50, 30]); // Vibrim paralajmërues
+    }
+    
+    if(confirm("A jeni të sigurt që dëshironi të pastroni të dhënat e ruajtura?")) {
+        localStorage.clear();
+        alert("Memory u pastrua me sukses!");
+        location.reload();
+    }
+}
 
         function openProduct(item) {
             const modal = document.getElementById('product-modal');
