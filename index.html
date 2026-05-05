@@ -177,6 +177,76 @@
             <div class="product-grid" id="grid-pijet"></div>
         </div>
 
+
+
+
+
+
+<div class="mb-10">
+    <div class="flex items-center justify-between mb-5 px-2">
+        <h3 class="text-lg font-black tracking-tight">🔥 Më të shiturat</h3>
+        <span class="text-[10px] font-bold text-primary uppercase tracking-widest">Shiko tjerat</span>
+    </div>
+    <div class="flex gap-4 overflow-x-auto no-scrollbar pb-4 px-1" id="grid-trending">
+        </div>
+</div>
+
+<div class="mb-10">
+    <div class="flex items-center justify-between mb-5 px-2">
+        <h3 class="text-lg font-black tracking-tight">🆕 Të reja në market</h3>
+        <span class="text-[10px] font-bold text-primary uppercase tracking-widest">Eksploro</span>
+    </div>
+    <div class="flex gap-4 overflow-x-auto no-scrollbar pb-4 px-1" id="grid-new">
+        </div>
+</div>
+
+
+        <style>
+            /* Përcakton gjerësinë e produkteve në scroll-in horizontal */
+.h-item { width: 145px; flex-shrink: 0; }
+        </style>
+
+        <script>  function renderHyrjaHighlights() {
+    const trendingContainer = document.getElementById('grid-trending');
+    const newContainer = document.getElementById('grid-new');
+    
+    // Marrim të gjitha produktet nga të gjitha kategoritë
+    const allProducts = [...data.pijet.items, ...data.snacks.items, ...data.sweets.items];
+    
+    // Pastrojmë kontenierët
+    trendingContainer.innerHTML = '';
+    newContainer.innerHTML = '';
+
+    allProducts.forEach(item => {
+        // Krijojmë kartelën për secilin produkt
+        const card = document.createElement('div');
+        card.className = "h-item product-card glass p-3 rounded-[2rem] cursor-pointer border-white/5";
+        card.onclick = () => openProduct(item);
+        card.innerHTML = `
+            <div class="w-full aspect-square bg-white/5 rounded-[1.5rem] mb-3 flex items-center justify-center overflow-hidden">
+                <img src="${item.img || ''}" class="w-full h-full object-cover" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%23ffffff10%22/></svg>'">
+            </div>
+            <div class="px-1">
+                <h4 class="font-bold text-[10px] truncate mb-1">${item.name}</h4>
+                <p class="text-primary font-black text-xs">${item.price}</p>
+            </div>
+        `;
+
+        // Nëse dëshiron t'i ndash: 
+        // Këtu mund të vendosësh kushtin (p.sh. nese emri përmban diçka ose thjesht i ndan përgjysmë)
+        if (Math.random() > 0.5) {
+            trendingContainer.appendChild(card);
+        } else {
+            newContainer.appendChild(card.cloneNode(true));
+            // Shënim: cloneNode duhet nese i shton te dyja, nese i ndan perdor card direkt
+        }
+    });
+} </script>
+
+
+
+
+        
         <div id="view-snacks" class="view px-6">
             <div class="flex gap-3 overflow-x-auto no-scrollbar mb-8 py-2" id="filter-snacks"></div>
             <div class="product-grid" id="grid-snacks"></div>
