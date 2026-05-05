@@ -556,14 +556,14 @@
 
 
 
-    // Konfigurimet Globale
+   // --- CONFIGURIMI I SETTINGS ---
 const appSettings = {
     darkMode: document.getElementById('toggle-dark-mode'),
     haptic: document.getElementById('toggle-haptic'),
     notifications: document.getElementById('toggle-notifications')
 };
 
-// 1. Funksioni për Dark Mode (Ndryshon klasën në <html>)
+// 1. Dark Mode Ultra - Ndryshon pamjen live
 function updateDarkMode() {
     if (appSettings.darkMode.checked) {
         document.documentElement.classList.add('dark');
@@ -574,72 +574,91 @@ function updateDarkMode() {
     }
 }
 
-// 2. Funksioni për Haptic (Vibrim Test)
-function triggerHaptic() {
-    if (appSettings.haptic.checked && window.navigator.vibrate) {
-        window.navigator.vibrate(15);
+// 2. Haptic Feedback - Vibrim gjatë ndërrimit
+function triggerHaptic(force = 15) {
+    if (appSettings.haptic.checked && window.navigator && window.navigator.vibrate) {
+        window.navigator.vibrate(force);
     }
     localStorage.setItem('haptic', appSettings.haptic.checked);
 }
 
-// 3. Funksioni për Njoftimet (Shembull logjike)
+// 3. Notifications - Logjika e njoftimeve
 function updateNotifications() {
     localStorage.setItem('notifications', appSettings.notifications.checked);
     if (appSettings.notifications.checked) {
-        console.log("Njoftimet u aktivizuan");
-        // Këtu mund të thirret kërkesa për Notification API
+        // Këtu mund të shtohet Notification.requestPermission() në të ardhmen
+        console.log("Njoftimet Live u aktivizuan.");
     }
 }
 
-// Event Listeners - Kjo bën që çdo gjë të ndodhë "LIVE"
-appSettings.darkMode.addEventListener('change', updateDarkMode);
-appSettings.haptic.addEventListener('change', triggerHaptic);
-appSettings.notifications.addEventListener('change', updateNotifications);
+// --- EVENT LISTENERS (LIVE UPDATE) ---
+appSettings.darkMode.addEventListener('change', () => {
+    updateDarkMode();
+    triggerHaptic(10);
+});
 
-// Load Settings on Start (Ngarkimi i preferencave kur hapet faqja)
+appSettings.haptic.addEventListener('change', () => {
+    triggerHaptic(20);
+});
+
+appSettings.notifications.addEventListener('change', () => {
+    updateNotifications();
+    triggerHaptic(10);
+});
+
+// --- INITIALIZE (NGARKIMI I PREFERENCAVE) ---
 window.addEventListener('DOMContentLoaded', () => {
-    // Ngarko Theme
-    const savedTheme = localStorage.getItem('theme');
+    // Ngarko Temën
+    const savedTheme = localStorage.getItem('theme') || 'dark'; // Default dark
     if (savedTheme === 'light') {
         appSettings.darkMode.checked = false;
         document.documentElement.classList.remove('dark');
+    } else {
+        appSettings.darkMode.checked = true;
+        document.documentElement.classList.add('dark');
     }
 
     // Ngarko Haptic
     const savedHaptic = localStorage.getItem('haptic');
-    if (savedHaptic !== null) {
-        appSettings.haptic.checked = savedHaptic === 'true';
-    }
+    appSettings.haptic.checked = savedHaptic === null ? true : savedHaptic === 'true';
 
     // Ngarko Notifications
     const savedNotif = localStorage.getItem('notifications');
-    if (savedNotif !== null) {
-        appSettings.notifications.checked = savedNotif === 'true';
-    }
+    appSettings.notifications.checked = savedNotif === 'true';
 });
 
-// Clear Cache Funksioni
-function clearCache() {
-    if (confirm("A dëshironi të pastroni të gjitha preferencat? Faqja do të rifreskohet.")) {
-        localStorage.clear();
-        location.reload();
+// --- MODAL CONTROL (OPEN/CLOSE) ---
+function toggleSettings() {
+    const modal = document.getElementById('settings-modal');
+    const content = document.getElementById('settings-content');
+    
+    triggerHaptic(10);
+
+    if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        requestAnimationFrame(() => {
+            content.classList.remove('translate-y-full');
+        });
+    } else {
+        content.classList.add('translate-y-full');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
     }
 }
-        
 
-// Funksioni për pastrimin e Cache (opsionale, shtoje nëse dëshiron)
+// --- MAINTENANCE (PASTRIMI I CACHE) ---
 function clearCache() {
+    // Vibrim paralajmërues (Triple Pulse)
     if (window.navigator && window.navigator.vibrate) {
-        window.navigator.vibrate([30, 50, 30]); // Vibrim paralajmërues
+        window.navigator.vibrate([30, 50, 30, 50, 30]);
     }
     
-    if(confirm("A jeni të sigurt që dëshironi të pastroni të dhënat e ruajtura?")) {
+    if (confirm("A jeni të sigurt? Të gjitha preferencat tuaja do të fshihen dhe faqja do të rifreskohet.")) {
         localStorage.clear();
-        alert("Memory u pastrua me sukses!");
         location.reload();
     }
 }
-
         function openProduct(item) {
             const modal = document.getElementById('product-modal');
             const box = document.getElementById('modal-box');
