@@ -169,31 +169,60 @@
                     <p class="text-[10px] text-gray-500 mt-1">Shërbim i menjëhershëm</p>
                 </div>
 
-                <!-- 1. SEKTORI I JASHTËM (IDENTIK ME DIZAJNIN AKTUAL) -->
-<div class="px-6 mb-10">
-    <div onclick="openTobaccoPerfect()" 
-         class="group relative overflow-hidden rounded-[2.5rem] bg-[#0A0F1E]/60 border border-white/5 p-5 cursor-pointer transition-all duration-500 hover:bg-[#0F172A] active:scale-[0.97] shadow-2xl">
+    <!-- MASTERPIECE SECTOR: TOBACCO MINIMALIST (WEB & MOBILE) -->
+<div class="px-6 mb-12">
+    <!-- Karta kryesore me Glassmorphism të rafinuar -->
+    <div onclick="openTobaccoMasterpiece()" 
+         class="group relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-[#0D121F] to-[#080B16] border border-white/5 p-1 cursor-pointer transition-all duration-700 hover:border-primary/20 hover:shadow-[0_20px_50px_-20px_rgba(0,0,0,0.7)] active:scale-[0.98]">
         
-        <!-- Glow subtil në sfond -->
-        <div class="absolute -right-10 -top-10 w-32 h-32 bg-primary/5 blur-[60px] group-hover:bg-primary/10 transition-all duration-700"></div>
+        <!-- Glow efeti që ndjek lëvizjen (subtil) -->
+        <div class="absolute -right-20 -top-20 w-64 h-64 bg-primary/5 blur-[80px] group-hover:bg-primary/10 transition-all duration-1000"></div>
         
-        <div class="relative z-10 flex items-center justify-between">
-            <div class="flex items-center gap-5">
-                <!-- Icon Circle (Si në Screenshot 2026-05-05 171239.jpg) -->
+        <div class="relative z-10 bg-[#0A0F1E]/40 backdrop-blur-xl rounded-[2.3rem] p-5 md:p-7 flex items-center justify-between">
+            
+            <div class="flex items-center gap-5 md:gap-8">
+                <!-- Icon Sphere: E frymëzuar nga dizajni i Apple Vision Pro -->
                 <div class="relative">
-                    <div class="w-14 h-14 rounded-full bg-[#111C2B] flex items-center justify-center border border-[#1A2B3C] group-hover:border-primary/50 transition-all duration-500">
-                        <i data-lucide="sparkles" class="text-primary w-7 h-7 group-hover:rotate-12 transition-transform"></i>
+                    <div class="absolute inset-0 bg-primary/20 blur-xl rounded-full scale-50 opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"></div>
+                    <div class="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#111C2B] flex items-center justify-center border border-white/5 shadow-inner relative z-10 transition-transform duration-700 group-hover:rotate-[15deg]">
+                        <i data-lucide="wind" class="text-primary w-7 h-7 md:w-8 md:h-8 opacity-80 group-hover:opacity-100 transition-opacity"></i>
                     </div>
                 </div>
                 
-                <div>
-                    <h3 class="text-[18px] font-bold text-white tracking-tight uppercase leading-none">Duhani <span class="text-primary">&</span></h3>
-                    <div class="flex items-center gap-2 mt-2">
-                        <span class="text-[9px] bg-primary/10 text-primary font-black px-2 py-0.5 rounded-md uppercase tracking-widest border border-primary/20"></span>
-                        <span class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">13 Produkte</span>
+                <!-- Tekstet: Hierarki e pastër dhe Moderne -->
+                <div class="space-y-1.5">
+                    <div class="flex items-center gap-2">
+                        <h3 class="text-xl md:text-2xl font-medium text-white tracking-tight">Duhani <span class="text-primary font-light">&</span></h3>
+                        <div class="h-1 w-1 rounded-full bg-white/20"></div>
+                        <span class="text-[10px] text-primary font-black uppercase tracking-[0.2em] pt-1">Elite</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-3">
+                        <div class="flex -space-x-2">
+                            <div class="w-4 h-4 rounded-full border border-[#0A0F1E] bg-gray-500"></div>
+                            <div class="w-4 h-4 rounded-full border border-[#0A0F1E] bg-gray-600"></div>
+                            <div class="w-4 h-4 rounded-full border border-[#0A0F1E] bg-gray-700"></div>
+                        </div>
+                        <span class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.25em]">13 Produkte Ekskluzive</span>
                     </div>
                 </div>
             </div>
+
+            <!-- Interaction Element: Minimalist dhe Funksional -->
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex flex-col items-end mr-2 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-4 group-hover:translate-x-0">
+                    <span class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Shiko</span>
+                    <span class="text-[9px] text-primary font-black uppercase tracking-widest">Katalogun</span>
+                </div>
+                
+                <div class="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center group-hover:bg-primary transition-all duration-500 shadow-lg">
+                    <i data-lucide="chevron-right" class="text-white group-hover:text-dark w-5 h-5 transition-transform group-hover:translate-x-0.5"></i>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 
             <!-- Butoni Eksploro (Minimalist dhe i pastër) -->
             <div class="bg-[#111C2B] border border-white/5 px-5 py-2.5 rounded-2xl flex items-center gap-3 group-hover:bg-primary transition-all duration-500 shadow-xl">
