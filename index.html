@@ -111,11 +111,10 @@
         </button>
     </header>
 
-    <div id="settings-modal" class="fixed inset-0 z-[60] hidden">
+   <div id="settings-modal" class="fixed inset-0 z-[60] hidden">
     <div class="absolute inset-0 bg-dark/90 backdrop-blur-2xl" onclick="toggleSettings()"></div>
     
     <div class="absolute bottom-0 w-full glass-ultra rounded-t-[4rem] p-8 pb-14 transition-transform translate-y-full shadow-[0_-20px_50px_rgba(0,0,0,0.5)] border-t border-white/10" id="settings-content">
-        
         <div class="w-16 h-1.5 bg-white/10 rounded-full mx-auto mb-10"></div>
         
         <div class="flex flex-col items-center mb-10">
@@ -124,9 +123,7 @@
         </div>
 
         <div class="space-y-3 max-w-lg mx-auto">
-            
             <div class="p-6 rounded-[2.5rem] bg-white/[0.03] border border-white/5 space-y-6">
-                
                 <div class="flex justify-between items-center">
                     <div class="flex items-center gap-4">
                         <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
@@ -138,7 +135,7 @@
                         </div>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" checked class="sr-only peer">
+                        <input type="checkbox" id="toggle-dark-mode" checked class="sr-only peer">
                         <div class="w-12 h-6 bg-white/10 peer-checked:bg-primary rounded-full transition-all"></div>
                         <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all peer-checked:translate-x-6"></div>
                     </label>
@@ -155,7 +152,7 @@
                         </div>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" checked class="sr-only peer">
+                        <input type="checkbox" id="toggle-haptic" checked class="sr-only peer">
                         <div class="w-12 h-6 bg-white/10 peer-checked:bg-accent rounded-full transition-all"></div>
                         <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all peer-checked:translate-x-6"></div>
                     </label>
@@ -174,7 +171,7 @@
                         </div>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" class="sr-only peer">
+                        <input type="checkbox" id="toggle-notifications" class="sr-only peer">
                         <div class="w-12 h-6 bg-white/10 peer-checked:bg-yellow-500 rounded-full transition-all"></div>
                         <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all peer-checked:translate-x-6"></div>
                     </label>
@@ -192,7 +189,6 @@
             <button onclick="toggleSettings()" class="w-full py-6 bg-primary text-dark font-black rounded-[2.5rem] mt-6 shadow-2xl shadow-primary/30 active:scale-95 transition-all tracking-[0.2em] text-xs">
                 APLIKO NDRYSHIMET
             </button>
-            
         </div>
     </div>
 </div>
@@ -558,32 +554,78 @@
             lucide.createIcons();
         }
 
-       // --- MODALS ENGINE (SUPERIOR VERSION) ---
-function toggleSettings() {
-    const modal = document.getElementById('settings-modal');
-    const content = document.getElementById('settings-content');
-    
-    // Shto Haptic Feedback për pajisjet mobile
-    if (window.navigator && window.navigator.vibrate) {
-        window.navigator.vibrate(10); 
-    }
 
-    if (modal.classList.contains('hidden')) {
-        // HAPJA
-        modal.classList.remove('hidden');
-        // Përdorim një vonesë të vogël që Browser-i të detektojë heqjen e 'hidden' para animacionit
-        requestAnimationFrame(() => {
-            content.classList.remove('translate-y-full');
-        });
+
+    // Konfigurimet Globale
+const appSettings = {
+    darkMode: document.getElementById('toggle-dark-mode'),
+    haptic: document.getElementById('toggle-haptic'),
+    notifications: document.getElementById('toggle-notifications')
+};
+
+// 1. Funksioni për Dark Mode (Ndryshon klasën në <html>)
+function updateDarkMode() {
+    if (appSettings.darkMode.checked) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
     } else {
-        // MBYLLJA
-        content.classList.add('translate-y-full');
-        // Presim 300ms (kohëzgjatja e tranzicionit CSS) para se të fshehim modalin plotësisht
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 300);
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
     }
 }
+
+// 2. Funksioni për Haptic (Vibrim Test)
+function triggerHaptic() {
+    if (appSettings.haptic.checked && window.navigator.vibrate) {
+        window.navigator.vibrate(15);
+    }
+    localStorage.setItem('haptic', appSettings.haptic.checked);
+}
+
+// 3. Funksioni për Njoftimet (Shembull logjike)
+function updateNotifications() {
+    localStorage.setItem('notifications', appSettings.notifications.checked);
+    if (appSettings.notifications.checked) {
+        console.log("Njoftimet u aktivizuan");
+        // Këtu mund të thirret kërkesa për Notification API
+    }
+}
+
+// Event Listeners - Kjo bën që çdo gjë të ndodhë "LIVE"
+appSettings.darkMode.addEventListener('change', updateDarkMode);
+appSettings.haptic.addEventListener('change', triggerHaptic);
+appSettings.notifications.addEventListener('change', updateNotifications);
+
+// Load Settings on Start (Ngarkimi i preferencave kur hapet faqja)
+window.addEventListener('DOMContentLoaded', () => {
+    // Ngarko Theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        appSettings.darkMode.checked = false;
+        document.documentElement.classList.remove('dark');
+    }
+
+    // Ngarko Haptic
+    const savedHaptic = localStorage.getItem('haptic');
+    if (savedHaptic !== null) {
+        appSettings.haptic.checked = savedHaptic === 'true';
+    }
+
+    // Ngarko Notifications
+    const savedNotif = localStorage.getItem('notifications');
+    if (savedNotif !== null) {
+        appSettings.notifications.checked = savedNotif === 'true';
+    }
+});
+
+// Clear Cache Funksioni
+function clearCache() {
+    if (confirm("A dëshironi të pastroni të gjitha preferencat? Faqja do të rifreskohet.")) {
+        localStorage.clear();
+        location.reload();
+    }
+}
+        
 
 // Funksioni për pastrimin e Cache (opsionale, shtoje nëse dëshiron)
 function clearCache() {
