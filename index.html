@@ -29,41 +29,7 @@
         }
     </script>
 
-    <style>
-
-
-/* Variablat dinamike */
-:root {
-    --bg-main: #020617;
-    --text-main: #f8fafc;
-    --glass-bg: rgba(30, 41, 59, 0.4);
-}
-
-/* Kur klasa .dark mungon në <html> (Light Mode) */
-html:not(.dark) {
-    --bg-main: #f1f5f9;
-    --text-main: #0f172a;
-    --glass-bg: rgba(255, 255, 255, 0.7);
-}
-
-body { 
-    background-color: var(--bg-main); 
-    color: var(--text-main); 
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.glass { background: var(--glass-bg); }
-
-
-
-
-
-
-
-
-
-
-        
+    <style>  
         :root { --nav-height: 76px; }
         body { 
             background-color: #020617; 
@@ -595,162 +561,212 @@ body {
 
 
 
- // --- KONFIGURIMI I SETTINGS ---
+// --- CONFIGURIMI I SETTINGS (Logjika Mekanike) ---
 const appSettings = {
+    // Kapim elementet direkt nga DOM përmes ID-ve
     darkMode: document.getElementById('toggle-dark-mode'),
     haptic: document.getElementById('toggle-haptic'),
     notifications: document.getElementById('toggle-notifications')
 };
 
 /**
- * 1. Dark Mode Mekanik
- * Ndryshon variablat e CSS dhe klasën e Tailwind në kohë reale
+ * 1. Dark Mode Ultra - Ndryshon klasën në HTML live
+ * Ky funksion kontrollon nëse faqja duhet të jetë 'dark' apo 'light'
  */
 function updateDarkMode() {
-    const isDark = appSettings.darkMode.checked;
-    if (isDark) {
+    if (appSettings.darkMode.checked) {
         document.documentElement.classList.add('dark');
         localStorage.setItem('theme', 'dark');
     } else {
         document.documentElement.classList.remove('dark');
         localStorage.setItem('theme', 'light');
     }
-    // Feedback vizual shtesë nese nevojitet
-    console.log(`Tema u ndryshua në: ${isDark ? 'Dark' : 'Light'}`);
 }
 
 /**
- * 2. Haptic Feedback (Vibrimi)
- * Aktivizon motorin e vibrimit të telefonit për çdo ndërveprim
+ * 2. Haptic Feedback - Mekanizmi i vibrimit
+ * Lëshon një impuls fizik në telefon gjatë ndërrimit të opsioneve
  */
 function triggerHaptic(force = 15) {
-    const isHapticEnabled = appSettings.haptic.checked;
-    if (isHapticEnabled && "vibrate" in navigator) {
-        navigator.vibrate(force);
+    if (appSettings.haptic.checked && window.navigator && window.navigator.vibrate) {
+        window.navigator.vibrate(force);
     }
-    localStorage.setItem('haptic', isHapticEnabled);
+    localStorage.setItem('haptic', appSettings.haptic.checked);
 }
 
 /**
- * 3. Live Notifications
- * Kërkon leje nga sistemi operativ për njoftime
+ * 3. Notifications - Ruajtja e preferencës për njoftimet
  */
-async function updateNotifications() {
-    const isEnabled = appSettings.notifications.checked;
-    localStorage.setItem('notifications', isEnabled);
-
-    if (isEnabled) {
-        const permission = await Notification.requestPermission();
-        if (permission === "granted") {
-            new Notification("NTP Ratkoci", {
-                body: "Njoftimet live janë aktivizuar me sukses!",
-                icon: "icon-512x512.png" // Sigurohu që kjo rrugë është e saktë
-            });
-        } else {
-            appSettings.notifications.checked = false;
-            localStorage.setItem('notifications', false);
-            alert("Ju lutem lejoni njoftimet nga cilësimet e shfletuesit.");
-        }
+function updateNotifications() {
+    localStorage.setItem('notifications', appSettings.notifications.checked);
+    if (appSettings.notifications.checked) {
+        console.log("Sistemi: Njoftimet Live u aktivizuan.");
     }
 }
 
-// --- LIDHJA LIVE ME ELEMENTET ---
-appSettings.darkMode?.addEventListener('change', () => {
+// --- EVENT LISTENERS (Lidhja Mekanike e Butonave) ---
+// Këto bëjnë që ndryshimi të ndodhë "LIVE" sapo shtypet butoni
+
+appSettings.darkMode.addEventListener('change', () => {
     updateDarkMode();
-    triggerHaptic(12);
+    triggerHaptic(10); // Vibrim i lehtë
 });
 
-appSettings.haptic?.addEventListener('change', () => {
-    triggerHaptic(25); // Feedback më i fortë kur ndizet opsioni
+appSettings.haptic.addEventListener('change', () => {
+    triggerHaptic(25); // Vibrim pak më i fortë për feedback
 });
 
-appSettings.notifications?.addEventListener('change', () => {
+appSettings.notifications.addEventListener('change', () => {
     updateNotifications();
-    triggerHaptic(12);
+    triggerHaptic(10);
 });
 
-// --- INITIALIZE (NGARKIMI I PREFERENCAVE) ---
+/**
+ * INITIALIZE - Ngarkimi i preferencave kur hapet faqja
+ * Ky bllok kodi ekzekutohet sapo vizitori hyn në aplikacion
+ */
 window.addEventListener('DOMContentLoaded', () => {
-    // Ngarko Temën
+    // 1. Ngarko Temën (Default është 'dark' nese nuk ka të dhëna)
     const savedTheme = localStorage.getItem('theme') || 'dark';
-    const isDark = savedTheme === 'dark';
-    if (appSettings.darkMode) {
-        appSettings.darkMode.checked = isDark;
-        updateDarkMode();
+    if (savedTheme === 'light') {
+        appSettings.darkMode.checked = false;
+        document.documentElement.classList.remove('dark');
+    } else {
+        appSettings.darkMode.checked = true;
+        document.documentElement.classList.add('dark');
     }
 
-    // Ngarko Haptic (Default: On)
+    // 2. Ngarko statusin e Vibrimit (Default: ON)
     const savedHaptic = localStorage.getItem('haptic');
-    if (appSettings.haptic) {
-        appSettings.haptic.checked = (savedHaptic === null) ? true : (savedHaptic === 'true');
-    }
+    appSettings.haptic.checked = (savedHaptic === null) ? true : (savedHaptic === 'true');
 
-    // Ngarko Njoftimet (Default: Off)
+    // 3. Ngarko statusin e Njoftimeve (Default: OFF)
     const savedNotif = localStorage.getItem('notifications');
-    if (appSettings.notifications) {
-        appSettings.notifications.checked = (savedNotif === 'true');
-    }
+    appSettings.notifications.checked = (savedNotif === 'true');
+
+    // Inicializo ikonat dhe statusin live
+    lucide.createIcons();
+    setInterval(updateLiveStatus, 1000); // Përditëso orarin çdo sekondë
 });
-        function clearCache() {
-    triggerHaptic([40, 60, 40]); // Vibrim paralajmërues (Triple Pulse)
+
+// --- MODAL CONTROL (Hapja/Mbyllja me Animacion) ---
+function toggleSettings() {
+    const modal = document.getElementById('settings-modal');
+    const content = document.getElementById('settings-content');
     
-    const confirmReset = confirm("A jeni të sigurt? Kjo do të fshijë preferencat tuaja dhe do të rifreskojë aplikacionin.");
+    triggerHaptic(8); // Feedback i vogël mekanik
+
+    if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        // Përdorim requestAnimationFrame për animacion të lëmuar
+        requestAnimationFrame(() => {
+            content.classList.remove('translate-y-full');
+        });
+    } else {
+        content.classList.add('translate-y-full');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+}
+
+// --- MAINTENANCE (Pastro Cache dhe Refresh) ---
+function clearCache() {
+    // Pulse vibrim paralajmërues
+    if (window.navigator.vibrate) window.navigator.vibrate([30, 50, 30]);
     
-    if (confirmReset) {
-        // Fshijmë vetëm çelësat tanë për të mos dëmtuar të dhëna tjera nese ka
-        localStorage.removeItem('theme');
-        localStorage.removeItem('haptic');
-        localStorage.removeItem('notifications');
-        
-        // Ose për pastrim total: localStorage.clear();
-        
-        document.body.style.opacity = '0'; // Efekt zbehjeje gjatë rifreskimit
-        setTimeout(() => location.reload(), 300);
+    if (confirm("Kujdes! Të gjitha preferencat tuaja do të fshihen. A dëshironi të vazhdoni?")) {
+        localStorage.clear();
+        location.reload();
     }
 }
 
 
 
 
-      function updateLiveStatus() {
+    // Menaxhimi i Navigimit
+function switchView(viewId, element) {
+    // 1. Hiq gjendjen aktive nga të gjithë butonat
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('nav-active', 'text-primary');
+        item.classList.add('text-gray-400');
+    });
+
+    // 2. Aktivizo butonin e klikuar
+    element.classList.add('nav-active', 'text-primary');
+    element.classList.remove('text-gray-400');
+
+    // 3. Ndërro pamjen (Views) me animacion
+    document.querySelectorAll('.view').forEach(view => {
+        view.classList.remove('active');
+    });
+    
+    const targetView = document.getElementById(viewId);
+    if (targetView) {
+        targetView.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 4. Feedback Haptic
+    triggerHaptic(12);
+}
+
+        // Konfigurimi i Lokacionit të Saktë
+const storeLocation = {
+    lat: 42.4011, // Koordinatat e përafërta për Ratkoc
+    lng: 20.4851,
+    name: "NTP Ratkoci",
+    address: "Ratkoc, Rahovec, Kosovë"
+};
+
+function openMap() {
+    triggerHaptic(20);
+    // Linku universal që hap aplikacionin e Maps në iOS/Android ose Browser
+    const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${storeLocation.lat},${storeLocation.lng}&travelmode=driving`;
+    window.open(mapUrl, '_blank');
+}
+
+        function updateLiveStatus() {
     const now = new Date();
-    const hour = now.getHours();
-    const minute = now.getMinutes();
-    const currentTime = hour + minute / 60;
+    const currentTime = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
 
     const countdownElement = document.getElementById('live-countdown');
     const statusIndicator = document.getElementById('status-indicator');
+    const dotIndicator = document.getElementById('status-dot'); // Një pikë rrethore që pulson
     
     const openTime = 8.0;   // 08:00
     const closeTime = 21.0; // 21:00
 
-    if (currentTime >= openTime && currentTime < closeTime) {
-        // Llogarit sa orë kanë mbetur deri në mbyllje
-        const remainingHours = Math.floor(closeTime - currentTime);
-        const remainingMinutes = Math.round((closeTime - currentTime - remainingHours) * 60);
+    const isOpen = currentTime >= openTime && currentTime < closeTime;
+
+    if (isOpen) {
+        const diff = closeTime - currentTime;
+        const h = Math.floor(diff);
+        const m = Math.floor((diff - h) * 60);
         
-        statusIndicator.innerText = "Hapur aktualisht";
-        statusIndicator.className = "text-[9px] font-bold uppercase text-green-500";
-        countdownElement.innerHTML = `<span class="text-white">Mbyllemi pas:</span> ${remainingHours} orë e ${remainingMinutes} min`;
+        statusIndicator.innerText = "Hapur";
+        statusIndicator.className = "text-[10px] font-bold uppercase text-green-500 tracking-wider";
+        if(dotIndicator) dotIndicator.className = "h-2 w-2 rounded-full bg-green-500 animate-pulse";
+        
+        countdownElement.innerHTML = `<span class="opacity-60">Mbyllet pas:</span> <span class="font-medium text-white">${h}orë ${m}min</span>`;
     } else {
+        let diff = openTime - currentTime;
+        if (diff < 0) diff += 24;
+        
+        const h = Math.floor(diff);
+        const m = Math.floor((diff - h) * 60);
+        
         statusIndicator.innerText = "Mbyllur";
-        statusIndicator.className = "text-[9px] font-bold uppercase text-red-500";
+        statusIndicator.className = "text-[10px] font-bold uppercase text-red-500 tracking-wider";
+        if(dotIndicator) dotIndicator.className = "h-2 w-2 rounded-full bg-red-500";
         
-        // Llogarit sa kohë deri në hapje (nëse është pas orës 21:00)
-        let hoursToOpen = openTime - currentTime;
-        if (hoursToOpen < 0) hoursToOpen += 24;
-        
-        const h = Math.floor(hoursToOpen);
-        const m = Math.round((hoursToOpen - h) * 60);
-        
-        countdownElement.innerHTML = `<span class="text-white font-bold">Hapemi pas:</span> ${h} orë e ${m} min`;
+        countdownElement.innerHTML = `<span class="opacity-60">Hapet pas:</span> <span class="font-medium text-white">${h}orë ${m}min</span>`;
     }
 }
 
-// Ekzekutohet menjëherë
+// Startimi
+setInterval(updateLiveStatus, 1000);
 updateLiveStatus();
-// Rifreskohet çdo minutë
-setInterval(updateLiveStatus, 60000);
     </script>
 </body>
 </html>
