@@ -30,6 +30,40 @@
     </script>
 
     <style>
+
+
+/* Variablat dinamike */
+:root {
+    --bg-main: #020617;
+    --text-main: #f8fafc;
+    --glass-bg: rgba(30, 41, 59, 0.4);
+}
+
+/* Kur klasa .dark mungon në <html> (Light Mode) */
+html:not(.dark) {
+    --bg-main: #f1f5f9;
+    --text-main: #0f172a;
+    --glass-bg: rgba(255, 255, 255, 0.7);
+}
+
+body { 
+    background-color: var(--bg-main); 
+    color: var(--text-main); 
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.glass { background: var(--glass-bg); }
+
+
+
+
+
+
+
+
+
+
+        
         :root { --nav-height: 76px; }
         body { 
             background-color: #020617; 
@@ -561,126 +595,119 @@
 
 
 
-  // --- CONFIGURIMI I SETTINGS (Logjika Mekanike) ---
+ // --- KONFIGURIMI I SETTINGS ---
 const appSettings = {
-    // Kapim elementet direkt nga DOM përmes ID-ve
     darkMode: document.getElementById('toggle-dark-mode'),
     haptic: document.getElementById('toggle-haptic'),
     notifications: document.getElementById('toggle-notifications')
 };
 
 /**
- * 1. Dark Mode Ultra - Ndryshon klasën në HTML live
- * Ky funksion kontrollon nëse faqja duhet të jetë 'dark' apo 'light'
+ * 1. Dark Mode Mekanik
+ * Ndryshon variablat e CSS dhe klasën e Tailwind në kohë reale
  */
 function updateDarkMode() {
-    if (appSettings.darkMode.checked) {
+    const isDark = appSettings.darkMode.checked;
+    if (isDark) {
         document.documentElement.classList.add('dark');
         localStorage.setItem('theme', 'dark');
     } else {
         document.documentElement.classList.remove('dark');
         localStorage.setItem('theme', 'light');
     }
+    // Feedback vizual shtesë nese nevojitet
+    console.log(`Tema u ndryshua në: ${isDark ? 'Dark' : 'Light'}`);
 }
 
 /**
- * 2. Haptic Feedback - Mekanizmi i vibrimit
- * Lëshon një impuls fizik në telefon gjatë ndërrimit të opsioneve
+ * 2. Haptic Feedback (Vibrimi)
+ * Aktivizon motorin e vibrimit të telefonit për çdo ndërveprim
  */
 function triggerHaptic(force = 15) {
-    if (appSettings.haptic.checked && window.navigator && window.navigator.vibrate) {
-        window.navigator.vibrate(force);
+    const isHapticEnabled = appSettings.haptic.checked;
+    if (isHapticEnabled && "vibrate" in navigator) {
+        navigator.vibrate(force);
     }
-    localStorage.setItem('haptic', appSettings.haptic.checked);
+    localStorage.setItem('haptic', isHapticEnabled);
 }
 
 /**
- * 3. Notifications - Ruajtja e preferencës për njoftimet
+ * 3. Live Notifications
+ * Kërkon leje nga sistemi operativ për njoftime
  */
-function updateNotifications() {
-    localStorage.setItem('notifications', appSettings.notifications.checked);
-    if (appSettings.notifications.checked) {
-        console.log("Sistemi: Njoftimet Live u aktivizuan.");
+async function updateNotifications() {
+    const isEnabled = appSettings.notifications.checked;
+    localStorage.setItem('notifications', isEnabled);
+
+    if (isEnabled) {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+            new Notification("NTP Ratkoci", {
+                body: "Njoftimet live janë aktivizuar me sukses!",
+                icon: "icon-512x512.png" // Sigurohu që kjo rrugë është e saktë
+            });
+        } else {
+            appSettings.notifications.checked = false;
+            localStorage.setItem('notifications', false);
+            alert("Ju lutem lejoni njoftimet nga cilësimet e shfletuesit.");
+        }
     }
 }
 
-// --- EVENT LISTENERS (Lidhja Mekanike e Butonave) ---
-// Këto bëjnë që ndryshimi të ndodhë "LIVE" sapo shtypet butoni
-
-appSettings.darkMode.addEventListener('change', () => {
+// --- LIDHJA LIVE ME ELEMENTET ---
+appSettings.darkMode?.addEventListener('change', () => {
     updateDarkMode();
-    triggerHaptic(10); // Vibrim i lehtë
+    triggerHaptic(12);
 });
 
-appSettings.haptic.addEventListener('change', () => {
-    triggerHaptic(25); // Vibrim pak më i fortë për feedback
+appSettings.haptic?.addEventListener('change', () => {
+    triggerHaptic(25); // Feedback më i fortë kur ndizet opsioni
 });
 
-appSettings.notifications.addEventListener('change', () => {
+appSettings.notifications?.addEventListener('change', () => {
     updateNotifications();
-    triggerHaptic(10);
+    triggerHaptic(12);
 });
 
-/**
- * INITIALIZE - Ngarkimi i preferencave kur hapet faqja
- * Ky bllok kodi ekzekutohet sapo vizitori hyn në aplikacion
- */
+// --- INITIALIZE (NGARKIMI I PREFERENCAVE) ---
 window.addEventListener('DOMContentLoaded', () => {
-    // 1. Ngarko Temën (Default është 'dark' nese nuk ka të dhëna)
+    // Ngarko Temën
     const savedTheme = localStorage.getItem('theme') || 'dark';
-    if (savedTheme === 'light') {
-        appSettings.darkMode.checked = false;
-        document.documentElement.classList.remove('dark');
-    } else {
-        appSettings.darkMode.checked = true;
-        document.documentElement.classList.add('dark');
+    const isDark = savedTheme === 'dark';
+    if (appSettings.darkMode) {
+        appSettings.darkMode.checked = isDark;
+        updateDarkMode();
     }
 
-    // 2. Ngarko statusin e Vibrimit (Default: ON)
+    // Ngarko Haptic (Default: On)
     const savedHaptic = localStorage.getItem('haptic');
-    appSettings.haptic.checked = (savedHaptic === null) ? true : (savedHaptic === 'true');
+    if (appSettings.haptic) {
+        appSettings.haptic.checked = (savedHaptic === null) ? true : (savedHaptic === 'true');
+    }
 
-    // 3. Ngarko statusin e Njoftimeve (Default: OFF)
+    // Ngarko Njoftimet (Default: Off)
     const savedNotif = localStorage.getItem('notifications');
-    appSettings.notifications.checked = (savedNotif === 'true');
-
-    // Inicializo ikonat dhe statusin live
-    lucide.createIcons();
-    setInterval(updateLiveStatus, 1000); // Përditëso orarin çdo sekondë
+    if (appSettings.notifications) {
+        appSettings.notifications.checked = (savedNotif === 'true');
+    }
 });
-
-// --- MODAL CONTROL (Hapja/Mbyllja me Animacion) ---
-function toggleSettings() {
-    const modal = document.getElementById('settings-modal');
-    const content = document.getElementById('settings-content');
+        function clearCache() {
+    triggerHaptic([40, 60, 40]); // Vibrim paralajmërues (Triple Pulse)
     
-    triggerHaptic(8); // Feedback i vogël mekanik
-
-    if (modal.classList.contains('hidden')) {
-        modal.classList.remove('hidden');
-        // Përdorim requestAnimationFrame për animacion të lëmuar
-        requestAnimationFrame(() => {
-            content.classList.remove('translate-y-full');
-        });
-    } else {
-        content.classList.add('translate-y-full');
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 300);
+    const confirmReset = confirm("A jeni të sigurt? Kjo do të fshijë preferencat tuaja dhe do të rifreskojë aplikacionin.");
+    
+    if (confirmReset) {
+        // Fshijmë vetëm çelësat tanë për të mos dëmtuar të dhëna tjera nese ka
+        localStorage.removeItem('theme');
+        localStorage.removeItem('haptic');
+        localStorage.removeItem('notifications');
+        
+        // Ose për pastrim total: localStorage.clear();
+        
+        document.body.style.opacity = '0'; // Efekt zbehjeje gjatë rifreskimit
+        setTimeout(() => location.reload(), 300);
     }
 }
-
-// --- MAINTENANCE (Pastro Cache dhe Refresh) ---
-function clearCache() {
-    // Pulse vibrim paralajmërues
-    if (window.navigator.vibrate) window.navigator.vibrate([30, 50, 30]);
-    
-    if (confirm("Kujdes! Të gjitha preferencat tuaja do të fshihen. A dëshironi të vazhdoni?")) {
-        localStorage.clear();
-        location.reload();
-    }
-}
-
 
 
 
