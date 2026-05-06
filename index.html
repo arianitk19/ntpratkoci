@@ -561,14 +561,18 @@
 
 
 
-   // --- CONFIGURIMI I SETTINGS ---
+  // --- CONFIGURIMI I SETTINGS (Logjika Mekanike) ---
 const appSettings = {
+    // Kapim elementet direkt nga DOM përmes ID-ve
     darkMode: document.getElementById('toggle-dark-mode'),
     haptic: document.getElementById('toggle-haptic'),
     notifications: document.getElementById('toggle-notifications')
 };
 
-// 1. Dark Mode Ultra - Ndryshon pamjen live
+/**
+ * 1. Dark Mode Ultra - Ndryshon klasën në HTML live
+ * Ky funksion kontrollon nëse faqja duhet të jetë 'dark' apo 'light'
+ */
 function updateDarkMode() {
     if (appSettings.darkMode.checked) {
         document.documentElement.classList.add('dark');
@@ -579,7 +583,10 @@ function updateDarkMode() {
     }
 }
 
-// 2. Haptic Feedback - Vibrim gjatë ndërrimit
+/**
+ * 2. Haptic Feedback - Mekanizmi i vibrimit
+ * Lëshon një impuls fizik në telefon gjatë ndërrimit të opsioneve
+ */
 function triggerHaptic(force = 15) {
     if (appSettings.haptic.checked && window.navigator && window.navigator.vibrate) {
         window.navigator.vibrate(force);
@@ -587,23 +594,26 @@ function triggerHaptic(force = 15) {
     localStorage.setItem('haptic', appSettings.haptic.checked);
 }
 
-// 3. Notifications - Logjika e njoftimeve
+/**
+ * 3. Notifications - Ruajtja e preferencës për njoftimet
+ */
 function updateNotifications() {
     localStorage.setItem('notifications', appSettings.notifications.checked);
     if (appSettings.notifications.checked) {
-        // Këtu mund të shtohet Notification.requestPermission() në të ardhmen
-        console.log("Njoftimet Live u aktivizuan.");
+        console.log("Sistemi: Njoftimet Live u aktivizuan.");
     }
 }
 
-// --- EVENT LISTENERS (LIVE UPDATE) ---
+// --- EVENT LISTENERS (Lidhja Mekanike e Butonave) ---
+// Këto bëjnë që ndryshimi të ndodhë "LIVE" sapo shtypet butoni
+
 appSettings.darkMode.addEventListener('change', () => {
     updateDarkMode();
-    triggerHaptic(10);
+    triggerHaptic(10); // Vibrim i lehtë
 });
 
 appSettings.haptic.addEventListener('change', () => {
-    triggerHaptic(20);
+    triggerHaptic(25); // Vibrim pak më i fortë për feedback
 });
 
 appSettings.notifications.addEventListener('change', () => {
@@ -611,10 +621,13 @@ appSettings.notifications.addEventListener('change', () => {
     triggerHaptic(10);
 });
 
-// --- INITIALIZE (NGARKIMI I PREFERENCAVE) ---
+/**
+ * INITIALIZE - Ngarkimi i preferencave kur hapet faqja
+ * Ky bllok kodi ekzekutohet sapo vizitori hyn në aplikacion
+ */
 window.addEventListener('DOMContentLoaded', () => {
-    // Ngarko Temën
-    const savedTheme = localStorage.getItem('theme') || 'dark'; // Default dark
+    // 1. Ngarko Temën (Default është 'dark' nese nuk ka të dhëna)
+    const savedTheme = localStorage.getItem('theme') || 'dark';
     if (savedTheme === 'light') {
         appSettings.darkMode.checked = false;
         document.documentElement.classList.remove('dark');
@@ -623,24 +636,29 @@ window.addEventListener('DOMContentLoaded', () => {
         document.documentElement.classList.add('dark');
     }
 
-    // Ngarko Haptic
+    // 2. Ngarko statusin e Vibrimit (Default: ON)
     const savedHaptic = localStorage.getItem('haptic');
-    appSettings.haptic.checked = savedHaptic === null ? true : savedHaptic === 'true';
+    appSettings.haptic.checked = (savedHaptic === null) ? true : (savedHaptic === 'true');
 
-    // Ngarko Notifications
+    // 3. Ngarko statusin e Njoftimeve (Default: OFF)
     const savedNotif = localStorage.getItem('notifications');
-    appSettings.notifications.checked = savedNotif === 'true';
+    appSettings.notifications.checked = (savedNotif === 'true');
+
+    // Inicializo ikonat dhe statusin live
+    lucide.createIcons();
+    setInterval(updateLiveStatus, 1000); // Përditëso orarin çdo sekondë
 });
 
-// --- MODAL CONTROL (OPEN/CLOSE) ---
+// --- MODAL CONTROL (Hapja/Mbyllja me Animacion) ---
 function toggleSettings() {
     const modal = document.getElementById('settings-modal');
     const content = document.getElementById('settings-content');
     
-    triggerHaptic(10);
+    triggerHaptic(8); // Feedback i vogël mekanik
 
     if (modal.classList.contains('hidden')) {
         modal.classList.remove('hidden');
+        // Përdorim requestAnimationFrame për animacion të lëmuar
         requestAnimationFrame(() => {
             content.classList.remove('translate-y-full');
         });
@@ -652,49 +670,16 @@ function toggleSettings() {
     }
 }
 
-// --- MAINTENANCE (PASTRIMI I CACHE) ---
+// --- MAINTENANCE (Pastro Cache dhe Refresh) ---
 function clearCache() {
-    // Vibrim paralajmërues (Triple Pulse)
-    if (window.navigator && window.navigator.vibrate) {
-        window.navigator.vibrate([30, 50, 30, 50, 30]);
-    }
+    // Pulse vibrim paralajmërues
+    if (window.navigator.vibrate) window.navigator.vibrate([30, 50, 30]);
     
-    if (confirm("A jeni të sigurt? Të gjitha preferencat tuaja do të fshihen dhe faqja do të rifreskohet.")) {
+    if (confirm("Kujdes! Të gjitha preferencat tuaja do të fshihen. A dëshironi të vazhdoni?")) {
         localStorage.clear();
         location.reload();
     }
 }
-        function openProduct(item) {
-            const modal = document.getElementById('product-modal');
-            const box = document.getElementById('modal-box');
-            const imgContainer = document.getElementById('modal-img-container');
-            
-            document.getElementById('modal-title').innerText = item.name;
-            document.getElementById('modal-price').innerText = item.price;
-            
-            imgContainer.innerHTML = `<img src="${item.img || ''}" class="w-full h-full object-cover" onerror="this.style.display='none'">`;
-            
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                box.classList.remove('scale-90', 'opacity-0');
-            }, 10);
-        }
-
-        function closeProduct() {
-            const modal = document.getElementById('product-modal');
-            const box = document.getElementById('modal-box');
-            box.classList.add('scale-90', 'opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
-
-        // Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('service-worker.js')
-                    .then(reg => console.log('NTP Ratkoci App: Aktiv'))
-                    .catch(err => console.log('PWA Error:', err));
-            });
-        }
 
 
 
