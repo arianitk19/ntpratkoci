@@ -350,6 +350,17 @@
             </button>
         </div>
     </div>
+<button onclick="switchView('view-ai', this)" class="nav-item flex flex-col items-center gap-1 text-gray-500" id="btn-ai">
+    <div class="relative">
+        <i data-lucide="bot" class="w-6 h-6"></i>
+        <span class="absolute -top-1 -right-1 flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+        </span>
+    </div>
+    <span class="text-[9px] font-black uppercase tracking-tighter">Asistenti</span>
+</button>
+    
 </section>
             </div>
         </div>
@@ -1020,55 +1031,6 @@ function renderTrendingSection() {
 
 
 
-
-
-
-
-
-
-// Funksioni kryesor për ndërrimin e sektorëve
-function switchView(viewId, element) {
-    // 1. Fshih të gjithë sektorët (views)
-    document.querySelectorAll('.view').forEach(view => {
-        view.classList.add('hidden');
-        view.classList.remove('active', 'opacity-100');
-        view.style.display = 'none'; // Siguri ekstra
-    });
-
-    // 2. Shfaq sektorin e kërkuar
-    const targetView = document.getElementById(viewId);
-    if (targetView) {
-        targetView.classList.remove('hidden');
-        targetView.style.display = 'block';
-        setTimeout(() => {
-            targetView.classList.add('active', 'opacity-100');
-        }, 10);
-    }
-
-    // 3. Menaxho stilin e butonave në navigim
-    document.querySelectorAll('.nav-item').forEach(btn => {
-        btn.classList.remove('text-primary');
-        btn.classList.add('text-gray-500');
-    });
-    
-    if(element) {
-        element.classList.add('text-primary');
-        element.classList.remove('text-gray-500');
-    }
-
-    // 4. Feedback haptic dhe refresh ikonat
-    if (typeof triggerHaptic === "function") triggerHaptic(10);
-    if (window.lucide) lucide.createIcons();
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// Funksioni për pyetjet automatike nga butonat e shpejtë
-function autoQuery(text) {
-    const input = document.getElementById('ai-input');
-    input.value = text;
-    sendMessage();
-}
 
 
         
