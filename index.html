@@ -818,6 +818,67 @@ if ('serviceWorker' in navigator) {
 
 
 
+        // --- MODULI I TRANZICIONIT TË HYRJES ---
+function initIntro() {
+    const tl = gsap.timeline({ 
+        onComplete: () => {
+            // Hiq ekranin intro
+            gsap.to("#intro-screen", { 
+                opacity: 0, 
+                duration: 0.8, 
+                ease: "power2.inOut", 
+                onComplete: () => {
+                    document.getElementById('intro-screen').style.pointerEvents = 'none';
+                    // Pas intros, nisim shfaqjen e produkteve më të shitura
+                    revealBestSellers();
+                }
+            });
+        }
+    });
+
+    tl.to("#intro-logo", { opacity: 1, scale: 1, duration: 1.2, ease: "elastic.out(1, 0.6)" })
+      .to("#intro-text", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.6")
+      .to("#intro-sub", { opacity: 1, duration: 0.8 }, "-=0.4");
+}
+
+// Funksioni që bën tranzicionin e produkteve "Më të Shiturat"
+function revealBestSellers() {
+    const container = document.getElementById('best-sellers-grid');
+    if (!container) return;
+
+    // Supozojmë se kemi një listë produktesh 'bestSellers'
+    const bestSellers = data.pijet.items.slice(0, 4); // Marrim 4 të parat si shembull
+
+    container.innerHTML = ''; // Pastrojmë kontejnerin
+
+    bestSellers.forEach(item => {
+        const card = document.createElement('div');
+        card.className = "product-card glass p-3 rounded-[2.2rem] opacity-0 translate-y-8"; // Nisja: e padukshme dhe poshtë
+        card.onclick = () => openProduct(item);
+        card.innerHTML = `
+            <div class="relative w-full aspect-square bg-white/5 rounded-[1.8rem] mb-3 overflow-hidden">
+                <div class="absolute top-2 left-2 bg-primary/90 text-dark text-[8px] font-black px-2 py-1 rounded-full uppercase z-10">Best Seller</div>
+                <img src="${item.img || ''}" class="w-full h-full object-cover">
+            </div>
+            <div class="px-1">
+                <h4 class="font-bold text-[11px] truncate text-white/90">${item.name}</h4>
+                <p class="text-primary font-black text-xs mt-1">${item.price}</p>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+
+    // Animo produktet një nga një (Stagger Effect)
+    gsap.to(".product-card", {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.15, // Vonesa mes secilit produkt
+        ease: "power4.out"
+    });
+}
+
+
     </script>
 </body>
 </html>
