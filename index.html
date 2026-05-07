@@ -118,6 +118,60 @@
         <p id="intro-sub" class="text-gray-500 text-sm mt-2 opacity-0">Cilësi dhe Besim në çdo blerje</p>
     </div>
 
+
+
+<button onclick="toggleAI()" id="ai-fab" class="fixed bottom-24 right-6 z-[1000] bg-primary text-dark h-16 w-16 rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-all border-4 border-white/10">
+    <i data-lucide="mic" class="w-8 h-8"></i>
+    <span class="absolute inset-0 rounded-full border-2 border-primary animate-ping opacity-20"></span>
+</button>
+
+<div id="ai-interface" class="fixed inset-0 z-[1001] hidden flex items-end justify-center transition-all duration-500">
+    <div class="absolute inset-0 bg-dark/90 backdrop-blur-2xl" onclick="toggleAI()"></div>
+    
+    <div id="ai-panel" class="relative w-full max-w-2xl bg-dark border-t border-white/10 rounded-t-[3rem] h-[90vh] flex flex-col transform translate-y-full transition-transform duration-500 overflow-hidden">
+        
+        <div id="ai-loader" class="h-1 w-0 bg-primary transition-all duration-300"></div>
+
+        <div class="p-6 flex justify-between items-center bg-white/5">
+            <div>
+                <h2 class="text-2xl font-black text-white">RATKOCI <span class="text-primary font-light text-lg">AI v4.0</span></h2>
+                <div class="flex items-center gap-2 mt-1">
+                    <select id="ai-lang" class="bg-transparent text-[10px] text-primary font-bold border border-primary/20 rounded px-2 py-1 outline-none">
+                        <option value="sq-AL">SHQIP (Përzgjedhur)</option>
+                        <option value="en-US">ENGLISH</option>
+                    </select>
+                </div>
+            </div>
+            <button onclick="toggleAI()" class="h-10 w-10 glass rounded-full flex items-center justify-center"><i data-lucide="x"></i></button>
+        </div>
+
+        <div id="ai-content" class="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
+            <div id="ai-onboarding" class="space-y-4">
+                <div class="glass p-6 rounded-[2.5rem] border-l-4 border-primary">
+                    <h3 class="font-black text-white mb-2">Si të komunikoni me mua?</h3>
+                    <div class="space-y-3 text-xs text-white/60 font-medium">
+                        <p class="flex items-center gap-3"><i data-lucide="message-square" class="w-4 text-primary"></i> Shkruani pyetjen në fushën më poshtë.</p>
+                        <p class="flex items-center gap-3"><i data-lucide="volume-2" class="w-4 text-primary"></i> Unë do t'ju përgjigjem me zë të qartë.</p>
+                        <p class="flex items-center gap-3"><i data-lucide="zap" class="w-4 text-primary"></i> Provoni: "Më tregoni ofertat e fundit"</p>
+                    </div>
+                </div>
+            </div>
+            <div id="ai-messages" class="space-y-4"></div>
+        </div>
+
+        <div class="p-6 bg-white/5 border-t border-white/5">
+            <div class="glass rounded-[2.5rem] p-2 flex items-center gap-2 border-white/10 shadow-2xl">
+                <input id="ai-query" type="text" placeholder="Më pyet diçka..." class="bg-transparent flex-1 px-5 py-3 text-sm text-white outline-none">
+                <button onclick="processAI()" class="bg-primary text-dark h-12 w-12 rounded-full flex items-center justify-center shadow-lg active:scale-95">
+                    <i data-lucide="arrow-up" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+    
     <header class="fixed top-0 w-full z-40 bg-dark/60 backdrop-blur-xl border-b border-white/5 px-6 py-5 flex justify-between items-center">
         <div class="flex flex-col">
             <span class="font-black text-xl tracking-tighter uppercase leading-none">NTP <span class="text-primary">Ratkoci</span></span>
@@ -313,55 +367,6 @@
         </div>
 </section>
 
-<section id="view-ai" class="view hidden opacity-0 transition-all duration-500 px-4 pt-6 pb-24">
-    <div class="mb-6 flex justify-between items-end">
-        <div>
-            <h2 class="text-2xl font-black text-white tracking-tighter">Ratkoci <span class="text-primary">AI</span></h2>
-            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em]">Inteligjenca Virtuale</p>
-        </div>
-        <div class="flex gap-1 mb-1">
-            <span class="w-1 h-1 rounded-full bg-primary animate-pulse"></span>
-            <span class="w-1 h-1 rounded-full bg-primary animate-pulse" style="animation-delay: 0.2s"></span>
-        </div>
-    </div>
-
-    <div class="flex gap-2 overflow-x-auto no-scrollbar mb-6 pb-2">
-        <button onclick="autoQuery('A jeni hapur?')" class="glass shrink-0 px-4 py-2 rounded-full text-[10px] font-bold text-white/80 border-white/5 active:scale-95 transition-transform">🕒 Orari</button>
-        <button onclick="autoQuery('Ku ndodheni?')" class="glass shrink-0 px-4 py-2 rounded-full text-[10px] font-bold text-white/80 border-white/5 active:scale-95 transition-transform">📍 Lokacioni</button>
-        <button onclick="autoQuery('Pijet më të mira')" class="glass shrink-0 px-4 py-2 rounded-full text-[10px] font-bold text-white/80 border-white/5 active:scale-95 transition-transform">🥤 Pijet</button>
-    </div>
-
-    <div id="ai-chat-box" class="h-[50vh] overflow-y-auto no-scrollbar mb-4 px-2 space-y-4 flex flex-col">
-        <div class="flex justify-start">
-            <div class="max-w-[85%] glass border border-white/5 p-4 rounded-[1.8rem] rounded-bl-none">
-                <div class="text-[9px] text-primary font-black mb-1 uppercase tracking-widest">Ratkoci AI</div>
-                <p class="text-white/90 text-sm">Përshëndetje! Si mund t'ju ndihmoj sot në NTP Ratkoci?</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="relative mt-auto">
-        <div class="glass rounded-[2.2rem] p-2 flex items-center gap-2 border-white/10 shadow-2xl">
-            <input id="ai-input" type="text" placeholder="Pyet diçka..." 
-                   class="bg-transparent flex-1 px-5 py-3 text-sm text-white outline-none placeholder:text-white/20"
-                   onkeypress="if(event.key === 'Enter') sendMessage()">
-            <button onclick="sendMessage()" class="bg-primary text-dark h-11 w-11 rounded-full flex items-center justify-center active:scale-90 transition-all">
-                <i data-lucide="send" class="w-5 h-5"></i>
-            </button>
-        </div>
-    </div>
-<button onclick="switchView('view-ai', this)" class="nav-item flex flex-col items-center gap-1 text-gray-500" id="btn-ai">
-    <div class="relative">
-        <i data-lucide="bot" class="w-6 h-6"></i>
-        <span class="absolute -top-1 -right-1 flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-        </span>
-    </div>
-    <span class="text-[9px] font-black uppercase tracking-tighter">Asistenti</span>
-</button>
-    
-</section>
             </div>
         </div>
 
@@ -1034,109 +1039,106 @@ function renderTrendingSection() {
 
 
         
-// Funksion ndihmës për Quick Actions
-function autoQuery(text) {
-    document.getElementById('ai-input').value = text;
-    sendMessage();
-}
-
 const RatkociAI = {
-    // Knowledge Base me logjikë dinamike
-    getDynamicResponse: function(query) {
-        const input = query.toLowerCase();
-        const hour = new Date().getHours();
+    settings: {
+        voiceActive: true,
+        typingSpeed: 30
+    },
+
+    // Motorri i Inteligjencës (Knowledge Base)
+    brain: {
+        "sq-AL": {
+            "përshëndetje": "Përshëndetje! Jam asistenti inteligjent i N T P Ratkocit. Si mund t'ju shërbej sot?",
+            "orari": "Ne punojmë me përkushtim çdo ditë nga ora tetë e mëngjesit deri në orën njëzet e një të mbrëmjes.",
+            "lokacioni": "N T P Ratkoci ndodhet në qendër të fshatit Ratkoc, Rahovec. Jeni mirëseardhur!",
+            "ofertat": "Këtë javë kemi zbritje deri në njëzet përqind në produktet e pijeve dhe ëmbëlsirave.",
+            "default": "Kjo është një pyetje interesante. Më lejoni t'ju ndihmoj duke ju treguar orarin tonë ose produktet më të shitura."
+        },
+        "en-US": {
+            "hello": "Hello! I am your Ratkoci virtual assistant. How can I help you today?",
+            "hours": "We are open every day from 8 AM to 9 PM.",
+            "location": "We are located in Ratkoc village, Rahovec municipality.",
+            "default": "I'm not sure about that, but I can tell you about our opening hours or location."
+        }
+    },
+
+    // Funksioni i Zërit (Speaks in Clean Albanian)
+    speak: function(text, lang) {
+        if (!this.settings.voiceActive) return;
         
-        // 1. Logjika e Orarit (Dinamike)
-        if (input.includes("orari") || input.includes("hapur")) {
-            if (hour >= 8 && hour < 21) {
-                return `Aktualisht jemi **HAPUR**! Do të jemi në shërbimin tuaj deri në orën 21:00. Na vizitoni!`;
-            } else {
-                return `Për momentin jemi të mbyllur. Hapemi në orën 08:00. Mund të na vizitoni nesër!`;
-            }
-        }
+        // Ndalo çdo zë tjetër që po flet
+        window.speechSynthesis.cancel();
 
-        // 2. Lokacioni
-        if (input.includes("ku") || input.includes("lokacion") || input.includes("vendi")) {
-            return `NTP Ratkoci ndodhet në Ratkoc, Rahovec. Nëse jeni në aplikacion, klikoni butonin **'Lokacioni'** në meny për navigim direkt me GPS!`;
-        }
-
-        // 3. Ofertat
-        if (input.includes("oferta") || input.includes("trending") || input.includes("lirë")) {
-            return `Kemi oferta fantastike këtë javë! Shiko seksionin **'Trending'** në ballinë për produktet me çmimet më të mira.`;
-        }
-
-        // 4. Pijet/Ushqimi
-        if (input.includes("pije") || input.includes("lëng")) return "Kemi një përzgjedhje elitare të pijeve: Coca-Cola, lëngje natyrale Jaffa, dhe pijet energjike më të kërkuara.";
-        if (input.includes("snacks") || input.includes("chips")) return "Nga chipsat klasikë e deri te snacks më të reja, i gjeni të gjitha në kategorinë 'Snacks'.";
-
-        // 5. Mirëseardhja
-        if (input.includes("tung") || input.includes("përshëndetje") || input.includes("ckemi")) {
-            return `Përshëndetje! Jam Ratkoci AI. Si mund t'ju ndihmoj me blerjet tuaja sot?`;
-        }
-
-        return "Kjo është një pyetje interesante! Për këtë mund të informoheni më detajisht duke na vizituar direkt në market ose duke pyetur për orarin dhe lokacionin tonë.";
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        
+        window.speechSynthesis.speak(utterance);
     }
 };
 
-function sendMessage() {
-    const input = document.getElementById('ai-input');
-    const chatBox = document.getElementById('ai-chat-box');
-    const visualizer = document.getElementById('ai-visualizer');
-    const query = input.value.trim();
+function toggleAI() {
+    const ui = document.getElementById('ai-interface');
+    const panel = document.getElementById('ai-panel');
+    const isHidden = ui.classList.contains('hidden');
 
-    if (query === "") return;
+    if (isHidden) {
+        ui.classList.remove('hidden');
+        setTimeout(() => panel.classList.remove('translate-y-full'), 10);
+    } else {
+        panel.classList.add('translate-y-full');
+        setTimeout(() => ui.classList.add('hidden'), 500);
+        window.speechSynthesis.cancel(); // Ndalo zërin kur mbyllet
+    }
+}
 
-    // UI: Shto mesazhin e përdoruesit
-    chatBox.innerHTML += `
-        <div class="flex justify-end w-full mb-2">
-            <div class="max-w-[80%] bg-primary text-dark font-bold rounded-[1.5rem] rounded-br-none px-5 py-3 text-xs shadow-xl">
-                ${query}
-            </div>
-        </div>
-    `;
+async function processAI() {
+    const input = document.getElementById('ai-query');
+    const box = document.getElementById('ai-messages');
+    const lang = document.getElementById('ai-lang').value;
+    const loader = document.getElementById('ai-loader');
+    const query = input.value.trim().toLowerCase();
 
+    if (!query) return;
+
+    // Fshih onboarding pas pyetjes së parë
+    document.getElementById('ai-onboarding').style.display = 'none';
+
+    // 1. Shfaq mesazhin e klientit
+    box.innerHTML += `<div class="flex justify-end mb-4"><div class="bg-primary text-dark font-black rounded-2xl rounded-br-none px-5 py-3 text-sm">${query}</div></div>`;
     input.value = "";
-    triggerHaptic(10);
-    chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
-
-    // Aktivo Visualizer (Glow Effect)
-    visualizer.style.opacity = "1";
-
-    // Simulimi i "mendimit"
-    const typingId = "typing-" + Date.now();
-    chatBox.innerHTML += `
-        <div id="${typingId}" class="flex justify-start w-full mb-2">
-            <div class="glass px-5 py-3 rounded-[1.5rem] rounded-bl-none flex gap-1 items-center">
-                <span class="ai-typing-dot"></span>
-                <span class="ai-typing-dot" style="animation-delay: 0.2s"></span>
-                <span class="ai-typing-dot" style="animation-delay: 0.4s"></span>
-            </div>
-        </div>
-    `;
-
+    
+    // 2. Simulimi i "Mendimit"
+    loader.style.width = "60%";
+    
     setTimeout(() => {
-        document.getElementById(typingId).remove();
-        visualizer.style.opacity = "0";
+        loader.style.width = "100%";
         
-        const response = RatkociAI.getDynamicResponse(query);
-        
-        chatBox.innerHTML += `
-            <div class="flex justify-start w-full mb-2 animate-in fade-in slide-in-from-left-4">
-                <div class="max-w-[85%] glass border border-white/5 p-4 rounded-[1.8rem] rounded-bl-none shadow-2xl">
-                    <div class="text-[9px] text-primary font-black mb-2 uppercase tracking-widest flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span> Ratkoci AI
-                    </div>
-                    <div class="text-white/90 text-sm leading-relaxed font-medium">
-                        ${response}
-                    </div>
+        // 3. Përzgjedhja e përgjigjes nga algoritmi
+        let response = RatkociAI.brain[lang].default;
+        for (let key in RatkociAI.brain[lang]) {
+            if (query.includes(key)) {
+                response = RatkociAI.brain[lang][key];
+                break;
+            }
+        }
+
+        // 4. Shfaqja e përgjigjes me efekt Typing
+        box.innerHTML += `
+            <div class="flex justify-start mb-4">
+                <div class="glass border border-white/10 p-5 rounded-2xl rounded-bl-none max-w-[90%]">
+                    <p class="text-white text-sm leading-relaxed">${response}</p>
                 </div>
             </div>
         `;
-        
-        chatBox.scrollTo({ top: chatBox.scrollHeight, behavior: 'smooth' });
-        triggerHaptic(15);
-        lucide.createIcons(); // Refresh ikonat nëse ka
-    }, 1200);
+
+        // 5. EKZEKUTIMI I ZËRIT
+        RatkociAI.speak(response, lang);
+
+        box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
+        setTimeout(() => loader.style.width = "0%", 400);
+    }, 800);
 }
     </script>
 </body>
