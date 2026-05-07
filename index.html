@@ -199,16 +199,7 @@
         <div id="view-hyrja" class="view active px-6">
 
 
-<div id="view-home" class="view active px-4 pt-6">
-    <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-black tracking-tight">Më të Shiturat <span class="text-primary">.</span></h2>
-        <div class="h-1 w-12 bg-primary rounded-full"></div>
-    </div>
 
-    <div id="best-sellers-grid" class="product-grid mb-10">
-        </div>
-    
-    </div>
 
             
             <div class="rounded-[2.8rem] overflow-hidden relative h-56 mb-8 group glass border-none">
@@ -245,7 +236,65 @@
         Procesim i menjëhershëm në arkë dhe saktësi maksimale.
     </p>
 </div>
-        
+
+                <style>
+                    /* Hero Horizontal Scroll - Premium Style */
+.trending-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 10px 4px 20px 4px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.trending-card {
+    flex: 0 0 280px; /* Madhësi serioze dhe profesionale */
+    scroll-snap-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.trending-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(2, 6, 23, 0.8), transparent);
+    z-index: 1;
+}
+
+.trending-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(16, 185, 129, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10b981;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 9px;
+    font-weight: 900;
+    text-transform: uppercase;
+    z-index: 2;
+    letter-spacing: 1px;
+}
+                </style>
+                <section class="mt-4 mb-8">
+    <div class="flex items-center justify-between px-4 mb-4">
+        <div>
+            <h2 class="text-xl font-black text-white tracking-tight">Më të kërkuarat</h2>
+            <p class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.2em]">NTP Ratkoci</p>
+        </div>
+        <div class="flex gap-1">
+            <div class="h-1.5 w-1.5 rounded-full bg-primary"></div>
+            <div class="h-1.5 w-4 rounded-full bg-primary/30"></div>
+        </div>
+    </div>
+
+    <div id="trending-scroll" class="trending-container no-scrollbar px-4">
+        </div>
+</section>
             </div>
         </div>
 
@@ -841,43 +890,75 @@ function initIntro() {
       .to("#intro-sub", { opacity: 1, duration: 0.8 }, "-=0.4");
 }
 
-// Funksioni që bën tranzicionin e produkteve "Më të Shiturat"
-function revealBestSellers() {
-    const container = document.getElementById('best-sellers-grid');
+
+        // --- TRENDING ENGINE (Advanced Transition) ---
+
+function initIntro() {
+    const tl = gsap.timeline({ 
+        onComplete: () => {
+            gsap.to("#intro-screen", { 
+                opacity: 0, 
+                duration: 1, 
+                ease: "expo.inOut", 
+                onComplete: () => {
+                    document.getElementById('intro-screen').style.display = 'none';
+                    // Startojmë tranzicionin e shiritit pas intros
+                    renderTrendingSection();
+                }
+            });
+        }
+    });
+
+    tl.to("#intro-logo", { opacity: 1, scale: 1.1, duration: 1, ease: "back.out(1.7)" })
+      .to("#intro-text", { opacity: 1, y: 0, duration: 0.8 }, "-=0.4");
+}
+
+function renderTrendingSection() {
+    const container = document.getElementById('trending-scroll');
     if (!container) return;
 
-    // Supozojmë se kemi një listë produktesh 'bestSellers'
-    const bestSellers = data.pijet.items.slice(0, 4); // Marrim 4 të parat si shembull
+    // Filtrojmë produktet më të kërkuara (psh. 6 produktet e para)
+    const trendingItems = [
+        ...data.pijet.items.slice(0, 2),
+        ...data.snacks.items.slice(0, 2),
+        ...data.sweets.items.slice(0, 2)
+    ];
 
-    container.innerHTML = ''; // Pastrojmë kontejnerin
+    container.innerHTML = '';
 
-    bestSellers.forEach(item => {
+    trendingItems.forEach((item, index) => {
         const card = document.createElement('div');
-        card.className = "product-card glass p-3 rounded-[2.2rem] opacity-0 translate-y-8"; // Nisja: e padukshme dhe poshtë
-        card.onclick = () => openProduct(item);
+        card.className = "trending-card glass rounded-[2.5rem] h-48 opacity-0";
+        card.style.transform = "translateX(50px)"; // Startojnë nga e djathta
+        
+        card.onclick = () => {
+            triggerHaptic(15);
+            openProduct(item);
+        };
+
         card.innerHTML = `
-            <div class="relative w-full aspect-square bg-white/5 rounded-[1.8rem] mb-3 overflow-hidden">
-                <div class="absolute top-2 left-2 bg-primary/90 text-dark text-[8px] font-black px-2 py-1 rounded-full uppercase z-10">Best Seller</div>
-                <img src="${item.img || ''}" class="w-full h-full object-cover">
-            </div>
-            <div class="px-1">
-                <h4 class="font-bold text-[11px] truncate text-white/90">${item.name}</h4>
-                <p class="text-primary font-black text-xs mt-1">${item.price}</p>
+            <div class="trending-badge">Top i kërkuar</div>
+            <img src="${item.img}" class="absolute inset-0 w-full h-full object-cover opacity-60">
+            <div class="absolute bottom-6 left-6 z-10">
+                <p class="text-[10px] text-primary font-black uppercase mb-1 tracking-widest">${item.cat || 'Premium'}</p>
+                <h3 class="text-lg font-bold text-white leading-tight">${item.name}</h3>
+                <p class="text-white/60 text-sm font-medium mt-1">${item.price}</p>
             </div>
         `;
         container.appendChild(card);
     });
 
-    // Animo produktet një nga një (Stagger Effect)
-    gsap.to(".product-card", {
+    // --- TRANZICIONI I AVANCUAR ---
+    // Produktet "rrëshqasin" në shirit me efekt shkallëzues
+    gsap.to(".trending-card", {
         opacity: 1,
-        y: 0,
-        duration: 0.8,
-        stagger: 0.15, // Vonesa mes secilit produkt
-        ease: "power4.out"
+        x: 0,
+        duration: 1.2,
+        stagger: 0.15,
+        ease: "power4.out",
+        onStart: () => triggerHaptic(5)
     });
 }
-
 
     </script>
 </body>
