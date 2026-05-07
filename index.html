@@ -467,306 +467,260 @@
             }
         };
 
-        // --- APP ENGINE ---
-        document.addEventListener('DOMContentLoaded', () => {
-            initIntro();
-            lucide.createIcons();
-            renderAllSections();
-        });
+      /**
+ * NTP RATKOCI - CORE APP ENGINE
+ * Integrimi i plotë mekanik: Intro, Navigim, Produkte, Settings
+ */
 
-        function initIntro() {
-            const tl = gsap.timeline({ onComplete: () => {
-                gsap.to("#intro-screen", { opacity: 0, duration: 1, ease: "power4.out", pointerEvents: 'none' });
-            }});
-            tl.to("#intro-logo", { opacity: 1, scale: 1, duration: 1.2, ease: "elastic.out(1, 0.5)" })
-              .to("#intro-text", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.6")
-              .to("#intro-sub", { opacity: 1, duration: 0.8 }, "-=0.4");
-        }
-
-        function renderAllSections() {
-            ["pijet", "snacks", "sweets"].forEach(section => {
-                renderFilters(section);
-                renderItems(section, "Të gjitha");
-            });
-        }
-
-        function renderFilters(section) {
-            const container = document.getElementById(`filter-${section}`);
-            data[section].filters.forEach(f => {
-                const btn = document.createElement('button');
-                btn.className = `category-pill filter-btn-${section} px-6 py-3 rounded-2xl glass text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all ${f === "Të gjitha" ? 'bg-primary text-dark border-primary' : 'text-gray-400'}`;
-                btn.innerText = f;
-                btn.onclick = () => {
-                    document.querySelectorAll(`.filter-btn-${section}`).forEach(b => {
-                        b.classList.remove('bg-primary', 'text-dark', 'border-primary');
-                        b.classList.add('text-gray-400');
-                    });
-                    btn.classList.add('bg-primary', 'text-dark', 'border-primary');
-                    btn.classList.remove('text-gray-400');
-                    
-                    // Smooth re-render animation
-                    gsap.to(`#grid-${section}`, { opacity: 0, y: 10, duration: 0.2, onComplete: () => {
-                        renderItems(section, f);
-                        gsap.to(`#grid-${section}`, { opacity: 1, y: 0, duration: 0.3 });
-                    }});
-                };
-                container.appendChild(btn);
-            });
-        }
-
-        function renderItems(section, filter) {
-            const container = document.getElementById(`grid-${section}`);
-            container.innerHTML = '';
-            
-            const filteredItems = filter === "Të gjitha" 
-                ? data[section].items 
-                : data[section].items.filter(i => i.cat === filter);
-
-            filteredItems.forEach(item => {
-                const div = document.createElement('div');
-                div.className = "product-card glass p-4 rounded-[2.5rem] cursor-pointer border-white/5";
-                div.onclick = () => openProduct(item);
-                div.innerHTML = `
-                    <div class="w-full aspect-square bg-white/5 rounded-[1.8rem] mb-4 flex items-center justify-center overflow-hidden">
-                        <img src="${item.img || ''}" class="w-full h-full object-cover" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%23ffffff10%22/></svg>'">
-                    </div>
-                    <div class="px-2">
-                        <h4 class="font-bold text-[12px] truncate mb-1">${item.name}</h4>
-                        <p class="text-primary font-black text-sm tracking-tighter">${item.price}</p>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        // --- NAVIGATION ---
-        function navigate(viewId) {
-            const views = document.querySelectorAll('.view');
-            const targetView = document.getElementById(`view-${viewId}`);
-            
-            views.forEach(v => {
-                v.classList.remove('active');
-            });
-            
-            targetView.classList.add('active');
-            
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
-            document.getElementById(`btn-${viewId}`).classList.add('nav-active');
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // Re-trigger lucide for safety
-            lucide.createIcons();
-        }
-
-
-
-// --- CONFIGURIMI I SETTINGS (Logjika Mekanike) ---
-const appSettings = {
-    // Kapim elementet direkt nga DOM përmes ID-ve
-    darkMode: document.getElementById('toggle-dark-mode'),
-    haptic: document.getElementById('toggle-haptic'),
-    notifications: document.getElementById('toggle-notifications')
+// 1. GLOBAL STATE & CONFIG
+const app = {
+    settings: {
+        darkMode: document.getElementById('toggle-dark-mode'),
+        haptic: document.getElementById('toggle-haptic'),
+        notifications: document.getElementById('toggle-notifications')
+    },
+    store: {
+        lat: 42.4011,
+        lng: 20.4851,
+        openTime: 8.0,
+        closeTime: 21.0
+    }
 };
 
-/**
- * 1. Dark Mode Ultra - Ndryshon klasën në HTML live
- * Ky funksion kontrollon nëse faqja duhet të jetë 'dark' apo 'light'
- */
-function updateDarkMode() {
-    if (appSettings.darkMode.checked) {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-    } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-    }
-}
-
-/**
- * 2. Haptic Feedback - Mekanizmi i vibrimit
- * Lëshon një impuls fizik në telefon gjatë ndërrimit të opsioneve
- */
-function triggerHaptic(force = 15) {
-    if (appSettings.haptic.checked && window.navigator && window.navigator.vibrate) {
-        window.navigator.vibrate(force);
-    }
-    localStorage.setItem('haptic', appSettings.haptic.checked);
-}
-
-/**
- * 3. Notifications - Ruajtja e preferencës për njoftimet
- */
-function updateNotifications() {
-    localStorage.setItem('notifications', appSettings.notifications.checked);
-    if (appSettings.notifications.checked) {
-        console.log("Sistemi: Njoftimet Live u aktivizuan.");
-    }
-}
-
-// --- EVENT LISTENERS (Lidhja Mekanike e Butonave) ---
-// Këto bëjnë që ndryshimi të ndodhë "LIVE" sapo shtypet butoni
-
-appSettings.darkMode.addEventListener('change', () => {
-    updateDarkMode();
-    triggerHaptic(10); // Vibrim i lehtë
-});
-
-appSettings.haptic.addEventListener('change', () => {
-    triggerHaptic(25); // Vibrim pak më i fortë për feedback
-});
-
-appSettings.notifications.addEventListener('change', () => {
-    updateNotifications();
-    triggerHaptic(10);
-});
-
-/**
- * INITIALIZE - Ngarkimi i preferencave kur hapet faqja
- * Ky bllok kodi ekzekutohet sapo vizitori hyn në aplikacion
- */
-window.addEventListener('DOMContentLoaded', () => {
-    // 1. Ngarko Temën (Default është 'dark' nese nuk ka të dhëna)
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    if (savedTheme === 'light') {
-        appSettings.darkMode.checked = false;
-        document.documentElement.classList.remove('dark');
-    } else {
-        appSettings.darkMode.checked = true;
-        document.documentElement.classList.add('dark');
-    }
-
-    // 2. Ngarko statusin e Vibrimit (Default: ON)
-    const savedHaptic = localStorage.getItem('haptic');
-    appSettings.haptic.checked = (savedHaptic === null) ? true : (savedHaptic === 'true');
-
-    // 3. Ngarko statusin e Njoftimeve (Default: OFF)
-    const savedNotif = localStorage.getItem('notifications');
-    appSettings.notifications.checked = (savedNotif === 'true');
-
-    // Inicializo ikonat dhe statusin live
+// 2. INITIALIZATION (Kur ngarkohet DOM)
+document.addEventListener('DOMContentLoaded', () => {
+    // Rregullo gjendjen fillestare nga memorja
+    loadSavedPreferences();
+    
+    // Starto Intro Screen
+    initIntro();
+    
+    // Vizato elementet e marketit
+    renderAllSections();
+    
+    // Aktivizo ikonat dhe statusin live
     lucide.createIcons();
-    setInterval(updateLiveStatus, 1000); // Përditëso orarin çdo sekondë
+    setInterval(updateLiveStatus, 1000);
+    updateLiveStatus();
+    
+    // Regjistro event listeners për butona globalë
+    setupGlobalListeners();
 });
 
-// --- MODAL CONTROL (Hapja/Mbyllja me Animacion) ---
-function toggleSettings() {
-    const modal = document.getElementById('settings-modal');
-    const content = document.getElementById('settings-content');
-    
-    triggerHaptic(8); // Feedback i vogël mekanik
+// 3. INTRO ENGINE (GSAP)
+function initIntro() {
+    const tl = gsap.timeline({ 
+        onComplete: () => {
+            gsap.to("#intro-screen", { 
+                opacity: 0, 
+                duration: 0.8, 
+                ease: "power2.inOut", 
+                onComplete: () => document.getElementById('intro-screen').style.pointerEvents = 'none' 
+            });
+        }
+    });
 
-    if (modal.classList.contains('hidden')) {
-        modal.classList.remove('hidden');
-        // Përdorim requestAnimationFrame për animacion të lëmuar
-        requestAnimationFrame(() => {
-            content.classList.remove('translate-y-full');
-        });
-    } else {
-        content.classList.add('translate-y-full');
-        setTimeout(() => {
-            modal.classList.add('hidden');
-        }, 300);
+    tl.to("#intro-logo", { opacity: 1, scale: 1, duration: 1.2, ease: "elastic.out(1, 0.6)" })
+      .to("#intro-text", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.6")
+      .to("#intro-sub", { opacity: 1, duration: 0.8 }, "-=0.4");
+}
+
+// 4. MARKET ENGINE (Rendering & Filtering)
+function renderAllSections() {
+    const categories = ["pijet", "snacks", "sweets"];
+    categories.forEach(section => {
+        if (document.getElementById(`filter-${section}`)) {
+            renderFilters(section);
+            renderItems(section, "Të gjitha");
+        }
+    });
+}
+
+function renderFilters(section) {
+    const container = document.getElementById(`filter-${section}`);
+    if (!data[section]) return;
+
+    data[section].filters.forEach(f => {
+        const btn = document.createElement('button');
+        btn.className = `category-pill filter-btn-${section} px-6 py-3 rounded-2xl glass text-[10px] font-black uppercase tracking-widest transition-all ${f === "Të gjitha" ? 'bg-primary text-dark active-filter' : 'text-gray-400'}`;
+        btn.innerText = f;
+        
+        btn.onclick = () => {
+            triggerHaptic(5);
+            document.querySelectorAll(`.filter-btn-${section}`).forEach(b => {
+                b.classList.remove('bg-primary', 'text-dark', 'active-filter');
+                b.classList.add('text-gray-400');
+            });
+            btn.classList.add('bg-primary', 'text-dark', 'active-filter');
+            btn.classList.remove('text-gray-400');
+
+            gsap.to(`#grid-${section}`, { opacity: 0, y: 15, duration: 0.2, onComplete: () => {
+                renderItems(section, f);
+                gsap.to(`#grid-${section}`, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(1.7)" });
+            }});
+        };
+        container.appendChild(btn);
+    });
+}
+
+function renderItems(section, filter) {
+    const container = document.getElementById(`grid-${section}`);
+    if (!container) return;
+    container.innerHTML = '';
+    
+    const items = filter === "Të gjitha" 
+        ? data[section].items 
+        : data[section].items.filter(i => i.cat === filter);
+
+    items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = "product-card glass p-3 rounded-[2.2rem] cursor-pointer border-white/5 active:scale-95 transition-transform";
+        div.onclick = () => openProduct(item);
+        div.innerHTML = `
+            <div class="w-full aspect-square bg-white/5 rounded-[1.8rem] mb-3 flex items-center justify-center overflow-hidden">
+                <img src="${item.img || ''}" class="w-full h-full object-cover" loading="lazy" onerror="this.style.opacity='0'">
+            </div>
+            <div class="px-1">
+                <h4 class="font-bold text-[11px] truncate text-white/90">${item.name}</h4>
+                <p class="text-primary font-black text-xs mt-1">${item.price}</p>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+// 5. NAVIGATION SYSTEM (Perfect Switch)
+function switchView(viewId, element) {
+    triggerHaptic(12);
+    
+    // Menaxho butonin e navigimit
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('nav-active', 'text-primary');
+        item.classList.add('text-gray-400');
+    });
+    element.classList.add('nav-active', 'text-primary');
+    element.classList.remove('text-gray-400');
+
+    // Ndërro pamjen me zbehje
+    document.querySelectorAll('.view').forEach(v => {
+        v.classList.remove('active');
+        v.style.display = 'none';
+    });
+    
+    const target = document.getElementById(viewId);
+    if (target) {
+        target.style.display = 'block';
+        setTimeout(() => target.classList.add('active'), 10);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    lucide.createIcons(); // Refresh ikonat për pamjen e re
+}
+
+// 6. SETTINGS & MECHANICS
+function loadSavedPreferences() {
+    const theme = localStorage.getItem('theme') || 'dark';
+    const haptic = localStorage.getItem('haptic') !== 'false'; // Default true
+    const notif = localStorage.getItem('notifications') === 'true';
+
+    // Apliko Temën
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    if (app.settings.darkMode) app.settings.darkMode.checked = (theme === 'dark');
+    
+    // Apliko Haptic
+    if (app.settings.haptic) app.settings.haptic.checked = haptic;
+    
+    // Apliko Njoftimet
+    if (app.settings.notifications) app.settings.notifications.checked = notif;
+}
+
+function triggerHaptic(force = 15) {
+    const isEnabled = app.settings.haptic?.checked;
+    if (isEnabled && navigator.vibrate) {
+        navigator.vibrate(force);
     }
 }
 
-// --- MAINTENANCE (Pastro Cache dhe Refresh) ---
+function updateDarkMode() {
+    const isDark = app.settings.darkMode.checked;
+    document.documentElement.classList.toggle('dark', isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    triggerHaptic(10);
+}
+
 function clearCache() {
-    // Pulse vibrim paralajmërues
-    if (window.navigator.vibrate) window.navigator.vibrate([30, 50, 30]);
-    
-    if (confirm("Kujdes! Të gjitha preferencat tuaja do të fshihen. A dëshironi të vazhdoni?")) {
+    triggerHaptic([30, 50, 30]);
+    if (confirm("Resetim Total? Preferencat tuaja do të fshihen.")) {
         localStorage.clear();
         location.reload();
     }
 }
 
-
-
-
-    // Menaxhimi i Navigimit
-function switchView(viewId, element) {
-    // 1. Hiq gjendjen aktive nga të gjithë butonat
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('nav-active', 'text-primary');
-        item.classList.add('text-gray-400');
-    });
-
-    // 2. Aktivizo butonin e klikuar
-    element.classList.add('nav-active', 'text-primary');
-    element.classList.remove('text-gray-400');
-
-    // 3. Ndërro pamjen (Views) me animacion
-    document.querySelectorAll('.view').forEach(view => {
-        view.classList.remove('active');
-    });
-    
-    const targetView = document.getElementById(viewId);
-    if (targetView) {
-        targetView.classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // 4. Feedback Haptic
-    triggerHaptic(12);
-}
-
-        // Konfigurimi i Lokacionit të Saktë
-const storeLocation = {
-    lat: 42.4011, // Koordinatat e përafërta për Ratkoc
-    lng: 20.4851,
-    name: "NTP Ratkoci",
-    address: "Ratkoc, Rahovec, Kosovë"
-};
-
+// 7. LOKACIONI DHE STATUSI LIVE
 function openMap() {
     triggerHaptic(20);
-    // Linku universal që hap aplikacionin e Maps në iOS/Android ose Browser
-    const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${storeLocation.lat},${storeLocation.lng}&travelmode=driving`;
+    const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${app.store.lat},${app.store.lng}`;
     window.open(mapUrl, '_blank');
 }
 
-        function updateLiveStatus() {
+function updateLiveStatus() {
     const now = new Date();
-    const currentTime = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
-
-    const countdownElement = document.getElementById('live-countdown');
-    const statusIndicator = document.getElementById('status-indicator');
-    const dotIndicator = document.getElementById('status-dot'); // Një pikë rrethore që pulson
+    const current = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
     
-    const openTime = 8.0;   // 08:00
-    const closeTime = 21.0; // 21:00
+    const indicator = document.getElementById('status-indicator');
+    const countdown = document.getElementById('live-countdown');
+    const dot = document.getElementById('status-dot');
 
-    const isOpen = currentTime >= openTime && currentTime < closeTime;
+    const isOpen = current >= app.store.openTime && current < app.store.closeTime;
 
     if (isOpen) {
-        const diff = closeTime - currentTime;
+        const diff = app.store.closeTime - current;
         const h = Math.floor(diff);
         const m = Math.floor((diff - h) * 60);
         
-        statusIndicator.innerText = "Hapur";
-        statusIndicator.className = "text-[10px] font-bold uppercase text-green-500 tracking-wider";
-        if(dotIndicator) dotIndicator.className = "h-2 w-2 rounded-full bg-green-500 animate-pulse";
-        
-        countdownElement.innerHTML = `<span class="opacity-60">Mbyllet pas:</span> <span class="font-medium text-white">${h}orë ${m}min</span>`;
+        indicator.innerText = "Hapur";
+        indicator.className = "text-[10px] font-black uppercase text-green-500 tracking-tighter";
+        if (dot) dot.className = "h-2 w-2 rounded-full bg-green-500 animate-pulse";
+        countdown.innerHTML = `<span class="opacity-50">Mbyllja pas:</span> ${h}h ${m}m`;
     } else {
-        let diff = openTime - currentTime;
+        let diff = app.store.openTime - current;
         if (diff < 0) diff += 24;
-        
         const h = Math.floor(diff);
         const m = Math.floor((diff - h) * 60);
-        
-        statusIndicator.innerText = "Mbyllur";
-        statusIndicator.className = "text-[10px] font-bold uppercase text-red-500 tracking-wider";
-        if(dotIndicator) dotIndicator.className = "h-2 w-2 rounded-full bg-red-500";
-        
-        countdownElement.innerHTML = `<span class="opacity-60">Hapet pas:</span> <span class="font-medium text-white">${h}orë ${m}min</span>`;
+
+        indicator.innerText = "Mbyllur";
+        indicator.className = "text-[10px] font-black uppercase text-red-500 tracking-tighter";
+        if (dot) dot.className = "h-2 w-2 rounded-full bg-red-500";
+        countdown.innerHTML = `<span class="opacity-50">Hapja pas:</span> ${h}h ${m}m`;
     }
 }
 
-// Startimi
-setInterval(updateLiveStatus, 1000);
-updateLiveStatus();
+// 8. HELPERS
+function setupGlobalListeners() {
+    app.settings.darkMode?.addEventListener('change', updateDarkMode);
+    app.settings.haptic?.addEventListener('change', () => {
+        localStorage.setItem('haptic', app.settings.haptic.checked);
+        triggerHaptic(20);
+    });
+    app.settings.notifications?.addEventListener('change', () => {
+        localStorage.setItem('notifications', app.settings.notifications.checked);
+        triggerHaptic(10);
+    });
+}
+
+function toggleSettings() {
+    const modal = document.getElementById('settings-modal');
+    const content = document.getElementById('settings-content');
+    triggerHaptic(8);
+
+    if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        setTimeout(() => content.classList.remove('translate-y-full'), 10);
+    } else {
+        content.classList.add('translate-y-full');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+}
     </script>
 </body>
 </html>
