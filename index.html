@@ -649,423 +649,161 @@
 
         }
 
-
-
-
-
-
-
-// --- CONFIGURIMI I SETTINGS (Logjika Mekanike) ---
-
+// --- KONFIGURIMI I SETTINGS ---
 const appSettings = {
-
-    // Kapim elementet direkt nga DOM përmes ID-ve
-
     darkMode: document.getElementById('toggle-dark-mode'),
-
     haptic: document.getElementById('toggle-haptic'),
-
     notifications: document.getElementById('toggle-notifications')
-
 };
 
-
-
-/**
-
- * 1. Dark Mode Ultra - Ndryshon klasën në HTML live
-
- * Ky funksion kontrollon nëse faqja duhet të jetë 'dark' apo 'light'
-
+/** 
+ * 1. Dark Mode - Ndryshimi i temës
+ * Përdorim 'dark' si klasë në elementin rrënjë (html)
  */
-
 function updateDarkMode() {
-
-    if (appSettings.darkMode.checked) {
-
-        document.documentElement.classList.add('dark');
-
-        localStorage.setItem('theme', 'dark');
-
-    } else {
-
-        document.documentElement.classList.remove('dark');
-
-        localStorage.setItem('theme', 'light');
-
-    }
-
+    if (!appSettings.darkMode) return;
+    const isDark = appSettings.darkMode.checked;
+    document.documentElement.classList.toggle('dark', isDark);
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 
-
-
 /**
-
- * 2. Haptic Feedback - Mekanizmi i vibrimit
-
- * Lëshon një impuls fizik në telefon gjatë ndërrimit të opsioneve
-
+ * 2. Haptic Feedback - Feedback fizik
  */
-
 function triggerHaptic(force = 15) {
-
-    if (appSettings.haptic.checked && window.navigator && window.navigator.vibrate) {
-
-        window.navigator.vibrate(force);
-
+    if (appSettings.haptic?.checked && navigator.vibrate) {
+        navigator.vibrate(force);
     }
-
-    localStorage.setItem('haptic', appSettings.haptic.checked);
-
+    if (appSettings.haptic) {
+        localStorage.setItem('haptic', appSettings.haptic.checked);
+    }
 }
-
-
 
 /**
-
- * 3. Notifications - Ruajtja e preferencës për njoftimet
-
+ * 3. Notifications - Statusi i njoftimeve
  */
-
 function updateNotifications() {
-
+    if (!appSettings.notifications) return;
     localStorage.setItem('notifications', appSettings.notifications.checked);
-
     if (appSettings.notifications.checked) {
-
-        console.log("Sistemi: Njoftimet Live u aktivizuan.");
-
+        console.info("NTP Ratkoci: Njoftimet u aktivizuan.");
     }
-
 }
 
-
-
-// --- EVENT LISTENERS (Lidhja Mekanike e Butonave) ---
-
-// Këto bëjnë që ndryshimi të ndodhë "LIVE" sapo shtypet butoni
-
-
-
-appSettings.darkMode.addEventListener('change', () => {
-
+// --- EVENT LISTENERS (LIVE UPDATE) ---
+// Shtojmë kontrolle sigurie (?.) në rast se një element mungon në HTML
+appSettings.darkMode?.addEventListener('change', () => {
     updateDarkMode();
-
-    triggerHaptic(10); // Vibrim i lehtë
-
+    triggerHaptic(10);
 });
 
-
-
-appSettings.haptic.addEventListener('change', () => {
-
-    triggerHaptic(25); // Vibrim pak më i fortë për feedback
-
+appSettings.haptic?.addEventListener('change', () => {
+    triggerHaptic(20);
 });
 
-
-
-appSettings.notifications.addEventListener('change', () => {
-
+appSettings.notifications?.addEventListener('change', () => {
     updateNotifications();
+    triggerHaptic(10);
+});
+
+// --- INITIALIZE (NGARKIMI I PREFERENCAVE) ---
+window.addEventListener('DOMContentLoaded', () => {
+    // Ngarko Temën
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const isDark = savedTheme === 'dark';
+    if (appSettings.darkMode) {
+        appSettings.darkMode.checked = isDark;
+        document.documentElement.classList.toggle('dark', isDark);
+    }
+
+    // Ngarko Haptic
+    const savedHaptic = localStorage.getItem('haptic');
+    if (appSettings.haptic) {
+        appSettings.haptic.checked = savedHaptic === null ? true : savedHaptic === 'true';
+    }
+
+    // Ngarko Notifications
+    const savedNotif = localStorage.getItem('notifications');
+    if (appSettings.notifications) {
+        appSettings.notifications.checked = savedNotif === 'true';
+    }
+});
+
+// --- MODAL CONTROL (SETTINGS & PRODUCTS) ---
+function toggleSettings() {
+    const modal = document.getElementById('settings-modal');
+    const content = document.getElementById('settings-content');
+    if (!modal || !content) return;
 
     triggerHaptic(10);
 
-});
-
-
-
-/**
-
- * INITIALIZE - Ngarkimi i preferencave kur hapet faqja
-
- * Ky bllok kodi ekzekutohet sapo vizitori hyn në aplikacion
-
- */
-
-window.addEventListener('DOMContentLoaded', () => {
-
-    // 1. Ngarko Temën (Default është 'dark' nese nuk ka të dhëna)
-
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-
-    if (savedTheme === 'light') {
-
-        appSettings.darkMode.checked = false;
-
-        document.documentElement.classList.remove('dark');
-
-    } else {
-
-        appSettings.darkMode.checked = true;
-
-        document.documentElement.classList.add('dark');
-
-    }
-
-
-
-    // 2. Ngarko statusin e Vibrimit (Default: ON)
-
-    const savedHaptic = localStorage.getItem('haptic');
-
-    appSettings.haptic.checked = (savedHaptic === null) ? true : (savedHaptic === 'true');
-
-
-
-    // 3. Ngarko statusin e Njoftimeve (Default: OFF)
-
-    const savedNotif = localStorage.getItem('notifications');
-
-    appSettings.notifications.checked = (savedNotif === 'true');
-
-
-
-    // Inicializo ikonat dhe statusin live
-
-    lucide.createIcons();
-
-    setInterval(updateLiveStatus, 1000); // Përditëso orarin çdo sekondë
-
-});
-
-
-
-// --- MODAL CONTROL (Hapja/Mbyllja me Animacion) ---
-
-function toggleSettings() {
-
-    const modal = document.getElementById('settings-modal');
-
-    const content = document.getElementById('settings-content');
-
-    
-
-    triggerHaptic(8); // Feedback i vogël mekanik
-
-
-
     if (modal.classList.contains('hidden')) {
-
         modal.classList.remove('hidden');
-
-        // Përdorim requestAnimationFrame për animacion të lëmuar
-
-        requestAnimationFrame(() => {
-
-            content.classList.remove('translate-y-full');
-
-        });
-
+        requestAnimationFrame(() => content.classList.remove('translate-y-full'));
     } else {
-
         content.classList.add('translate-y-full');
-
-        setTimeout(() => {
-
-            modal.classList.add('hidden');
-
-        }, 300);
-
+        setTimeout(() => modal.classList.add('hidden'), 300);
     }
-
 }
 
+function openProduct(item) {
+    const modal = document.getElementById('product-modal');
+    const box = document.getElementById('modal-box');
+    const imgContainer = document.getElementById('modal-img-container');
+    
+    if (!modal || !box) return;
 
+    document.getElementById('modal-title').innerText = item.name || 'Produkti';
+    document.getElementById('modal-price').innerText = item.price || '--';
+    
+    // Optimizim: Pastrim i kontejnerit para shtimit të imazhit të ri
+    imgContainer.innerHTML = '';
+    if (item.img) {
+        const img = new Image();
+        img.src = item.img;
+        img.className = "w-full h-full object-cover";
+        img.onerror = () => img.style.display = 'none';
+        imgContainer.appendChild(img);
+    }
+    
+    modal.classList.remove('hidden');
+    triggerHaptic(5);
+    setTimeout(() => box.classList.remove('scale-90', 'opacity-0'), 10);
+}
 
-// --- MAINTENANCE (Pastro Cache dhe Refresh) ---
+function closeProduct() {
+    const modal = document.getElementById('product-modal');
+    const box = document.getElementById('modal-box');
+    if (!box || !modal) return;
 
+    box.classList.add('scale-90', 'opacity-0');
+    setTimeout(() => modal.classList.add('hidden'), 300);
+}
+
+// --- MAINTENANCE ---
 function clearCache() {
-
-    // Pulse vibrim paralajmërues
-
-    if (window.navigator.vibrate) window.navigator.vibrate([30, 50, 30]);
-
+    if (navigator.vibrate) navigator.vibrate([30, 50, 30, 50, 30]);
     
-
-    if (confirm("Kujdes! Të gjitha preferencat tuaja do të fshihen. A dëshironi të vazhdoni?")) {
-
+    if (confirm("A jeni të sigurt? Të gjitha preferencat do të fshihen.")) {
         localStorage.clear();
-
         location.reload();
-
     }
-
 }
 
-
-
-
-
-
-
-
-
-    // Menaxhimi i Navigimit
-
-function switchView(viewId, element) {
-
-    // 1. Hiq gjendjen aktive nga të gjithë butonat
-
-    document.querySelectorAll('.nav-item').forEach(item => {
-
-        item.classList.remove('nav-active', 'text-primary');
-
-        item.classList.add('text-gray-400');
-
+// --- PWA SERVICE WORKER ---
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+            .then(() => console.log('NTP Ratkoci: App Offline Ready'))
+            .catch(err => console.error('PWA Error:', err));
     });
-
-
-
-    // 2. Aktivizo butonin e klikuar
-
-    element.classList.add('nav-active', 'text-primary');
-
-    element.classList.remove('text-gray-400');
-
-
-
-    // 3. Ndërro pamjen (Views) me animacion
-
-    document.querySelectorAll('.view').forEach(view => {
-
-        view.classList.remove('active');
-
-    });
-
-    
-
-    const targetView = document.getElementById(viewId);
-
-    if (targetView) {
-
-        targetView.classList.add('active');
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    }
-
-
-
-    // 4. Feedback Haptic
-
-    triggerHaptic(12);
-
 }
 
 
 
-        // Konfigurimi i Lokacionit të Saktë
-
-const storeLocation = {
-
-    lat: 42.4011, // Koordinatat e përafërta për Ratkoc
-
-    lng: 20.4851,
-
-    name: "NTP Ratkoci",
-
-    address: "Ratkoc, Rahovec, Kosovë"
-
-};
 
 
 
-function openMap() {
-
-    triggerHaptic(20);
-
-    // Linku universal që hap aplikacionin e Maps në iOS/Android ose Browser
-
-    const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${storeLocation.lat},${storeLocation.lng}&travelmode=driving`;
-
-    window.open(mapUrl, '_blank');
-
-}
-
-
-
-        function updateLiveStatus() {
-
-    const now = new Date();
-
-    const currentTime = now.getHours() + now.getMinutes() / 60 + now.getSeconds() / 3600;
-
-
-
-    const countdownElement = document.getElementById('live-countdown');
-
-    const statusIndicator = document.getElementById('status-indicator');
-
-    const dotIndicator = document.getElementById('status-dot'); // Një pikë rrethore që pulson
-
-    
-
-    const openTime = 8.0;   // 08:00
-
-    const closeTime = 21.0; // 21:00
-
-
-
-    const isOpen = currentTime >= openTime && currentTime < closeTime;
-
-
-
-    if (isOpen) {
-
-        const diff = closeTime - currentTime;
-
-        const h = Math.floor(diff);
-
-        const m = Math.floor((diff - h) * 60);
-
-        
-
-        statusIndicator.innerText = "Hapur";
-
-        statusIndicator.className = "text-[10px] font-bold uppercase text-green-500 tracking-wider";
-
-        if(dotIndicator) dotIndicator.className = "h-2 w-2 rounded-full bg-green-500 animate-pulse";
-
-        
-
-        countdownElement.innerHTML = `<span class="opacity-60">Mbyllet pas:</span> <span class="font-medium text-white">${h}orë ${m}min</span>`;
-
-    } else {
-
-        let diff = openTime - currentTime;
-
-        if (diff < 0) diff += 24;
-
-        
-
-        const h = Math.floor(diff);
-
-        const m = Math.floor((diff - h) * 60);
-
-        
-
-        statusIndicator.innerText = "Mbyllur";
-
-        statusIndicator.className = "text-[10px] font-bold uppercase text-red-500 tracking-wider";
-
-        if(dotIndicator) dotIndicator.className = "h-2 w-2 rounded-full bg-red-500";
-
-        
-
-        countdownElement.innerHTML = `<span class="opacity-60">Hapet pas:</span> <span class="font-medium text-white">${h}orë ${m}min</span>`;
-
-    }
-
-}
-
-
-
-// Startimi
-
-setInterval(updateLiveStatus, 1000);
-
-updateLiveStatus();
     </script>
 </body>
 </html>
