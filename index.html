@@ -112,7 +112,9 @@
 
 
 
-
+ <button onclick="toggleAI()" id="ai-btn" class="fixed bottom-8 right-6 z-[1000] bg-primary text-dark w-14 h-14 rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-all">
+    <i data-lucide="sparkles"></i>
+</button>
    
 
 <div id="ai-modal" class="fixed inset-0 z-[1001] hidden flex items-center justify-center p-4">
@@ -172,10 +174,6 @@
 
 
 
-
- <button onclick="toggleAI()" id="ai-btn" class="fixed bottom-8 right-6 z-[1000] bg-primary text-dark w-14 h-14 rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-all">
-    <i data-lucide="sparkles"></i>
-</button>
     
     
     <header class="fixed top-0 w-full z-40 bg-dark/60 backdrop-blur-xl border-b border-white/5 px-6 py-5 flex justify-between items-center">
@@ -1042,14 +1040,10 @@ function renderTrendingSection() {
 
 
 
-
-
-        
 const AI_ENGINE = {
     responses: {
         orari: {
             text: "Marketin tonë mund ta vizitoni çdo ditë, nga ora 08:00 deri në orën 21:00. Ju mirëpresim!",
-            // Përdorim pika dhe presje për të krijuar pauza njerëzore
             voice: "Marketin tonë, mund ta vizitoni çdo ditë. Nga ora 8 e mëngjesit, deri në orën 9 të mbrëmjes. Ju mirëpresim!"
         },
         lokacioni: {
@@ -1057,8 +1051,8 @@ const AI_ENGINE = {
             voice: "N.T.P Ratkoci, ndodhet në qendër të fshatit Ratkoc. Mund të na gjeni shumë lehtë, saktësisht, përballë xhamisë."
         },
         ofertat: {
-            text: "Mirë se vini! Sot kemi oferta fantastike, veçanërisht për pijet freskuese dhe snacks këtë fundjavë.",
-            voice: "Mirë se vini. Sot kemi oferta fantastike. Kontrolloni çmimet për pijet freskuese, dhe snaks, këtë fundjavë."
+            text: "Sot kemi oferta fantastike, veçanërisht për pijet freskuese dhe produktet ushqimore këtë fundjavë.",
+            voice: "Sot kemi oferta fantastike. Kontrolloni çmimet për pijet freskuese, dhe produktet ushqimore, këtë fundjavë."
         },
         produktet: {
             text: "Produktet tona më të kërkuara janë lëngjet e freskëta dhe produktet shtëpiake që sapo kanë mbërritur.",
@@ -1067,22 +1061,29 @@ const AI_ENGINE = {
     },
 
     speak: function(phrase) {
+        // Ndalo çdo zë që mund të jetë duke folur
         window.speechSynthesis.cancel();
         
         const msg = new SpeechSynthesisUtterance(phrase);
         
-        // Konfigurimi për një zë më serioz dhe autoritar
+        // Konfigurimi për zë serioz dhe profesional
         msg.lang = 'sq-AL'; 
-        msg.rate = 0.85;  // Pak më ngadalë se normalja për qartësi maksimale
-        msg.pitch = 0.9;   // Ulja e tonit e bën zërin të tingëllojë më serioz/maskulin
+        msg.rate = 0.85;  // Shpejtësi njerëzore
+        msg.pitch = 0.9;   // Ton serioz
         msg.volume = 1.0;
 
-        // Animimi i valës
         const wave = document.getElementById('voice-wave');
-        if(wave) wave.style.width = '100%';
-        
+        if(wave) {
+            wave.style.width = '100%';
+            wave.style.opacity = '1';
+        }
+
         msg.onend = () => { 
-            if(wave) wave.style.width = '0%'; 
+            if(wave) {
+                wave.style.width = '0%';
+                wave.style.opacity = '0.5';
+            }
+            document.getElementById('ai-status').innerText = "Gati për t'ju dëgjuar";
         };
         
         window.speechSynthesis.speak(msg);
@@ -1096,16 +1097,43 @@ function executeAction(type) {
 
     if(!data) return;
 
-    output.classList.add('opacity-0');
-    status.innerText = "Duke u procesuar...";
+    // Efekti vizual i ngarkimit
+    output.style.opacity = '0.3';
+    status.innerText = "Duke analizuar...";
 
     setTimeout(() => {
-        output.innerHTML = `<span style="color: #2563eb;">●</span> ${data.text}`;
-        output.classList.remove('opacity-0');
-        status.innerText = "Asistenti Profesional:";
+        output.innerHTML = `<span class="text-primary">●</span> ${data.text}`;
+        output.style.opacity = '1';
+        status.innerText = "Asistenti po flet...";
         
         AI_ENGINE.speak(data.voice);
     }, 400);
+}
+
+function manualSearch() {
+    const input = document.getElementById('ai-input');
+    const val = input.value.toLowerCase();
+    
+    if(val.includes("orar")) executeAction('orari');
+    else if(val.includes("ku") || val.includes("vendi")) executeAction('lokacioni');
+    else if(val.includes("oferta") || val.includes("lirë")) executeAction('ofertat');
+    else if(val.includes("produkt") || val.includes("shitet")) executeAction('produktet');
+    else {
+        AI_ENGINE.speak("Më falni, nuk e kuptova kërkesën tuaj. Ju lutem zgjidhni një nga opsionet.");
+    }
+    input.value = "";
+}
+
+function toggleAI() {
+    const modal = document.getElementById('ai-modal');
+    modal.classList.toggle('hidden');
+    if(!modal.classList.contains('hidden')) {
+        // Nëse përdorni haptic feedback në mobile
+        if (window.navigator.vibrate) window.navigator.vibrate(10);
+        if(typeof lucide !== 'undefined') lucide.createIcons();
+    } else {
+        window.speechSynthesis.cancel(); // Ndalo zërin kur mbyllet modali
+    }
 }
     </script>
 </body>
