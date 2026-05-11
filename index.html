@@ -194,6 +194,115 @@
     </div>
 </div>
 
+
+    <!-- KODI HTML MBETET I NJEJTË, SIGUROHU QË JE BRENDA NJË PROJEKTI TAILWIND -->
+
+<script>
+// Kjo siguron që zërat të ngarkohen saktë në shfletues (Chrome ka nevojë për këtë)
+window.speechSynthesis.getVoices();
+
+function toggleAI() {
+    const modal = document.getElementById('ai-modal');
+    if (!modal) return;
+
+    if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex'; // Forcon shfaqjen
+        if (window.navigator.vibrate) window.navigator.vibrate(10);
+        
+        // Inicializo ikonat nëse përdor Lucide
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    } else {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+        window.speechSynthesis.cancel();
+    }
+}
+
+const AI_ENGINE = {
+    responses: {
+        orari: {
+            text: "Marketin tonë mund ta vizitoni çdo ditë, nga ora 08:00 deri në orën 21:00. Ju mirëpresim!",
+            voice: "Marketin tonë mund ta vizitoni çdo ditë... Nga ora tetë e mëngjesit, deri në orën nëntë të mbrëmjes. Ju mirëpresim!"
+        },
+        lokacioni: {
+            text: "NTP Ratkoci ndodhet në qendër të fshatit Ratkoc, saktësisht përballë xhamisë.",
+            voice: "N. T. P. Ratkoci ndodhet në qendër të fshatit Ratkoc. Saktësisht... përballë xhamisë. Mund të na gjeni shumë lehtë!"
+        },
+        ofertat: {
+            text: "Sot kemi oferta fantastike, veçanërisht për pijet freskuese dhe produktet ushqimore këtë fundjavë.",
+            voice: "Sot kemi oferta fantastike! Kontrolloni çmimet për pijet freskuese dhe produktet ushqimore... këtë fundjavë."
+        },
+        produktet: {
+            text: "Produktet tona më të kërkuara janë lëngjet e freskëta dhe produktet shtëpiake që sapo kanë mbërritur.",
+            voice: "Produktet tona më të kërkuara aktualisht... janë lëngjet e freskëta dhe produktet shtëpiake... që sapo kanë mbërritur."
+        }
+    },
+
+    speak: function(phrase) {
+        window.speechSynthesis.cancel();
+        const msg = new SpeechSynthesisUtterance(phrase);
+        const voices = window.speechSynthesis.getVoices();
+        
+        // Gjejmë zërin shqip ose një zë cilësor
+        msg.voice = voices.find(v => v.lang.includes('sq') || v.name.includes('Google')) || voices[0];
+        msg.lang = 'sq-AL';
+        msg.rate = 0.9;
+        msg.pitch = 1.0;
+
+        msg.onstart = () => {
+            const wave = document.getElementById('voice-wave');
+            if(wave) {
+                wave.style.width = '100%';
+                wave.style.opacity = '1';
+                wave.classList.add('animate-pulse');
+            }
+            document.getElementById('ai-status').innerText = "Asistenti po flet...";
+        };
+
+        msg.onend = () => {
+            const wave = document.getElementById('voice-wave');
+            if(wave) {
+                wave.style.width = '0%';
+                wave.style.opacity = '0.5';
+                wave.classList.remove('animate-pulse');
+            }
+            document.getElementById('ai-status').innerText = "Gati për t'ju dëgjuar";
+        };
+
+        window.speechSynthesis.speak(msg);
+    }
+};
+
+// Shto këto funksione që mungonin në snippet-in tënd të fundit për të ekzekutuar veprimet
+function executeAction(type) {
+    const data = AI_ENGINE.responses[type];
+    const output = document.getElementById('ai-output');
+    if(!data || !output) return;
+
+    output.style.opacity = '0.5';
+    setTimeout(() => {
+        output.innerHTML = `<span class="text-primary">●</span> ${data.text}`;
+        output.style.opacity = '1';
+        AI_ENGINE.speak(data.voice);
+    }, 300);
+}
+
+function manualSearch() {
+    const input = document.getElementById('ai-input');
+    const val = input.value.toLowerCase();
+    if(!val) return;
+
+    if(val.includes("orar")) executeAction('orari');
+    else if(val.includes("ku") || val.includes("lokacion")) executeAction('lokacioni');
+    else if(val.includes("oferta")) executeAction('ofertat');
+    else if(val.includes("produkt")) executeAction('produktet');
+    else {
+        AI_ENGINE.speak("Më falni, nuk e kuptova kërkesën.");
+    }
+    input.value = "";
+}
+</script>
     
     <div id="intro-screen" class="fixed inset-0 flex flex-col items-center justify-center p-8 text-center">
         <div id="intro-logo" class="w-24 h-24 bg-primary/10 rounded-[2.5rem] flex items-center justify-center mb-6 opacity-0 scale-50">
@@ -1067,90 +1176,6 @@ function renderTrendingSection() {
     });
 }
 
-
-
-function toggleAI() {
-    const modal = document.getElementById('ai-modal');
-    
-    if (!modal) {
-        console.error("Gabim: Nuk u gjet asnjë element me ID 'ai-modal'");
-        return;
-    }
-
-    if (modal.classList.contains('hidden')) {
-        modal.classList.remove('hidden');
-        // Kjo e bën modalin të shfaqet si 'flex' pasi heqim 'hidden'
-        modal.style.display = 'flex'; 
-        
-        if (window.navigator.vibrate) window.navigator.vibrate(10);
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-    } else {
-        modal.classList.add('hidden');
-        modal.style.display = 'none';
-        window.speechSynthesis.cancel();
-    }
-}
-
-        
-const AI_ENGINE = {
-    responses: {
-        orari: {
-            text: "Marketin tonë mund ta vizitoni çdo ditë, nga ora 08:00 deri në orën 21:00. Ju mirëpresim!",
-            // Përdorim presje dhe pika për të detyruar AI të marrë frymë
-            voice: "Marketin tonë mund ta vizitoni çdo ditë... Nga ora tetë e mëngjesit, deri në orën nëntë të mbrëmjes. Ju mirëpresim!"
-        },
-        lokacioni: {
-            text: "NTP Ratkoci ndodhet në qendër të fshatit Ratkoc, saktësisht përballë xhamisë.",
-            voice: "N. T. P. Ratkoci ndodhet në qendër të fshatit Ratkoc. Saktësisht... përballë xhamisë. Mund të na gjeni shumë lehtë!"
-        },
-        ofertat: {
-            text: "Sot kemi oferta fantastike, veçanërisht për pijet freskuese dhe produktet ushqimore këtë fundjavë.",
-            voice: "Sot kemi oferta fantastike! Kontrolloni çmimet për pijet freskuese dhe produktet ushqimore... këtë fundjavë."
-        },
-        produktet: {
-            text: "Produktet tona më të kërkuara janë lëngjet e freskëta dhe produktet shtëpiake që sapo kanë mbërritur.",
-            voice: "Produktet tona më të kërkuara aktualisht... janë lëngjet e freskëta dhe produktet shtëpiake... që sapo kanë mbërritur."
-        }
-    },
-
-    speak: function(phrase) {
-        window.speechSynthesis.cancel();
-        
-        const msg = new SpeechSynthesisUtterance(phrase);
-        
-        // Gjetja e zërit më cilësor në sistem (nëse ekziston një zë premium)
-        const voices = window.speechSynthesis.getVoices();
-        // Preferojmë zërat "Google" ose "Natural" nëse janë të disponueshëm
-        msg.voice = voices.find(v => v.lang.includes('sq') || v.name.includes('Google')) || voices[0];
-
-        msg.lang = 'sq-AL'; 
-        msg.rate = 0.9;   // Pak më ngadalë se normalja për qartësi
-        msg.pitch = 1.0;  // Ton natyral, jo shumë i rëndë
-        msg.volume = 1.0;
-
-        // Eventi kur fillon të flasë
-        msg.onstart = () => {
-            const wave = document.getElementById('voice-wave');
-            if(wave) {
-                wave.style.width = '100%';
-                wave.style.opacity = '1';
-                wave.classList.add('animate-pulse'); // Shto një animacion lëvizës
-            }
-        };
-
-        msg.onend = () => { 
-            const wave = document.getElementById('voice-wave');
-            if(wave) {
-                wave.style.width = '0%';
-                wave.style.opacity = '0.5';
-                wave.classList.remove('animate-pulse');
-            }
-            document.getElementById('ai-status').innerText = "Gati për t'ju dëgjuar";
-        };
-        
-        window.speechSynthesis.speak(msg);
-    }
-};
     </script>
 </body>
 </html>
