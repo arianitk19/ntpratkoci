@@ -112,56 +112,87 @@
 
 
 
- <button onclick="toggleAI()" id="ai-btn" class="fixed bottom-8 right-6 z-[1000] bg-primary text-dark w-14 h-14 rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-all">
+ <!-- Butoni kryesor me efekt aktiv -->
+<button onclick="toggleAI()" id="ai-btn" class="fixed bottom-8 right-6 z-[1000] bg-primary text-dark w-14 h-14 rounded-full shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] flex items-center justify-center active:scale-90 transition-all hover:scale-110">
     <i data-lucide="sparkles"></i>
 </button>
-   
 
 <div id="ai-modal" class="fixed inset-0 z-[1001] hidden flex items-center justify-center p-4">
-    <div class="absolute inset-0 bg-dark/95 backdrop-blur-lg" onclick="toggleAI()"></div>
+    <!-- Overlay me blur më të lartë -->
+    <div class="absolute inset-0 bg-dark/90 backdrop-blur-xl" onclick="toggleAI()"></div>
     
-    <div class="relative w-full max-w-lg bg-dark border border-white/10 rounded-[2.5rem] overflow-hidden flex flex-col max-h-[80vh]">
-        <div id="voice-wave" class="h-1 bg-primary w-0 transition-all duration-500 opacity-50"></div>
+    <div class="relative w-full max-w-lg bg-dark border border-white/10 rounded-[2.5rem] overflow-hidden flex flex-col max-h-[85vh] shadow-2xl">
+        
+        <!-- Shiriti i zërit - Tani me animacion lëvizës kur AI flet -->
+        <div id="voice-wave" class="h-1.5 bg-primary w-0 transition-all duration-700 ease-in-out opacity-0 shadow-[0_0_15px_#your-primary-color]"></div>
 
         <div class="p-8 flex-1 overflow-y-auto no-scrollbar">
-            <h2 class="text-2xl font-black text-white mb-2">Ratkoci <span class="text-primary text-sm font-medium tracking-[0.3em] ml-2">INTEL</span></h2>
-            <p id="ai-status" class="text-[10px] text-white/30 uppercase font-bold tracking-widest mb-8">Gati për t'ju dëgjuar</p>
-
-            <div id="ai-cards" class="grid grid-cols-2 gap-3 mb-8">
-                <button onclick="executeAction('orari')" class="glass p-4 rounded-3xl text-left hover:border-primary/50 transition-all group">
-                    <i data-lucide="clock" class="w-5 h-5 text-primary mb-2"></i>
-                    <p class="text-xs font-bold text-white">Orari i punës</p>
-                    <p class="text-[9px] text-white/40 mt-1 italic italic">Kliko për zë</p>
-                </button>
-                <button onclick="executeAction('lokacioni')" class="glass p-4 rounded-3xl text-left hover:border-primary/50 transition-all">
-                    <i data-lucide="map-pin" class="w-5 h-5 text-primary mb-2"></i>
-                    <p class="text-xs font-bold text-white">Ku ndodhemi?</p>
-                    <p class="text-[9px] text-white/40 mt-1 italic">Hap hartën</p>
-                </button>
-                <button onclick="executeAction('ofertat')" class="glass p-4 rounded-3xl text-left hover:border-primary/50 transition-all">
-                    <i data-lucide="tag" class="w-5 h-5 text-primary mb-2"></i>
-                    <p class="text-xs font-bold text-white">Ofertat Top</p>
-                    <p class="text-[9px] text-white/40 mt-1 italic">Kurseni sot</p>
-                </button>
-                <button onclick="executeAction('produktet')" class="glass p-4 rounded-3xl text-left hover:border-primary/50 transition-all">
-                    <i data-lucide="shopping-bag" class="w-5 h-5 text-primary mb-2"></i>
-                    <p class="text-xs font-bold text-white">Më të shiturat</p>
-                    <p class="text-[9px] text-white/40 mt-1 italic">Produktet elitë</p>
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h2 class="text-2xl font-black text-white tracking-tight">Ratkoci <span class="text-primary text-xs font-bold tracking-[0.4em] ml-2 uppercase">Intel</span></h2>
+                    <p id="ai-status" class="text-[10px] text-white/40 uppercase font-bold tracking-[0.2em] mt-1 transition-all">Gati për t'ju dëgjuar</p>
+                </div>
+                <!-- Butoni i mbylljes i integruar bukur -->
+                <button onclick="toggleAI()" class="text-white/20 hover:text-white transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
             </div>
 
-            <div id="ai-output" class="text-lg font-medium text-white/90 leading-relaxed min-h-[60px]">
-                Zgjidhni një opsion më sipër...
+            <!-- Grid-i i butonave me stil "Glassmorphism" -->
+            <div id="ai-cards" class="grid grid-cols-2 gap-4 mb-10">
+                <button onclick="executeAction('orari')" class="glass group p-5 rounded-[2rem] text-left border border-white/5 hover:border-primary/40 transition-all active:scale-95 bg-white/5">
+                    <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
+                        <i data-lucide="clock" class="w-5 h-5 text-primary"></i>
+                    </div>
+                    <p class="text-sm font-bold text-white">Orari i punës</p>
+                    <p class="text-[10px] text-white/30 mt-1 italic font-medium">Hapur deri 21:00</p>
+                </button>
+
+                <button onclick="executeAction('lokacioni')" class="glass group p-5 rounded-[2rem] text-left border border-white/5 hover:border-primary/40 transition-all active:scale-95 bg-white/5">
+                    <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
+                        <i data-lucide="map-pin" class="w-5 h-5 text-primary"></i>
+                    </div>
+                    <p class="text-sm font-bold text-white">Ku ndodhemi?</p>
+                    <p class="text-[10px] text-white/30 mt-1 italic font-medium">Qendra, Ratkoc</p>
+                </button>
+
+                <button onclick="executeAction('ofertat')" class="glass group p-5 rounded-[2rem] text-left border border-white/5 hover:border-primary/40 transition-all active:scale-95 bg-white/5">
+                    <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
+                        <i data-lucide="tag" class="w-5 h-5 text-primary"></i>
+                    </div>
+                    <p class="text-sm font-bold text-white">Ofertat Top</p>
+                    <p class="text-[10px] text-white/30 mt-1 italic font-medium">Zbritjet e javës</p>
+                </button>
+
+                <button onclick="executeAction('produktet')" class="glass group p-5 rounded-[2rem] text-left border border-white/5 hover:border-primary/40 transition-all active:scale-95 bg-white/5">
+                    <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
+                        <i data-lucide="shopping-bag" class="w-5 h-5 text-primary"></i>
+                    </div>
+                    <p class="text-sm font-bold text-white">Më të shiturat</p>
+                    <p class="text-[10px] text-white/30 mt-1 italic font-medium">Cilësi elitë</p>
+                </button>
+            </div>
+
+            <!-- Fusha e tekstit ku del përgjigja -->
+            <div class="relative">
+                <div id="ai-output" class="text-lg font-medium text-white/80 leading-snug min-h-[80px] p-2 transition-all duration-500">
+                    Zgjidhni një opsion ose shkruani pyetjen tuaj...
+                </div>
             </div>
         </div>
 
-        <div class="p-4 border-t border-white/5 bg-white/5 flex items-center gap-3">
-            <input id="ai-input" type="text" placeholder="Pyet diçka tjetër..." class="bg-transparent flex-1 text-sm text-white outline-none">
-            <button onclick="manualSearch()" class="text-primary p-2"><i data-lucide="send-horizontal"></i></button>
+        <!-- Input-i i poshtëm më i pastër -->
+        <div class="p-6 border-t border-white/5 bg-white/[0.02] flex items-center gap-4">
+            <input id="ai-input" type="text" 
+                   onkeypress="if(event.key === 'Enter') manualSearch()"
+                   placeholder="Shkruaj këtu..." 
+                   class="bg-white/5 flex-1 h-12 px-6 rounded-2xl text-sm text-white border border-white/5 outline-none focus:border-primary/30 transition-all placeholder:text-white/20">
+            <button onclick="manualSearch()" class="bg-primary text-dark p-3 rounded-xl hover:bg-primary/80 transition-all shadow-lg">
+                <i data-lucide="send-horizontal" class="w-5 h-5"></i>
+            </button>
         </div>
     </div>
 </div>
-
 
     
     <div id="intro-screen" class="fixed inset-0 flex flex-col items-center justify-center p-8 text-center">
