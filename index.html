@@ -1069,8 +1069,29 @@ function renderTrendingSection() {
 
 
 
+function toggleAI() {
+    const modal = document.getElementById('ai-modal');
+    
+    if (!modal) {
+        console.error("Gabim: Nuk u gjet asnjë element me ID 'ai-modal'");
+        return;
+    }
 
+    if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        // Kjo e bën modalin të shfaqet si 'flex' pasi heqim 'hidden'
+        modal.style.display = 'flex'; 
+        
+        if (window.navigator.vibrate) window.navigator.vibrate(10);
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    } else {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+        window.speechSynthesis.cancel();
+    }
+}
 
+        
 const AI_ENGINE = {
     responses: {
         orari: {
