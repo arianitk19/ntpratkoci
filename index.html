@@ -110,7 +110,82 @@
 </head>
 <body class="font-sans antialiased select-none">
 
-<style> :root {
+ <div id="ai-modal" class="fixed inset-0 z-[1001] flex items-center justify-center p-6 bg-black/90 backdrop-blur-2xl">
+    <div class="relative w-full max-w-4xl ai-modal-glass rounded-[3.5rem] overflow-hidden flex flex-col h-[85vh] shadow-[0_0_100px_rgba(16,185,129,0.1)]">
+        
+        <!-- Top Status Bar -->
+        <div id="voice-wave" class="absolute top-0 left-0 w-full h-[2px] transition-all duration-500"></div>
+
+        <div class="p-10 flex-1 overflow-y-auto no-scrollbar">
+            <!-- Header -->
+            <div class="flex justify-between items-start mb-12">
+                <div>
+                    <h2 class="text-4xl font-black text-white tracking-tighter italic">NTP RATKOCI <span class="text-primary text-xs tracking-[0.5em] not-italic ml-2">2026</span></h2>
+                    <div class="flex items-center gap-2 mt-2">
+                        <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                        <p id="ai-status" class="text-[10px] text-white/40 font-bold tracking-widest uppercase">Sistemi Online</p>
+                    </div>
+                </div>
+                <button onclick="toggleAI()" class="p-4 rounded-full bg-white/5 hover:bg-white/10 transition-all">
+                    <i data-lucide="x" class="text-white/20"></i>
+                </button>
+            </div>
+
+            <!-- Smart Interaction Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+                <!-- Orari Card -->
+                <button onclick="AI_CORE.executeAction('orari')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
+                    <i data-lucide="clock" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
+                    <p class="text-xs font-bold text-white uppercase tracking-wider">Orari</p>
+                    <p class="text-[10px] text-white/30 mt-1">Statusi Live</p>
+                </button>
+
+                <!-- Lokacioni Card -->
+                <button onclick="AI_CORE.executeAction('lokacioni')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
+                    <i data-lucide="map-pin" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
+                    <p class="text-xs font-bold text-white uppercase tracking-wider">Lokacioni</p>
+                    <p class="text-[10px] text-white/30 mt-1">Gjej Marketin</p>
+                </button>
+
+                <!-- Pijet Card -->
+                <button onclick="AI_CORE.executeAction('pijet')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
+                    <i data-lucide="cup-soda" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
+                    <p class="text-xs font-bold text-white uppercase tracking-wider">Pijet</p>
+                    <p class="text-[10px] text-white/30 mt-1">Freskohu</p>
+                </button>
+
+                <!-- Snacks Card -->
+                <button onclick="AI_CORE.executeAction('snacks')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
+                    <i data-lucide="cookie" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
+                    <p class="text-xs font-bold text-white uppercase tracking-wider">Snacks</p>
+                    <p class="text-[10px] text-white/30 mt-1">Shije Unike</p>
+                </button>
+            </div>
+
+            <!-- AI Cinematic Response -->
+            <div class="max-w-2xl mx-auto text-center">
+                <div id="ai-output" class="text-2xl md:text-3xl font-medium text-white/90 leading-tight tracking-tight min-h-[100px]">
+                    Zgjidhni një kategori ose më pyesni për çdo gjë rreth marketit...
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Section -->
+        <div class="p-8 bg-white/[0.02] border-t border-white/5">
+            <div class="relative max-w-3xl mx-auto group">
+                <input id="ai-input" type="text" placeholder="Pyete NTP Ratkocin..." 
+                    class="w-full h-16 bg-white/5 border border-white/10 rounded-2xl px-8 text-white outline-none focus:border-primary/50 transition-all">
+                <button class="absolute right-4 top-1/2 -translate-y-1/2 bg-primary p-3 rounded-xl text-dark hover:scale-105 active:scale-95 transition-all">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<style> 
+    
+ :root {
   --primary-emerald: #10b981;
   --dark-bg: #050505;
   --glass-border: rgba(255, 255, 255, 0.08);
@@ -223,81 +298,6 @@ const AI_CORE = {
         }, 30);
     }
 };</script>
-
-
-    <div id="ai-modal" class="fixed inset-0 z-[1001] flex items-center justify-center p-6 bg-black/90 backdrop-blur-2xl">
-    <div class="relative w-full max-w-4xl ai-modal-glass rounded-[3.5rem] overflow-hidden flex flex-col h-[85vh] shadow-[0_0_100px_rgba(16,185,129,0.1)]">
-        
-        <!-- Top Status Bar -->
-        <div id="voice-wave" class="absolute top-0 left-0 w-full h-[2px] transition-all duration-500"></div>
-
-        <div class="p-10 flex-1 overflow-y-auto no-scrollbar">
-            <!-- Header -->
-            <div class="flex justify-between items-start mb-12">
-                <div>
-                    <h2 class="text-4xl font-black text-white tracking-tighter italic">NTP RATKOCI <span class="text-primary text-xs tracking-[0.5em] not-italic ml-2">2026</span></h2>
-                    <div class="flex items-center gap-2 mt-2">
-                        <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                        <p id="ai-status" class="text-[10px] text-white/40 font-bold tracking-widest uppercase">Sistemi Online</p>
-                    </div>
-                </div>
-                <button onclick="toggleAI()" class="p-4 rounded-full bg-white/5 hover:bg-white/10 transition-all">
-                    <i data-lucide="x" class="text-white/20"></i>
-                </button>
-            </div>
-
-            <!-- Smart Interaction Grid -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
-                <!-- Orari Card -->
-                <button onclick="AI_CORE.executeAction('orari')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
-                    <i data-lucide="clock" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
-                    <p class="text-xs font-bold text-white uppercase tracking-wider">Orari</p>
-                    <p class="text-[10px] text-white/30 mt-1">Statusi Live</p>
-                </button>
-
-                <!-- Lokacioni Card -->
-                <button onclick="AI_CORE.executeAction('lokacioni')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
-                    <i data-lucide="map-pin" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
-                    <p class="text-xs font-bold text-white uppercase tracking-wider">Lokacioni</p>
-                    <p class="text-[10px] text-white/30 mt-1">Gjej Marketin</p>
-                </button>
-
-                <!-- Pijet Card -->
-                <button onclick="AI_CORE.executeAction('pijet')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
-                    <i data-lucide="cup-soda" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
-                    <p class="text-xs font-bold text-white uppercase tracking-wider">Pijet</p>
-                    <p class="text-[10px] text-white/30 mt-1">Freskohu</p>
-                </button>
-
-                <!-- Snacks Card -->
-                <button onclick="AI_CORE.executeAction('snacks')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
-                    <i data-lucide="cookie" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
-                    <p class="text-xs font-bold text-white uppercase tracking-wider">Snacks</p>
-                    <p class="text-[10px] text-white/30 mt-1">Shije Unike</p>
-                </button>
-            </div>
-
-            <!-- AI Cinematic Response -->
-            <div class="max-w-2xl mx-auto text-center">
-                <div id="ai-output" class="text-2xl md:text-3xl font-medium text-white/90 leading-tight tracking-tight min-h-[100px]">
-                    Zgjidhni një kategori ose më pyesni për çdo gjë rreth marketit...
-                </div>
-            </div>
-        </div>
-
-        <!-- Input Section -->
-        <div class="p-8 bg-white/[0.02] border-t border-white/5">
-            <div class="relative max-w-3xl mx-auto group">
-                <input id="ai-input" type="text" placeholder="Pyete NTP Ratkocin..." 
-                    class="w-full h-16 bg-white/5 border border-white/10 rounded-2xl px-8 text-white outline-none focus:border-primary/50 transition-all">
-                <button class="absolute right-4 top-1/2 -translate-y-1/2 bg-primary p-3 rounded-xl text-dark hover:scale-105 active:scale-95 transition-all">
-                    <i data-lucide="sparkles" class="w-5 h-5"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
     
     <div id="intro-screen" class="fixed inset-0 flex flex-col items-center justify-center p-8 text-center">
         <div id="intro-logo" class="w-24 h-24 bg-primary/10 rounded-[2.5rem] flex items-center justify-center mb-6 opacity-0 scale-50">
