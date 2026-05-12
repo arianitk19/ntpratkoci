@@ -342,51 +342,7 @@
             <i data-lucide="settings-2" class="w-5 h-5 text-gray-300"></i>
         </button>
     </header>
-
-   <style>
-       :root {
-    --glass-bg: rgba(10, 10, 10, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --primary-glow: rgba(16, 185, 129, 0.4);
-}
-
-.glass-control-panel {
-    background: var(--glass-bg);
-    backdrop-filter: blur(40px) saturate(180%);
-    -webkit-backdrop-filter: blur(40px) saturate(180%);
-    border: 1px solid var(--glass-border);
-}
-
-.control-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.control-card:active {
-    transform: scale(0.97);
-    background: rgba(255, 255, 255, 0.05);
-}
-
-/* Custom Slider Styling */
-input[type='range'] {
-    -webkit-appearance: none;
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
-}
-
-input[type='range']::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    background: #fff;
-    border-radius: 50%;
-    box-shadow: 0 0 15px var(--primary-glow);
-    cursor: pointer;
-}
-       </style>
-
-    <!-- SETTINGS CONTROL CENTER -->
+  <!-- SETTINGS CONTROL CENTER -->
 <div id="settings-modal" class="fixed inset-0 z-[100] hidden overflow-hidden">
     <!-- Ambient Fade Overlay -->
     <div class="absolute inset-0 bg-black/60 backdrop-blur-md opacity-0 transition-opacity duration-700" id="settings-overlay" onclick="toggleSettings()"></div>
@@ -500,6 +456,49 @@ input[type='range']::-webkit-slider-thumb {
 </div>
 
     
+   <style>
+       :root {
+    --glass-bg: rgba(10, 10, 10, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --primary-glow: rgba(16, 185, 129, 0.4);
+}
+
+.glass-control-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(40px) saturate(180%);
+    -webkit-backdrop-filter: blur(40px) saturate(180%);
+    border: 1px solid var(--glass-border);
+}
+
+.control-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.control-card:active {
+    transform: scale(0.97);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Custom Slider Styling */
+input[type='range'] {
+    -webkit-appearance: none;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+
+input[type='range']::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 15px var(--primary-glow);
+    cursor: pointer;
+}
+       </style>
+
     <main class="pt-28 safe-area-bottom">
         
 
