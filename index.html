@@ -342,121 +342,94 @@
             <i data-lucide="settings-2" class="w-5 h-5 text-gray-300"></i>
         </button>
     </header>
-  <!-- SETTINGS CONTROL CENTER -->
-<div id="settings-modal" class="fixed inset-0 z-[100] hidden overflow-hidden">
-    <!-- Ambient Fade Overlay -->
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-md opacity-0 transition-opacity duration-700" id="settings-overlay" onclick="toggleSettings()"></div>
+<!-- SETTINGS TRIGGER BUTTON (Butoni që e hap) -->
+<button onclick="toggleSettings()" class="fixed bottom-24 right-6 z-[999] bg-white/10 backdrop-blur-lg border border-white/20 p-4 rounded-3xl shadow-2xl active:scale-90 transition-all">
+    <i data-lucide="settings" class="w-6 h-6 text-white"></i>
+</button>
+
+<!-- SETTINGS MODAL -->
+<div id="settings-modal" class="fixed inset-0 z-[1000] hidden">
+    <!-- Overlay (Mbyllja me klikim jashtë) -->
+    <div id="settings-overlay" 
+         onclick="toggleSettings()" 
+         class="absolute inset-0 bg-black/80 backdrop-blur-xl opacity-0 transition-opacity duration-500">
+    </div>
     
-    <!-- Flagship Bottom Sheet -->
-    <div class="absolute bottom-0 w-full glass-control-panel rounded-t-[3.5rem] p-8 pb-12 translate-y-full transition-transform duration-700 cubic-bezier(0.32, 0.72, 0, 1)" id="settings-content">
+    <!-- Panel Content -->
+    <div id="settings-content" 
+         class="absolute bottom-0 left-0 right-0 w-full glass-control-panel rounded-t-[3rem] p-8 pb-12 translate-y-full transition-transform duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] z-[1001]">
         
-        <!-- Interactive Handle -->
-        <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-10 group-active:bg-white/40"></div>
+        <!-- Handle -->
+        <div class="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-8"></div>
 
-        <!-- Header: Smart Intelligence -->
-        <div class="flex flex-col items-center mb-10 text-center">
-            <h3 class="text-3xl font-black tracking-tighter text-white bg-gradient-to-b from-white to-white/50 bg-clip-text text-transparent">Sistemi & Inteligjenca</h3>
-            <p class="text-[9px] text-primary font-black uppercase tracking-[0.4em] mt-2 animate-pulse">NTP RATKOCI OS v2.6</p>
-        </div>
+        <div class="max-w-md mx-auto space-y-6">
+            <h3 class="text-2xl font-bold text-center text-white mb-6 italic tracking-tight">NTP Ratkoci <span class="text-primary text-xs ml-1 font-black uppercase tracking-widest">Settings</span></h3>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto overflow-y-auto max-h-[65vh] no-scrollbar px-2">
-            
-            <!-- Appearance Group -->
-            <div class="space-y-4">
-                <p class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] ml-4">Appearance Intelligence</p>
-                <div class="control-card p-6 rounded-[2.5rem] space-y-6">
-                    <!-- Dark Mode -->
-                    <div class="flex justify-between items-center group">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-active:scale-90 transition-transform">
-                                <i data-lucide="moon" class="w-5 h-5"></i>
-                            </div>
-                            <div>
-                                <span class="block font-bold text-sm text-white">Dark Mode Ultra</span>
-                                <span class="text-[10px] text-white/40">OLED Optimized</span>
-                            </div>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="toggle-dark-mode" checked class="sr-only peer">
-                            <div class="w-14 h-7 bg-white/10 peer-checked:bg-primary rounded-full transition-all duration-500 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-7 peer-checked:after:scale-90"></div>
-                        </label>
-                    </div>
-
-                    <!-- AI Speaker Speed Slider -->
-                    <div class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold text-white/80">Shpejtësia e AI Voice</span>
-                            <span id="speed-val" class="text-xs font-black text-primary">1.0x</span>
-                        </div>
-                        <input type="range" min="0.5" max="2" step="0.1" value="1" class="w-full h-1.5" oninput="updateAISpeed(this.value)">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Interaction & Haptics -->
-            <div class="space-y-4">
-                <p class="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] ml-4">Haptic & Motion</p>
-                <div class="control-card p-6 rounded-[2.5rem] space-y-6">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500">
-                                <i data-lucide="zap" class="w-5 h-5"></i>
-                            </div>
-                            <div>
-                                <span class="block font-bold text-sm text-white">Haptic Feedback</span>
-                                <span class="text-[10px] text-white/40">Tactile Micro-interactions</span>
-                            </div>
-                        </div>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="toggle-haptic" checked class="sr-only peer">
-                            <div class="w-14 h-7 bg-white/10 peer-checked:bg-blue-500 rounded-full transition-all duration-500 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-7"></div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Performance System Health -->
-                <div class="control-card p-6 rounded-[2.5rem] bg-gradient-to-br from-white/[0.02] to-transparent">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-[10px] font-bold text-white/60 uppercase tracking-widest">System Health</span>
-                        <div class="flex gap-1">
-                            <span class="w-1 h-1 bg-primary rounded-full animate-bounce"></span>
-                            <span class="w-1 h-1 bg-primary rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                        </div>
-                    </div>
+            <!-- Group 1: Appearance -->
+            <div class="space-y-3">
+                <div class="control-card p-5 rounded-[2rem] flex justify-between items-center bg-white/5 border border-white/10">
                     <div class="flex items-center gap-4">
-                        <div class="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden">
-                            <div class="w-[92%] h-full bg-primary shadow-[0_0_10px_#10b981]"></div>
+                        <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
+                            <i data-lucide="moon" class="w-5 h-5"></i>
                         </div>
-                        <span class="text-[10px] font-black text-white">92% Optimized</span>
+                        <span class="font-semibold text-white">Dark Mode Ultra</span>
                     </div>
+                    <label class="relative inline-flex items-center cursor-pointer p-2">
+                        <input type="checkbox" id="toggle-dark-mode" checked class="sr-only peer" onchange="updateDarkMode()">
+                        <div class="w-11 h-6 bg-white/10 peer-checked:bg-primary rounded-full transition-all duration-300"></div>
+                        <div class="absolute left-3 top-3 bg-white w-4 h-4 rounded-full transition-all peer-checked:translate-x-5"></div>
+                    </label>
+                </div>
+
+                <div class="control-card p-5 rounded-[2rem] flex justify-between items-center bg-white/5 border border-white/10">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400">
+                            <i data-lucide="zap" class="w-5 h-5"></i>
+                        </div>
+                        <span class="font-semibold text-white">Haptic Feedback</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer p-2">
+                        <input type="checkbox" id="toggle-haptic" checked class="sr-only peer" onchange="triggerHaptic(15)">
+                        <div class="w-11 h-6 bg-white/10 peer-checked:bg-blue-500 rounded-full transition-all duration-300"></div>
+                        <div class="absolute left-3 top-3 bg-white w-4 h-4 rounded-full transition-all peer-checked:translate-x-5"></div>
+                    </label>
                 </div>
             </div>
 
-            <!-- Actions Group -->
-            <div class="md:col-span-2 pt-6">
-                <button onclick="clearCacheCinematic()" class="w-full p-6 rounded-[2.5rem] bg-red-500/5 border border-red-500/10 flex items-center justify-between group active:bg-red-500/10 transition-all">
-                    <div class="flex items-center gap-5">
-                        <div class="w-12 h-12 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-500 group-hover:rotate-12 transition-transform">
-                            <i data-lucide="trash-2" class="w-6 h-6"></i>
-                        </div>
-                        <div class="text-left">
-                            <span class="block font-bold text-sm text-red-500">Pastro Memorien (Cache)</span>
-                            <span class="text-[9px] text-red-500/40 uppercase font-black">Veprim i pakthyeshëm</span>
-                        </div>
-                    </div>
-                    <i data-lucide="chevron-right" class="w-5 h-5 text-red-500/20"></i>
-                </button>
-            </div>
+            <!-- Close Button -->
+            <button onclick="toggleSettings()" class="w-full py-5 bg-white text-black font-black rounded-3xl active:scale-95 transition-all text-sm uppercase tracking-widest mt-4">
+                Ruaj Ndryshimet
+            </button>
         </div>
-
-        <button onclick="toggleSettings()" class="max-w-md mx-auto w-full py-6 bg-white text-black font-black rounded-[2.5rem] mt-10 shadow-2xl active:scale-95 transition-all tracking-[0.2em] text-xs">
-            APLIKO DHE MBYLL
-        </button>
     </div>
 </div>
 
     
    <style>
+/* Sigurohet që modali të mos bllokojë faqen kur është i mbyllur */
+#settings-modal.hidden {
+    display: none !important;
+    pointer-events: none;
+}
+
+#settings-modal:not(.hidden) {
+    display: block !important;
+    pointer-events: auto;
+}
+
+/* Glass effect që nuk bllokon klikimet e fëmijëve */
+.glass-control-panel {
+    pointer-events: auto;
+    touch-action: manipulation;
+}
+
+/* Efekti i shtypjes për butonat */
+.control-card, button {
+    cursor: pointer !important;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+       
        :root {
     --glass-bg: rgba(10, 10, 10, 0.7);
     --glass-border: rgba(255, 255, 255, 0.08);
@@ -1026,72 +999,48 @@ input[type='range']::-webkit-slider-thumb {
             // Re-trigger lucide for safety
 
             lucide.createIcons();
-
-        }
-
-// Smart Animation System
 function toggleSettings() {
     const modal = document.getElementById('settings-modal');
     const overlay = document.getElementById('settings-overlay');
     const content = document.getElementById('settings-content');
 
     if (modal.classList.contains('hidden')) {
+        // HAPJA
         modal.classList.remove('hidden');
-        triggerHaptic(15);
+        document.body.style.overflow = 'hidden'; // Ndalon scrolling e faqes mbrapa
         
-        // Cinematic Reveal
         setTimeout(() => {
-            overlay.classList.replace('opacity-0', 'opacity-100');
+            overlay.classList.add('opacity-100');
             content.classList.remove('translate-y-full');
         }, 10);
+        
+        if(typeof triggerHaptic === "function") triggerHaptic(10);
     } else {
-        triggerHaptic(10);
+        // MBYLLJA
         content.classList.add('translate-y-full');
-        overlay.classList.replace('opacity-100', 'opacity-0');
+        overlay.classList.remove('opacity-100');
+        document.body.style.overflow = ''; 
         
         setTimeout(() => {
             modal.classList.add('hidden');
-        }, 700);
+        }, 500);
     }
 }
 
-// AI Voice Speed Simulation
-function updateAISpeed(val) {
-    document.getElementById('speed-val').innerText = val + "x";
-    triggerHaptic(5);
+// Funksioni për Dark Mode (nëse nuk e keni definuar ende)
+function updateDarkMode() {
+    const isDark = document.getElementById('toggle-dark-mode').checked;
+    if(isDark) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+    }
 }
 
-// Cinematic Cache Clear
-function clearCacheCinematic() {
-    triggerHaptic([40, 60, 40]);
-    
-    // Krijo një feedback vizual destruktiv
-    const btn = event.currentTarget;
-    btn.classList.add('animate-pulse', 'border-red-500');
-    
-    setTimeout(() => {
-        if(confirm("Sistemi do të bëjë 'Reset' total. Dëshironi të vazhdoni?")) {
-            localStorage.clear();
-            document.body.style.opacity = '0';
-            setTimeout(() => location.reload(), 500);
-        } else {
-            btn.classList.remove('animate-pulse', 'border-red-500');
-        }
-    }, 300);
-}
-
-// Initialize Lucide with Custom Glow
+// Inicializo ikonat që të bëhen të dukshme
 lucide.createIcons();
-
-// --- PWA SERVICE WORKER ---
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-            .then(() => console.log('NTP Ratkoci: App Offline Ready'))
-            .catch(err => console.error('PWA Error:', err));
-    });
-}
-
 
 
 
