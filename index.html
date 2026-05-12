@@ -110,195 +110,194 @@
 </head>
 <body class="font-sans antialiased select-none">
 
+<style> :root {
+  --primary-emerald: #10b981;
+  --dark-bg: #050505;
+  --glass-border: rgba(255, 255, 255, 0.08);
+}
 
+.ai-modal-glass {
+    background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(30px) saturate(150%);
+    border: 1px solid var(--glass-border);
+}
 
+.card-magnetic {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
 
-<div id="ai-modal" class="fixed inset-0 z-[1001] hidden flex items-center justify-center p-4">
-    <!-- Overlay me blur më të lartë -->
-    <div class="absolute inset-0 bg-dark/90 backdrop-blur-xl" onclick="toggleAI()"></div>
-    
-    <div class="relative w-full max-w-lg bg-dark border border-white/10 rounded-[2.5rem] overflow-hidden flex flex-col max-h-[85vh] shadow-2xl">
+.card-magnetic:hover {
+    background: rgba(16, 185, 129, 0.05);
+    border-color: var(--primary-emerald);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
+    transform: translateY(-5px) scale(1.02);
+}
+
+.voice-wave-active {
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--primary-emerald), transparent);
+    box-shadow: 0 0 15px var(--primary-emerald);
+    animation: waveMove 2s infinite linear;
+}
+
+@keyframes waveMove {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+} </style>
+<script> const RATKOCI_INTEL_DATA = {
+    market: {
+        name: "NTP Ratkoci",
+        founded: "1989",
+        location: "Rruga Safet Latifi, Ratkoc",
+        hours: "08:00 - 21:00",
+        status: () => {
+            const hour = new Date().getHours();
+            return (hour >= 8 && hour < 21) ? "OPEN" : "CLOSED";
+        }
+    },
+    inventory: {
+        pijet: ["Coca Cola", "Fanta", "Schweppes", "Golden Eagle", "Lynx", "Jaffa", "Sola", "Relax", "Ujë Ana", "Ujë Sharri", "Birra Peja"],
+        snacks: ["Vipa", "Patos", "Fripsy", "Opps", "Gold Snacks", "Bambusa"],
+        sweets: ["Pop Kek", "Alpella", "Today", "Topsa", "Figaro", "Nuss"]
+    },
+    trending: ["Coca Cola", "Patos Chips", "Golden Eagle", "Pop Kek"],
+    responses: {
+        greeting: "Mirësevini në NTP Ratkoci. Jam asistenti juaj inteligjent. Si mund t'ju ndihmoj sot?",
+        orari: "NTP Ratkoci është i hapur çdo ditë nga ora 08:00 deri në 21:00. Për momentin jemi STATUS_PLACEHOLDER.",
+        lokacioni: "Ne ndodhemi në Rrugën Safet Latifi në Ratkoc. Mund të na gjeni përballë xhamisë.",
+        pijet: "Kemi një përzgjedhje të gjerë të pijeve freskuese si Coca Cola, Golden Eagle dhe Ujë Sharri me çmimet më të mira.",
+        snacks: "Ju sugjeroj Vipa ose Patos, janë shoqëruesit perfekt për çdo moment!"
+    }
+};
+
+const AI_CORE = {
+    speak: function(text) {
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'sq-AL';
+        msg.rate = 0.95;
         
-        <!-- Shiriti i zërit - Tani me animacion lëvizës kur AI flet -->
-        <div id="voice-wave" class="h-1.5 bg-primary w-0 transition-all duration-700 ease-in-out opacity-0 shadow-[0_0_15px_#your-primary-color]"></div>
+        msg.onstart = () => {
+            document.getElementById('voice-wave').classList.add('voice-wave-active');
+            this.updateStatus("Duke folur...");
+        };
+        
+        msg.onend = () => {
+            document.getElementById('voice-wave').classList.remove('voice-wave-active');
+            this.updateStatus("Gati për pyetje");
+        };
+        
+        window.speechSynthesis.speak(msg);
+    },
 
-        <div class="p-8 flex-1 overflow-y-auto no-scrollbar">
-            <div class="flex justify-between items-start mb-6">
+    updateStatus: (text) => {
+        document.getElementById('ai-status').innerText = text.toUpperCase();
+    },
+
+    executeAction: function(key) {
+        let response = RATKOCI_INTEL_DATA.responses[key];
+        
+        if(key === 'orari') {
+            const status = RATKOCI_INTEL_DATA.market.status();
+            response = response.replace("STATUS_PLACEHOLDER", status === "OPEN" ? "HAPUR" : "MBYLLUR");
+        }
+
+        this.typeEffect(response);
+        this.speak(response);
+    },
+
+    typeEffect: function(text) {
+        const output = document.getElementById('ai-output');
+        output.innerHTML = "";
+        let i = 0;
+        this.updateStatus("Duke menduar...");
+        
+        const timer = setInterval(() => {
+            if (i < text.length) {
+                output.innerHTML += text.charAt(i);
+                i++;
+            } else {
+                clearInterval(timer);
+            }
+        }, 30);
+    }
+};</script>
+
+
+    <div id="ai-modal" class="fixed inset-0 z-[1001] flex items-center justify-center p-6 bg-black/90 backdrop-blur-2xl">
+    <div class="relative w-full max-w-4xl ai-modal-glass rounded-[3.5rem] overflow-hidden flex flex-col h-[85vh] shadow-[0_0_100px_rgba(16,185,129,0.1)]">
+        
+        <!-- Top Status Bar -->
+        <div id="voice-wave" class="absolute top-0 left-0 w-full h-[2px] transition-all duration-500"></div>
+
+        <div class="p-10 flex-1 overflow-y-auto no-scrollbar">
+            <!-- Header -->
+            <div class="flex justify-between items-start mb-12">
                 <div>
-                    <h2 class="text-2xl font-black text-white tracking-tight">Ratkoci <span class="text-primary text-xs font-bold tracking-[0.4em] ml-2 uppercase">Intel</span></h2>
-                    <p id="ai-status" class="text-[10px] text-white/40 uppercase font-bold tracking-[0.2em] mt-1 transition-all">Gati për t'ju dëgjuar</p>
+                    <h2 class="text-4xl font-black text-white tracking-tighter italic">NTP RATKOCI <span class="text-primary text-xs tracking-[0.5em] not-italic ml-2">2026</span></h2>
+                    <div class="flex items-center gap-2 mt-2">
+                        <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                        <p id="ai-status" class="text-[10px] text-white/40 font-bold tracking-widest uppercase">Sistemi Online</p>
+                    </div>
                 </div>
-                <!-- Butoni i mbylljes i integruar bukur -->
-                <button onclick="toggleAI()" class="text-white/20 hover:text-white transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
+                <button onclick="toggleAI()" class="p-4 rounded-full bg-white/5 hover:bg-white/10 transition-all">
+                    <i data-lucide="x" class="text-white/20"></i>
                 </button>
             </div>
 
-            <!-- Grid-i i butonave me stil "Glassmorphism" -->
-            <div id="ai-cards" class="grid grid-cols-2 gap-4 mb-10">
-                <button onclick="executeAction('orari')" class="glass group p-5 rounded-[2rem] text-left border border-white/5 hover:border-primary/40 transition-all active:scale-95 bg-white/5">
-                    <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                        <i data-lucide="clock" class="w-5 h-5 text-primary"></i>
-                    </div>
-                    <p class="text-sm font-bold text-white">Orari i punës</p>
-                    <p class="text-[10px] text-white/30 mt-1 italic font-medium">Hapur nga 8:00 deri 21:00</p>
+            <!-- Smart Interaction Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+                <!-- Orari Card -->
+                <button onclick="AI_CORE.executeAction('orari')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
+                    <i data-lucide="clock" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
+                    <p class="text-xs font-bold text-white uppercase tracking-wider">Orari</p>
+                    <p class="text-[10px] text-white/30 mt-1">Statusi Live</p>
                 </button>
 
-                <button onclick="executeAction('lokacioni')" class="glass group p-5 rounded-[2rem] text-left border border-white/5 hover:border-primary/40 transition-all active:scale-95 bg-white/5">
-                    <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                        <i data-lucide="map-pin" class="w-5 h-5 text-primary"></i>
-                    </div>
-                    <p class="text-sm font-bold text-white">Ku ndodhemi?</p>
-                    <p class="text-[10px] text-white/30 mt-1 italic font-medium">Rruga Safet Latifi, Ratkoc</p>
+                <!-- Lokacioni Card -->
+                <button onclick="AI_CORE.executeAction('lokacioni')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
+                    <i data-lucide="map-pin" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
+                    <p class="text-xs font-bold text-white uppercase tracking-wider">Lokacioni</p>
+                    <p class="text-[10px] text-white/30 mt-1">Gjej Marketin</p>
                 </button>
 
-                <button onclick="executeAction('ofertat')" class="glass group p-5 rounded-[2rem] text-left border border-white/5 hover:border-primary/40 transition-all active:scale-95 bg-white/5">
-                    <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                        <i data-lucide="tag" class="w-5 h-5 text-primary"></i>
-                    </div>
-                    <p class="text-sm font-bold text-white">Çmimet e produkteve</p>
-                    <p class="text-[10px] text-white/30 mt-1 italic font-medium">Çmimet ne marketin NTP Ratkoci janë shum te pershtatshme</p>
+                <!-- Pijet Card -->
+                <button onclick="AI_CORE.executeAction('pijet')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
+                    <i data-lucide="cup-soda" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
+                    <p class="text-xs font-bold text-white uppercase tracking-wider">Pijet</p>
+                    <p class="text-[10px] text-white/30 mt-1">Freskohu</p>
                 </button>
 
-                <button onclick="executeAction('produktet')" class="glass group p-5 rounded-[2rem] text-left border border-white/5 hover:border-primary/40 transition-all active:scale-95 bg-white/5">
-                    <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center mb-3 group-hover:bg-primary/20 transition-colors">
-                        <i data-lucide="shopping-bag" class="w-5 h-5 text-primary"></i>
-                    </div>
-                    <p class="text-sm font-bold text-white">Më të shiturat</p>
-                    <p class="text-[10px] text-white/30 mt-1 italic font-medium">Shikoni kete sektor për më shumë</p>
+                <!-- Snacks Card -->
+                <button onclick="AI_CORE.executeAction('snacks')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
+                    <i data-lucide="cookie" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
+                    <p class="text-xs font-bold text-white uppercase tracking-wider">Snacks</p>
+                    <p class="text-[10px] text-white/30 mt-1">Shije Unike</p>
                 </button>
             </div>
 
-            <!-- Fusha e tekstit ku del përgjigja -->
-            <div class="relative">
-                <div id="ai-output" class="text-lg font-medium text-white/80 leading-snug min-h-[80px] p-2 transition-all duration-500">
-                    Zgjidhni një opsion ose shkruani pyetjen tuaj...
+            <!-- AI Cinematic Response -->
+            <div class="max-w-2xl mx-auto text-center">
+                <div id="ai-output" class="text-2xl md:text-3xl font-medium text-white/90 leading-tight tracking-tight min-h-[100px]">
+                    Zgjidhni një kategori ose më pyesni për çdo gjë rreth marketit...
                 </div>
             </div>
         </div>
 
-        <!-- Input-i i poshtëm më i pastër -->
-        <div class="p-6 border-t border-white/5 bg-white/[0.02] flex items-center gap-4">
-            <input id="ai-input" type="text" 
-                   onkeypress="if(event.key === 'Enter') manualSearch()"
-                   placeholder="Shkruaj këtu..." 
-                   class="bg-white/5 flex-1 h-12 px-6 rounded-2xl text-sm text-white border border-white/5 outline-none focus:border-primary/30 transition-all placeholder:text-white/20">
-            <button onclick="manualSearch()" class="bg-primary text-dark p-3 rounded-xl hover:bg-primary/80 transition-all shadow-lg">
-                <i data-lucide="send-horizontal" class="w-5 h-5"></i>
-            </button>
+        <!-- Input Section -->
+        <div class="p-8 bg-white/[0.02] border-t border-white/5">
+            <div class="relative max-w-3xl mx-auto group">
+                <input id="ai-input" type="text" placeholder="Pyete NTP Ratkocin..." 
+                    class="w-full h-16 bg-white/5 border border-white/10 rounded-2xl px-8 text-white outline-none focus:border-primary/50 transition-all">
+                <button class="absolute right-4 top-1/2 -translate-y-1/2 bg-primary p-3 rounded-xl text-dark hover:scale-105 active:scale-95 transition-all">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
-
-    <!-- KODI HTML MBETET I NJEJTË, SIGUROHU QË JE BRENDA NJË PROJEKTI TAILWIND -->
-
-<script>
-// Kjo siguron që zërat të ngarkohen saktë në shfletues (Chrome ka nevojë për këtë)
-window.speechSynthesis.getVoices();
-
-function toggleAI() {
-    const modal = document.getElementById('ai-modal');
-    if (!modal) return;
-
-    if (modal.classList.contains('hidden')) {
-        modal.classList.remove('hidden');
-        modal.style.display = 'flex'; // Forcon shfaqjen
-        if (window.navigator.vibrate) window.navigator.vibrate(10);
-        
-        // Inicializo ikonat nëse përdor Lucide
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-    } else {
-        modal.classList.add('hidden');
-        modal.style.display = 'none';
-        window.speechSynthesis.cancel();
-    }
-}
-
-const AI_ENGINE = {
-    responses: {
-        orari: {
-            text: "Marketin tonë mund ta vizitoni çdo ditë, nga ora 08:00 deri në orën 21:00. Ju mirëpresim!",
-            voice: "Our market is open for you every day… From eight in the morning until nine in the evening. We welcome you!”"
-        },
-        lokacioni: {
-            text: "NTP Ratkoci ndodhet në qendër të fshatit Ratkoc, saktësisht përballë xhamisë.",
-            voice: "“NTP Ratkoci is located on Safet Latifi Street in the village of Ratkoc. Specifically, right next to the Elementary School. You can find us very easily!”"
-        },
-        ofertat: {
-            text: "Kemi çmime fantastike, veçanërisht për pijet freskuese dhe produktet ushqimore.",
-            voice: "We have fantastic prices, especially for soft drinks and food products."
-        },
-        produktet: {
-            text: "Produktet tona më të kërkuara mund ti shihni ne sektorin qe ndodhet ne kategorine e pare.",
-            voice: "“Our most requested products can be found in the section located in the first category.”"
-        }
-    },
-
-    speak: function(phrase) {
-        window.speechSynthesis.cancel();
-        const msg = new SpeechSynthesisUtterance(phrase);
-        const voices = window.speechSynthesis.getVoices();
-        
-        // Gjejmë zërin shqip ose një zë cilësor
-        msg.voice = voices.find(v => v.lang.includes('sq') || v.name.includes('Google')) || voices[0];
-        msg.lang = 'sq-AL';
-        msg.rate = 0.9;
-        msg.pitch = 1.0;
-
-        msg.onstart = () => {
-            const wave = document.getElementById('voice-wave');
-            if(wave) {
-                wave.style.width = '100%';
-                wave.style.opacity = '1';
-                wave.classList.add('animate-pulse');
-            }
-            document.getElementById('ai-status').innerText = "Asistenti po flet...";
-        };
-
-        msg.onend = () => {
-            const wave = document.getElementById('voice-wave');
-            if(wave) {
-                wave.style.width = '0%';
-                wave.style.opacity = '0.5';
-                wave.classList.remove('animate-pulse');
-            }
-            document.getElementById('ai-status').innerText = "Gati për t'ju dëgjuar";
-        };
-
-        window.speechSynthesis.speak(msg);
-    }
-};
-
-// Shto këto funksione që mungonin në snippet-in tënd të fundit për të ekzekutuar veprimet
-function executeAction(type) {
-    const data = AI_ENGINE.responses[type];
-    const output = document.getElementById('ai-output');
-    if(!data || !output) return;
-
-    output.style.opacity = '0.5';
-    setTimeout(() => {
-        output.innerHTML = `<span class="text-primary">●</span> ${data.text}`;
-        output.style.opacity = '1';
-        AI_ENGINE.speak(data.voice);
-    }, 300);
-}
-
-function manualSearch() {
-    const input = document.getElementById('ai-input');
-    const val = input.value.toLowerCase();
-    if(!val) return;
-
-    if(val.includes("orar")) executeAction('orari');
-    else if(val.includes("ku") || val.includes("lokacion")) executeAction('lokacioni');
-    else if(val.includes("oferta")) executeAction('ofertat');
-    else if(val.includes("produkt")) executeAction('produktet');
-    else {
-        AI_ENGINE.speak("Më falni, nuk e kuptova kërkesën.");
-    }
-    input.value = "";
-}
-</script>
     
     <div id="intro-screen" class="fixed inset-0 flex flex-col items-center justify-center p-8 text-center">
         <div id="intro-logo" class="w-24 h-24 bg-primary/10 rounded-[2.5rem] flex items-center justify-center mb-6 opacity-0 scale-50">
