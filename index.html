@@ -1,18 +1,31 @@
 <!DOCTYPE html>
 <html lang="sq" class="dark">
 <head>
+    <!-- ============================================================
+         NTP RATKOCI — PREMIUM PWA PLATFORM
+         Single-File Enterprise Architecture
+         Build: 2026 · Ultra Modern Edition
+         ============================================================ -->
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NTP Ratkoci</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#020617">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="NTP Ratkoci — Marketi premium në Ratkoc. Cilësi dhe besim në çdo blerje që nga 1989.">
+
+    <title>NTP Ratkoci · Premium Market</title>
+
     <link rel="manifest" href="manifest.json">
-    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310b981'%3E%3Cpath d='M16 11V7a4 4 0 1 0-8 0v4H5v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-9h-3zm-6-4a2 2 0 1 1 4 0v4h-4V7z'/%3E%3C/svg%3E">
+
+    <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Tailwind Configuration -->
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -21,1188 +34,2636 @@
                     colors: {
                         dark: '#020617',
                         primary: '#10b981',
+                        accent: '#34d399',
                         surface: '#0f172a',
+                        glow: '#6ee7b7'
                     },
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif']
+                    }
                 }
             }
-        }
+        };
     </script>
 
-    <style>  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        :root { --nav-height: 76px; }
-        body { 
-            background-color: #020617; 
-            color: #f8fafc; 
-            -webkit-tap-highlight-color: transparent; 
-            overflow-x: hidden;
+    <style>
+        /* ============================================================
+           SECTION 01 · DESIGN TOKENS & ROOT VARIABLES
+           ============================================================ */
+        :root {
+            --nav-height: 86px;
+            --header-height: 72px;
+            --primary: #10b981;
+            --primary-rgb: 16, 185, 129;
+            --primary-soft: #34d399;
+            --primary-deep: #047857;
+            --dark: #020617;
+            --dark-soft: #0f172a;
+            --dark-glass: rgba(15, 23, 42, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-strong: rgba(255, 255, 255, 0.14);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-tertiary: #64748b;
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-premium: 0 30px 80px -20px rgba(0, 0, 0, 0.6);
+            --shadow-glow: 0 0 60px rgba(16, 185, 129, 0.25);
         }
-        
-        /* Smooth View Transitions */
-        .view { display: none; opacity: 0; transform: translateY(10px); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .view.active { display: block; opacity: 1; transform: translateY(0); }
 
-        /* Prevent Layout Shifts */
-        .safe-area-bottom { padding-bottom: calc(var(--nav-height) + 40px); }
-        
-        /* Modern Scroll */
+        html.light {
+            --dark: #f8fafc;
+            --dark-soft: #ffffff;
+            --dark-glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.06);
+            --glass-border-strong: rgba(0, 0, 0, 0.12);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #94a3b8;
+        }
+
+        /* ============================================================
+           SECTION 02 · BASE & RESET
+           ============================================================ */
+        * { -webkit-tap-highlight-color: transparent; }
+
+        html, body {
+            background-color: var(--dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            min-height: 100vh;
+            min-height: 100dvh;
+            background-image:
+                radial-gradient(circle at 15% 10%, rgba(16, 185, 129, 0.08), transparent 50%),
+                radial-gradient(circle at 85% 90%, rgba(52, 211, 153, 0.05), transparent 50%);
+            background-attachment: fixed;
+            transition: background-color 0.5s var(--ease-smooth), color 0.5s var(--ease-smooth);
+        }
+
+        html.light body {
+            background-image:
+                radial-gradient(circle at 15% 10%, rgba(16, 185, 129, 0.06), transparent 50%),
+                radial-gradient(circle at 85% 90%, rgba(52, 211, 153, 0.04), transparent 50%);
+        }
+
+        ::selection { background: var(--primary); color: var(--dark); }
+
+        /* ============================================================
+           SECTION 03 · UTILITIES
+           ============================================================ */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Components */
-        .glass { 
-            background: rgba(30, 41, 59, 0.4); 
-            backdrop-filter: blur(16px); 
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+
+        .safe-area-bottom { padding-bottom: calc(var(--nav-height) + 48px); }
+        .safe-area-top { padding-top: calc(var(--header-height) + 24px); }
+
+        .text-balance { text-wrap: balance; }
+        .gpu { transform: translateZ(0); will-change: transform; backface-visibility: hidden; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #10b981 0%, #6ee7b7 50%, #34d399 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        
-        .nav-active { color: #10b981; position: relative; }
-        .nav-active::after {
+
+        .gradient-border {
+            position: relative;
+            background: linear-gradient(var(--dark-soft), var(--dark-soft)) padding-box,
+                        linear-gradient(135deg, rgba(16, 185, 129, 0.6), rgba(110, 231, 183, 0.1)) border-box;
+            border: 1px solid transparent;
+        }
+
+        /* ============================================================
+           SECTION 04 · GLASSMORPHISM COMPONENTS
+           ============================================================ */
+        .glass {
+            background: var(--dark-glass);
+            backdrop-filter: blur(24px) saturate(160%);
+            -webkit-backdrop-filter: blur(24px) saturate(160%);
+            border: 1px solid var(--glass-border);
+        }
+
+        .glass-strong {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border: 1px solid var(--glass-border-strong);
+        }
+
+        html.light .glass-strong {
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .glass-ultra {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(2, 6, 23, 0.95) 100%);
+            backdrop-filter: blur(60px) saturate(200%);
+            -webkit-backdrop-filter: blur(60px) saturate(200%);
+            border: 1px solid var(--glass-border-strong);
+        }
+
+        html.light .glass-ultra {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.98) 100%);
+        }
+
+        /* ============================================================
+           SECTION 05 · INTRO SCREEN
+           ============================================================ */
+        #intro-screen {
+            position: fixed; inset: 0; z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 70%);
+            overflow: hidden;
+        }
+
+        #intro-screen::before {
+            content: ''; position: absolute; inset: 0;
+            background:
+                radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.15), transparent 50%),
+                conic-gradient(from 0deg at 50% 50%, transparent, rgba(16, 185, 129, 0.08), transparent);
+            animation: introPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes introPulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .intro-logo-ring {
+            position: relative;
+            width: 120px; height: 120px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .intro-logo-ring::before,
+        .intro-logo-ring::after {
+            content: ''; position: absolute; inset: 0;
+            border-radius: 50%;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            animation: ringPulse 2s ease-out infinite;
+        }
+        .intro-logo-ring::after { animation-delay: 1s; }
+
+        @keyframes ringPulse {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(1.6); opacity: 0; }
+        }
+
+        /* ============================================================
+           SECTION 06 · TOP HEADER
+           ============================================================ */
+        .app-header {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+            height: var(--header-height);
+            background: linear-gradient(180deg, rgba(2, 6, 23, 0.85) 0%, rgba(2, 6, 23, 0.6) 100%);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px;
+            transition: all 0.4s var(--ease-smooth);
+        }
+
+        html.light .app-header {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.6) 100%);
+        }
+
+        .header-logo-mark {
+            width: 38px; height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #10b981, #047857);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .icon-btn {
+            width: 42px; height: 42px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s var(--ease-spring);
+            color: var(--text-secondary);
+        }
+
+        html.light .icon-btn {
+            background: rgba(0, 0, 0, 0.03);
+            color: var(--text-secondary);
+        }
+
+        .icon-btn:hover {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .icon-btn:active { transform: scale(0.92); }
+
+        /* ============================================================
+           SECTION 07 · VIEW TRANSITIONS
+           ============================================================ */
+        .view {
+            display: none;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+        }
+        .view.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: viewEnter 0.6s var(--ease-out);
+        }
+
+        @keyframes viewEnter {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ============================================================
+           SECTION 08 · HERO SECTION
+           ============================================================ */
+        .hero-card {
+            position: relative;
+            border-radius: 36px;
+            overflow: hidden;
+            min-height: 240px;
+            background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+            isolation: isolate;
+        }
+
+        .hero-card::before {
+            content: ''; position: absolute; inset: 0; z-index: 1;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.4), transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(110, 231, 183, 0.25), transparent 40%);
+        }
+
+        .hero-card::after {
+            content: ''; position: absolute; inset: 0; z-index: 2;
+            background: linear-gradient(180deg, transparent 30%, rgba(2, 6, 23, 0.85) 100%);
+        }
+
+        .hero-grain {
+            position: absolute; inset: 0; z-index: 3;
+            opacity: 0.15;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            mix-blend-mode: overlay;
+        }
+
+        /* ============================================================
+           SECTION 09 · FEATURE CARDS (Quality / Service)
+           ============================================================ */
+        .feature-card {
+            position: relative;
+            padding: 24px;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+            transition: all 0.5s var(--ease-out);
+            cursor: default;
+        }
+
+        html.light .feature-card {
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .feature-card::before {
             content: '';
             position: absolute;
-            bottom: -8px;
-            width: 4px;
-            height: 4px;
-            background: #10b981;
-            border-radius: 50%;
+            top: -50%; right: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.15), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.5s var(--ease-out);
         }
-        .nav-active i { transform: translateY(-2px); transition: transform 0.3s ease; }
 
-        .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-        
-        /* Intro Overlay */
-        #intro-screen { z-index: 100; background: #020617; }
-        
-        /* Custom Checkbox/Toggle for Settings */
-        .toggle-dot { transition: all 0.3s ease; }
-        input:checked ~ .toggle-dot { transform: translateX(100%); background-color: #10b981; }
+        .feature-card:hover::before { opacity: 1; }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(16, 185, 129, 0.25);
+        }
 
-        /* Product Card Animation */
+        .feature-icon-wrap {
+            width: 48px; height: 48px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.18), rgba(16, 185, 129, 0.06));
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--primary);
+            margin-bottom: 16px;
+            transition: all 0.5s var(--ease-spring);
+        }
+
+        .feature-card:hover .feature-icon-wrap {
+            transform: scale(1.08) rotate(-5deg);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(16, 185, 129, 0.1));
+        }
+
+        /* ============================================================
+           SECTION 10 · TRENDING SLIDER
+           ============================================================ */
+        .trending-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 16px;
+            padding: 8px 20px 20px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scroll-padding: 20px;
+        }
+
+        .trending-card {
+            flex: 0 0 260px;
+            height: 320px;
+            scroll-snap-align: start;
+            position: relative;
+            border-radius: 32px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f172a, #020617);
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            transition: all 0.5s var(--ease-out);
+            isolation: isolate;
+        }
+
+        .trending-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(16, 185, 129, 0.35);
+            box-shadow: 0 30px 60px -20px rgba(16, 185, 129, 0.25);
+        }
+
+        .trending-img {
+            position: absolute; inset: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0.45;
+            transition: transform 0.8s var(--ease-out), opacity 0.5s;
+        }
+
+        .trending-card:hover .trending-img {
+            transform: scale(1.08);
+            opacity: 0.55;
+        }
+
+        .trending-card::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(180deg, transparent 30%, rgba(2, 6, 23, 0.95) 100%);
+            z-index: 1;
+        }
+
+        .trending-badge {
+            position: absolute; top: 16px; right: 16px;
+            padding: 6px 12px;
+            background: rgba(16, 185, 129, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            color: #6ee7b7;
+            border-radius: 100px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            z-index: 3;
+        }
+
+        .trending-info {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 24px;
+            z-index: 2;
+        }
+
+        /* ============================================================
+           SECTION 11 · PRODUCT GRID & CARDS
+           ============================================================ */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        @media (min-width: 640px) {
+            .product-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (min-width: 1024px) {
+            .product-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+        }
+
         .product-card {
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid var(--glass-border);
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.4s var(--ease-out);
+            overflow: hidden;
+            isolation: isolate;
         }
-        .product-card:active { transform: scale(0.95); }
 
-        /* Category Click State */
-        .category-pill {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        html.light .product-card {
+            background: rgba(255, 255, 255, 0.75);
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute; inset: 0; z-index: -1;
+            border-radius: inherit;
+            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(16, 185, 129, 0.15), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .product-card:hover::before { opacity: 1; }
+        .product-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(16, 185, 129, 0.3);
+            box-shadow: 0 16px 40px -12px rgba(16, 185, 129, 0.2);
+        }
+        .product-card:active { transform: scale(0.97); }
+
+        .product-img-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.04);
+            margin-bottom: 12px;
+        }
+
+        html.light .product-img-wrap {
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        .product-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s var(--ease-out);
+        }
+
+        .product-card:hover .product-img { transform: scale(1.07); }
+
+        .wishlist-btn {
+            position: absolute;
+            top: 8px; right: 8px;
+            width: 32px; height: 32px;
+            border-radius: 12px;
+            background: rgba(2, 6, 23, 0.65);
+            backdrop-filter: blur(10px);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s var(--ease-spring);
+            z-index: 4;
+            cursor: pointer;
+        }
+
+        .wishlist-btn:hover {
+            transform: scale(1.15);
+            color: #f87171;
+        }
+
+        .wishlist-btn.active {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .wishlist-btn.active i { fill: currentColor; }
+
+        .skeleton {
+            background: linear-gradient(90deg,
+                rgba(255, 255, 255, 0.04) 25%,
+                rgba(255, 255, 255, 0.08) 50%,
+                rgba(255, 255, 255, 0.04) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 28px;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* ============================================================
+           SECTION 12 · FILTER PILLS
+           ============================================================ */
+        .filter-row {
+            display: flex; gap: 10px;
+            overflow-x: auto;
+            padding: 8px 0 16px;
+            scroll-snap-type: x mandatory;
+        }
+
+        .filter-pill {
+            flex-shrink: 0;
+            scroll-snap-align: start;
+            padding: 10px 20px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            transition: all 0.3s var(--ease-spring);
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        html.light .filter-pill {
+            background: rgba(255, 255, 255, 0.75);
+        }
+
+        .filter-pill:hover {
+            color: var(--text-primary);
+            border-color: var(--glass-border-strong);
+        }
+
+        .filter-pill.active {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-color: transparent;
+            color: #022c22;
+            box-shadow: 0 8px 24px -8px rgba(16, 185, 129, 0.5);
+        }
+
+        /* ============================================================
+           SECTION 13 · BOTTOM NAV DOCK
+           ============================================================ */
+        .nav-dock {
+            position: fixed;
+            bottom: 16px; left: 50%;
+            transform: translateX(-50%);
+            z-index: 49;
+            width: calc(100% - 32px);
+            max-width: 480px;
+            height: 70px;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid var(--glass-border-strong);
+            border-radius: 28px;
+            box-shadow: 0 20px 60px -10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 8px;
+        }
+
+        html.light .nav-dock {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .nav-btn {
+            position: relative;
+            flex: 1;
+            height: 54px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            border-radius: 18px;
+            color: var(--text-tertiary);
+            transition: all 0.4s var(--ease-spring);
+        }
+
+        .nav-btn:active { transform: scale(0.92); }
+
+        .nav-btn i {
+            width: 22px; height: 22px;
+            transition: transform 0.4s var(--ease-spring);
+        }
+
+        .nav-btn span {
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(4px);
+            transition: all 0.3s var(--ease-out);
+        }
+
+        .nav-btn.active {
+            color: var(--primary);
+        }
+
+        .nav-btn.active i { transform: translateY(-2px) scale(1.1); }
+        .nav-btn.active span { opacity: 1; transform: translateY(0); }
+
+        .nav-btn.active::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            width: 24px; height: 3px;
+            border-radius: 100px;
+            background: linear-gradient(90deg, #10b981, #6ee7b7);
+            box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+        }
+
+        /* ============================================================
+           SECTION 14 · FLOATING AI BUTTON
+           ============================================================ */
+        .ai-fab {
+            position: fixed;
+            bottom: calc(var(--nav-height) + 16px);
+            right: 20px;
+            z-index: 48;
+            width: 56px; height: 56px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #022c22;
+            box-shadow: 0 20px 40px -10px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.4s var(--ease-spring);
+            cursor: pointer;
+        }
+
+        .ai-fab::before {
+            content: '';
+            position: absolute; inset: -4px;
+            border-radius: 24px;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            animation: fabPulse 2.5s ease-out infinite;
+        }
+
+        @keyframes fabPulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            100% { transform: scale(1.25); opacity: 0; }
+        }
+
+        .ai-fab:hover {
+            transform: scale(1.1) rotate(8deg);
+            box-shadow: 0 25px 50px -10px rgba(16, 185, 129, 0.7);
+        }
+        .ai-fab:active { transform: scale(0.92); }
+
+        /* ============================================================
+           SECTION 15 · MODALS
+           ============================================================ */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.open { display: flex; }
+
+        .modal-backdrop {
+            position: absolute; inset: 0;
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            opacity: 0;
+            transition: opacity 0.4s var(--ease-out);
+        }
+
+        .modal-overlay.visible .modal-backdrop { opacity: 1; }
+
+        .modal-panel {
+            position: relative;
+            z-index: 1;
+            transform: scale(0.92) translateY(20px);
+            opacity: 0;
+            transition: all 0.5s var(--ease-spring);
+            max-height: 90vh;
+            max-width: 100%;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.visible .modal-panel {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        /* Sheet modal (settings) */
+        .sheet-overlay {
+            position: fixed; inset: 0; z-index: 100;
+            display: none;
+        }
+        .sheet-overlay.open { display: block; }
+
+        .sheet-backdrop {
+            position: absolute; inset: 0;
+            background: rgba(2, 6, 23, 0.7);
+            backdrop-filter: blur(16px);
+            opacity: 0;
+            transition: opacity 0.4s var(--ease-out);
+        }
+        .sheet-overlay.visible .sheet-backdrop { opacity: 1; }
+
+        .sheet-panel {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.5s var(--ease-out);
+            border-radius: 36px 36px 0 0;
+            padding: 20px 20px 80px;
+        }
+        .sheet-overlay.visible .sheet-panel { transform: translateY(0); }
+
+        .sheet-handle {
+            width: 48px; height: 5px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 100px;
+            margin: 0 auto 24px;
+        }
+
+        /* ============================================================
+           SECTION 16 · TOGGLE SWITCH
+           ============================================================ */
+        .toggle {
+            position: relative;
+            width: 48px; height: 28px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s var(--ease-smooth);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px; left: 3px;
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            background: #ffffff;
+            transition: all 0.3s var(--ease-spring);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .toggle input { display: none; }
+        .toggle input:checked ~ .toggle-track { background: linear-gradient(135deg, #10b981, #059669); }
+        .toggle input:checked ~ .toggle-track::after { transform: translateX(20px); }
+
+        .toggle-track {
+            width: 100%; height: 100%;
+            border-radius: inherit;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+            transition: background 0.3s var(--ease-smooth);
+        }
+
+        html.light .toggle-track { background: rgba(0, 0, 0, 0.1); }
+
+        .toggle-track::after {
+            content: '';
+            position: absolute;
+            top: 3px; left: 3px;
+            width: 22px; height: 22px;
+            border-radius: 50%;
+            background: #ffffff;
+            transition: transform 0.3s var(--ease-spring);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        }
+
+        /* ============================================================
+           SECTION 17 · AI ASSISTANT
+           ============================================================ */
+        .ai-panel {
+            width: 100%;
+            max-width: 720px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(2, 6, 23, 0.98) 100%);
+            backdrop-filter: blur(50px) saturate(180%);
+            border: 1px solid var(--glass-border-strong);
+            border-radius: 40px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 85vh;
+            position: relative;
+        }
+
+        .ai-orb {
+            width: 56px; height: 56px;
+            border-radius: 18px;
+            background: conic-gradient(from 0deg, #10b981, #6ee7b7, #34d399, #10b981);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #022c22;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+            position: relative;
+            animation: orbSpin 8s linear infinite;
+        }
+
+        .ai-orb::before {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+
+        .ai-orb i {
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes orbSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        .voice-wave {
+            position: absolute;
+            top: 0; left: 0;
+            height: 3px;
+            width: 0;
+            background: linear-gradient(90deg, transparent, #10b981, #6ee7b7, #10b981, transparent);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+            transition: width 0.4s var(--ease-out);
+            z-index: 5;
+        }
+
+        .voice-wave.active {
+            width: 100%;
+            animation: voiceFlow 1.5s linear infinite;
+        }
+
+        @keyframes voiceFlow {
+            0% { background-position: -100% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .ai-chip {
+            padding: 18px;
+            border-radius: 22px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            text-align: left;
+            transition: all 0.4s var(--ease-spring);
+            cursor: pointer;
+        }
+
+        .ai-chip:hover {
+            background: rgba(16, 185, 129, 0.06);
+            border-color: rgba(16, 185, 129, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px -8px rgba(16, 185, 129, 0.2);
+        }
+
+        .ai-output-box {
+            min-height: 96px;
+            padding: 24px;
+            border-radius: 24px;
+            background: rgba(16, 185, 129, 0.04);
+            border: 1px solid rgba(16, 185, 129, 0.12);
+        }
+
+        .ai-cursor {
+            display: inline-block;
+            width: 2px; height: 1.2em;
+            background: var(--primary);
+            margin-left: 2px;
+            vertical-align: text-bottom;
+            animation: blink 1s steps(2) infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* ============================================================
+           SECTION 18 · SEARCH MODAL
+           ============================================================ */
+        .search-input {
+            width: 100%;
+            height: 58px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 0 20px 0 56px;
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.3s var(--ease-smooth);
+        }
+
+        html.light .search-input {
+            background: rgba(255, 255, 255, 0.85);
+            color: var(--text-primary);
+        }
+
+        .search-input:focus {
+            border-color: rgba(16, 185, 129, 0.5);
+            background: rgba(16, 185, 129, 0.04);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.08);
+        }
+
+        .search-result {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid transparent;
+            transition: all 0.3s var(--ease-smooth);
+            cursor: pointer;
+        }
+
+        .search-result:hover {
+            background: rgba(16, 185, 129, 0.06);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        /* ============================================================
+           SECTION 19 · TOAST NOTIFICATIONS
+           ============================================================ */
+        .toast-container {
+            position: fixed;
+            top: calc(var(--header-height) + 12px);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+            width: calc(100% - 40px);
+            max-width: 420px;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid var(--glass-border-strong);
+            border-radius: 18px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: all 0.4s var(--ease-spring);
+            pointer-events: auto;
+        }
+
+        html.light .toast {
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-icon {
+            width: 32px; height: 32px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .toast-success .toast-icon {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+        .toast-info .toast-icon {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+        }
+        .toast-warn .toast-icon {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+        }
+
+        /* ============================================================
+           SECTION 20 · STATUS PILL (Open/Closed)
+           ============================================================ */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .status-pill .dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            animation: dotPulse 2s ease-in-out infinite;
+        }
+
+        .status-open {
+            background: rgba(16, 185, 129, 0.12);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+        .status-open .dot {
+            background: #10b981;
+            box-shadow: 0 0 12px #10b981;
+        }
+
+        .status-closed {
+            background: rgba(239, 68, 68, 0.12);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+        }
+        .status-closed .dot {
+            background: #ef4444;
+            box-shadow: 0 0 12px #ef4444;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.85); }
+        }
+
+        /* ============================================================
+           SECTION 21 · SECTION HEADERS
+           ============================================================ */
+        .section-eyebrow {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-eyebrow::before {
+            content: '';
+            width: 18px; height: 1px;
+            background: var(--primary);
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        /* ============================================================
+           SECTION 22 · BUTTONS
+           ============================================================ */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 28px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #022c22;
+            font-weight: 800;
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border-radius: 18px;
+            box-shadow: 0 16px 32px -10px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            transition: all 0.3s var(--ease-spring);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px -10px rgba(16, 185, 129, 0.6);
+        }
+        .btn-primary:active { transform: scale(0.96); }
+
+        .btn-ghost {
+            padding: 14px 22px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 16px;
+            transition: all 0.3s var(--ease-smooth);
+            cursor: pointer;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: var(--primary);
+        }
+
+        /* ============================================================
+           SECTION 23 · EMPTY STATES
+           ============================================================ */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-tertiary);
+        }
+
+        .empty-state-icon {
+            width: 64px; height: 64px;
+            margin: 0 auto 16px;
+            border-radius: 20px;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        /* ============================================================
+           SECTION 24 · LIGHT MODE TWEAKS
+           ============================================================ */
+        html.light .glass {
+            background: rgba(255, 255, 255, 0.7);
+        }
+        html.light .nav-btn { color: #94a3b8; }
+        html.light .toggle-track { background: rgba(0, 0, 0, 0.08); }
+        html.light .feature-icon-wrap {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(16, 185, 129, 0.04));
+        }
+        html.light .skeleton {
+            background: linear-gradient(90deg,
+                rgba(0, 0, 0, 0.04) 25%,
+                rgba(0, 0, 0, 0.08) 50%,
+                rgba(0, 0, 0, 0.04) 75%);
+            background-size: 200% 100%;
+        }
+
+        /* ============================================================
+           SECTION 25 · ACCESSIBILITY & MOTION
+           ============================================================ */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 3px;
+            border-radius: 8px;
+        }
+
+        button, [role="button"] { cursor: pointer; }
+
+        /* ============================================================
+           SECTION 26 · RESPONSIVE
+           ============================================================ */
+        @media (min-width: 768px) {
+            .hero-card { min-height: 320px; }
+            .section-title { font-size: 36px; }
+            .trending-card { flex: 0 0 300px; height: 360px; }
+        }
+
+        @media (max-width: 380px) {
+            .nav-dock { height: 64px; }
+            .nav-btn i { width: 20px; height: 20px; }
         }
     </style>
 </head>
+
 <body class="font-sans antialiased select-none">
 
-
-
-<body class="font-sans antialiased select-none bg-dark">
-
-    <!-- AI MODAL -->
-    <div id="ai-modal" class="fixed inset-0 z-[1001] hidden flex items-center justify-center p-6 bg-black/90 backdrop-blur-2xl transition-all duration-500 opacity-0 scale-95">
-        <div class="relative w-full max-w-4xl ai-modal-glass rounded-[3.5rem] overflow-hidden flex flex-col h-[85vh] shadow-[0_0_100px_rgba(16,185,129,0.1)]">
-            
-            <div id="voice-wave" class="absolute top-0 left-0 w-0 h-[2px] transition-all duration-500"></div>
-
-            <div class="p-10 flex-1 overflow-y-auto no-scrollbar">
-                <!-- Header -->
-                <div class="flex justify-between items-start mb-12">
-                    <div>
-                        <h2 class="text-4xl font-black text-white tracking-tighter italic">NTP RATKOCI <span class="text-primary text-xs tracking-[0.5em] not-italic ml-2">2026</span></h2>
-                        <div class="flex items-center gap-2 mt-2">
-                            <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
-                            <p id="ai-status" class="text-[10px] text-white/40 font-bold tracking-widest uppercase">Asistenti Virtual</p>
-                        </div>
-                    </div>
-                    <button onclick="toggleAI()" class="p-4 rounded-full bg-white/5 hover:bg-white/10 transition-all">
-                        <i data-lucide="x" class="text-white/20 w-6 h-6"></i>
-                    </button>
-                </div>
-
-                <!-- Cards Grid -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
-                    <button onclick="AI_CORE.executeAction('orari')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
-                        <i data-lucide="clock" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
-                        <p class="text-xs font-bold text-white uppercase tracking-wider">Orari</p>
-                        <p class="text-[10px] text-white/30 mt-1">Statusi Live</p>
-                    </button>
-                    <button onclick="AI_CORE.executeAction('lokacioni')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
-                        <i data-lucide="map-pin" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
-                        <p class="text-xs font-bold text-white uppercase tracking-wider">Lokacioni</p>
-                        <p class="text-[10px] text-white/30 mt-1">Gjej Marketin</p>
-                    </button>
-                    <button onclick="AI_CORE.executeAction('pijet')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
-                        <i data-lucide="cup-soda" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
-                        <p class="text-xs font-bold text-white uppercase tracking-wider">Pijet</p>
-                        <p class="text-[10px] text-white/30 mt-1">Freskohu</p>
-                    </button>
-                    <button onclick="AI_CORE.executeAction('snacks')" class="card-magnetic p-6 rounded-[2.5rem] text-left group">
-                        <i data-lucide="cookie" class="w-6 h-6 text-primary mb-4 group-hover:scale-110 transition-transform"></i>
-                        <p class="text-xs font-bold text-white uppercase tracking-wider">Snacks</p>
-                        <p class="text-[10px] text-white/30 mt-1">Shije Unike</p>
-                    </button>
-                </div>
-
-                <!-- Response Area -->
-                <div class="max-w-2xl mx-auto text-center">
-                    <div id="ai-output" class="text-2xl md:text-3xl font-medium text-white/90 leading-tight tracking-tight min-h-[100px]">
-                        Përshëndetje! Si mund t'ju ndihmoj sot?
-                    </div>
-                </div>
+    <!-- ============================================================
+         INTRO SCREEN
+         ============================================================ -->
+    <div id="intro-screen">
+        <div class="intro-logo-ring">
+            <div id="intro-logo" class="relative w-20 h-20 rounded-3xl flex items-center justify-center opacity-0"
+                 style="background: linear-gradient(135deg, #10b981, #047857); box-shadow: 0 20px 40px rgba(16, 185, 129, 0.4);">
+                <i data-lucide="shopping-bag" class="w-9 h-9 text-white"></i>
             </div>
-
-            <!-- Input Area -->
-            <div class="p-8 bg-white/[0.02] border-t border-white/5">
-                <div class="relative max-w-3xl mx-auto group">
-                    <input id="ai-input" type="text" 
-                        onkeydown="if(event.key === 'Enter') AI_CORE.handleUserInput()"
-                        placeholder="Pyete NTP Ratkocin..." 
-                        class="w-full h-16 bg-white/5 border border-white/10 rounded-2xl px-8 pr-20 text-white outline-none focus:border-primary/50 transition-all">
-                    <button onclick="AI_CORE.handleUserInput()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-primary p-3 rounded-xl text-dark hover:scale-105 active:scale-95 transition-all">
-                        <i data-lucide="send-horizontal" class="w-5 h-5"></i>
-                    </button>
-                </div>
-            </div>
+        </div>
+        <h1 id="intro-text" class="font-display text-5xl font-bold tracking-tight mt-8 opacity-0">
+            NTP <span class="gradient-text">RATKOCI</span>
+        </h1>
+        <p id="intro-sub" class="text-slate-500 text-xs font-bold tracking-[0.4em] uppercase mt-3 opacity-0">
+            Cilësi · Besim · Që nga 1989
+        </p>
+        <div id="intro-loader" class="mt-12 w-32 h-[2px] bg-white/10 rounded-full overflow-hidden opacity-0">
+            <div id="intro-loader-bar" class="h-full w-0 bg-gradient-to-r from-emerald-500 to-emerald-300"></div>
         </div>
     </div>
 
-    <script>
-        // Funksioni për hapje/mbyllje
-        function toggleAI() {
-            const modal = document.getElementById('ai-modal');
-            if (modal.classList.contains('hidden')) {
-                modal.classList.remove('hidden');
-                setTimeout(() => {
-                    modal.classList.add('opacity-100', 'scale-100');
-                    modal.classList.remove('opacity-0', 'scale-95');
-                }, 10);
-            } else {
-                modal.classList.remove('opacity-100', 'scale-100');
-                modal.classList.add('opacity-0', 'scale-95');
-                setTimeout(() => modal.classList.add('hidden'), 500);
-                window.speechSynthesis.cancel();
-            }
-        }
+    <!-- ============================================================
+         TOAST CONTAINER
+         ============================================================ -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
-        const RATKOCI_INTEL_DATA = {
-            responses: {
-                greeting: "Mirësevini në NTP Ratkoci. Jam asistenti juaj inteligjent. Si mund t'ju ndihmoj sot?",
-                orari: "NTP Ratkoci është i hapur çdo ditë nga ora 08:00 deri në 21:00.",
-                lokacioni: "Ne ndodhemi në Rrugën Safet Latifi në Ratkoc, saktësisht përballë xhamisë.",
-                pijet: "Kemi lloje të ndryshme si Coca Cola, Golden Eagle dhe lëngje natyrale. Çfarë preferoni?",
-                snacks: "Nga Patos te Vipa, kemi të gjitha llojet e snacks që ju duhen!",
-                fallback: "Kjo është një pyetje interesante! Për detaje më specifike, ju mirëpresim në dyqanin tonë në Ratkoc."
-            }
-        };
-
-        const AI_CORE = {
-            speak: function(text) {
-                window.speechSynthesis.cancel();
-                const msg = new SpeechSynthesisUtterance(text);
-                msg.lang = 'sq-AL';
-                msg.onstart = () => {
-                    document.getElementById('voice-wave').style.width = '100%';
-                    document.getElementById('voice-wave').classList.add('voice-wave-active');
-                    this.updateStatus("Duke folur...");
-                };
-                msg.onend = () => {
-                    document.getElementById('voice-wave').style.width = '0';
-                    document.getElementById('voice-wave').classList.remove('voice-wave-active');
-                    this.updateStatus("Gati");
-                };
-                window.speechSynthesis.speak(msg);
-            },
-
-            updateStatus: (text) => {
-                document.getElementById('ai-status').innerText = text.toUpperCase();
-            },
-
-            executeAction: function(key) {
-                const response = RATKOCI_INTEL_DATA.responses[key] || RATKOCI_INTEL_DATA.responses.fallback;
-                this.typeEffect(response);
-                this.speak(response);
-            },
-
-            handleUserInput: function() {
-                const input = document.getElementById('ai-input');
-                const val = input.value.trim().toLowerCase();
-                if (!val) return;
-
-                let response = RATKOCI_INTEL_DATA.responses.fallback;
-
-                // Inteligjenca e thjeshtë për keywords
-                if (val.includes("orar")) response = RATKOCI_INTEL_DATA.responses.orari;
-                else if (val.includes("ku") || val.includes("lokacion")) response = RATKOCI_INTEL_DATA.responses.lokacioni;
-                else if (val.includes("pije")) response = RATKOCI_INTEL_DATA.responses.pijet;
-                else if (val.includes("chips") || val.includes("snacks")) response = RATKOCI_INTEL_DATA.responses.snacks;
-                else if (val.includes("përshëndetje") || val.includes("tung")) response = RATKOCI_INTEL_DATA.responses.greeting;
-
-                this.typeEffect(response);
-                this.speak(response);
-                input.value = "";
-            },
-
-            typeEffect: function(text) {
-                const output = document.getElementById('ai-output');
-                output.innerHTML = "";
-                let i = 0;
-                this.updateStatus("Duke menduar...");
-                
-                const timer = setInterval(() => {
-                    if (i < text.length) {
-                        output.innerHTML += text.charAt(i);
-                        i++;
-                    } else {
-                        clearInterval(timer);
-                    }
-                }, 20);
-            }
-        };
-
-        // Initialize Lucide Icons
-        lucide.createIcons();
-    </script>
-
-    
-    
-<style> 
- :root {
-  --primary-emerald: #10b981;
-  --dark-bg: #050505;
-  --glass-border: rgba(255, 255, 255, 0.08);
-}
-
-.ai-modal-glass {
-    background: rgba(10, 10, 10, 0.8);
-    backdrop-filter: blur(30px) saturate(150%);
-    border: 1px solid var(--glass-border);
-}
-
-.card-magnetic {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--glass-border);
-    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.card-magnetic:hover {
-    background: rgba(16, 185, 129, 0.05);
-    border-color: var(--primary-emerald);
-    box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
-    transform: translateY(-5px) scale(1.02);
-}
-
-.voice-wave-active {
-    height: 4px;
-    background: linear-gradient(90deg, transparent, var(--primary-emerald), transparent);
-    box-shadow: 0 0 15px var(--primary-emerald);
-    animation: waveMove 2s infinite linear;
-}
-
-@keyframes waveMove {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-}  
-</style>
-
-    
-    <div id="intro-screen" class="fixed inset-0 flex flex-col items-center justify-center p-8 text-center">
-        <div id="intro-logo" class="w-24 h-24 bg-primary/10 rounded-[2.5rem] flex items-center justify-center mb-6 opacity-0 scale-50">
-            <i data-lucide="shopping-bag" class="w-12 h-12 text-primary"></i>
+    <!-- ============================================================
+         TOP HEADER
+         ============================================================ -->
+    <header class="app-header">
+        <div class="flex items-center gap-3">
+            <div class="header-logo-mark">
+                <i data-lucide="shopping-bag" class="w-5 h-5 text-white"></i>
+            </div>
+            <div class="flex flex-col leading-tight">
+                <span class="font-display font-bold text-base tracking-tight">NTP <span class="text-primary">Ratkoci</span></span>
+                <span class="text-[9px] text-slate-500 font-bold tracking-[0.25em] uppercase">Ratkoc · Since 1989</span>
+            </div>
         </div>
-        <h1 id="intro-text" class="text-4xl font-extrabold tracking-tighter opacity-0 translate-y-4">NTP <span class="text-primary">RATKOCI</span></h1>
-        <p id="intro-sub" class="text-gray-500 text-sm mt-2 opacity-0">Cilësi dhe Besim në çdo blerje</p>
-    </div>
-
-
-
-    
-    
-    <header class="fixed top-0 w-full z-40 bg-dark/60 backdrop-blur-xl border-b border-white/5 px-6 py-5 flex justify-between items-center">
-        <div class="flex flex-col">
-            <span class="font-black text-xl tracking-tighter uppercase leading-none">NTP <span class="text-primary">Ratkoci</span></span>
-            <span class="text-[10px] text-gray-500 font-bold tracking-widest uppercase mt-1">Ratkoc</span>
+        <div class="flex items-center gap-2">
+            <button class="icon-btn" onclick="App.openSearch()" aria-label="Kërko">
+                <i data-lucide="search" class="w-5 h-5"></i>
+            </button>
+            <button class="icon-btn relative" onclick="App.navigate('wishlist')" aria-label="Të preferuarat">
+                <i data-lucide="heart" class="w-5 h-5"></i>
+                <span id="wishlist-badge" class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white text-[9px] font-black flex items-center justify-center hidden"></span>
+            </button>
+            <button class="icon-btn" onclick="App.openSettings()" aria-label="Cilësimet">
+                <i data-lucide="settings-2" class="w-5 h-5"></i>
+            </button>
         </div>
-        <button onclick="toggleSettings()" class="w-11 h-11 rounded-2xl glass flex items-center justify-center active:scale-90 transition-transform">
-            <i data-lucide="settings-2" class="w-5 h-5 text-gray-300"></i>
-        </button>
     </header>
 
-   <div id="settings-modal" class="fixed inset-0 z-[60] hidden">
-    <div class="absolute inset-0 bg-dark/90 backdrop-blur-2xl" onclick="toggleSettings()"></div>
-    
-    <div class="absolute bottom-0 w-full glass-ultra rounded-t-[4rem] p-8 pb-14 transition-transform translate-y-full shadow-[0_-20px_50px_rgba(0,0,0,0.5)] border-t border-white/10" id="settings-content">
-        <div class="w-16 h-1.5 bg-white/10 rounded-full mx-auto mb-10"></div>
-        
-        <div class="flex flex-col items-center mb-10">
-            <h3 class="text-3xl font-black tracking-tighter text-white">Preferencat</h3>
-            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-2">Personalizo Eksperiencën Tënde</p>
-        </div>
+    <!-- ============================================================
+         MAIN CONTENT
+         ============================================================ -->
+    <main class="safe-area-top safe-area-bottom px-5 max-w-6xl mx-auto">
 
-        <div class="space-y-3 max-w-lg mx-auto">
-            <div class="p-6 rounded-[2.5rem] bg-white/[0.03] border border-white/5 space-y-6">
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
-                            <i data-lucide="moon" class="w-5 h-5"></i>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="font-bold text-sm">Dark Mode Ultra</span>
-                            <span class="text-[9px] text-gray-500 font-bold uppercase">Kursim baterie</span>
-                        </div>
-                    </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="toggle-dark-mode" checked class="sr-only peer">
-                        <div class="w-12 h-6 bg-white/10 peer-checked:bg-primary rounded-full transition-all"></div>
-                        <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all peer-checked:translate-x-6"></div>
-                    </label>
-                </div>
+        <!-- ========== VIEW: HYRJA (HOME) ========== -->
+        <section id="view-hyrja" class="view active">
 
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-2xl bg-accent/10 flex items-center justify-center text-accent">
-                            <i data-lucide="smartphone" class="w-5 h-5"></i>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="font-bold text-sm">Vibrime (Haptic)</span>
-                            <span class="text-[9px] text-gray-500 font-bold uppercase">Feedback gjatë klikimit</span>
-                        </div>
+            <!-- Hero Banner -->
+            <div class="hero-card gpu mb-6">
+                <img src="Images/ntpratkoci.jpg" alt="NTP Ratkoci" loading="lazy"
+                     class="absolute inset-0 w-full h-full object-cover opacity-50"
+                     onerror="this.style.display='none'">
+                <div class="hero-grain"></div>
+                <div class="relative z-10 h-full flex flex-col justify-between p-7 min-h-[240px]">
+                    <div class="flex items-center justify-between">
+                        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[9px] font-black uppercase tracking-[0.25em] text-white">
+                            <i data-lucide="award" class="w-3 h-3"></i> Premium · 1989
+                        </span>
+                        <span id="hero-status" class="status-pill status-open">
+                            <span class="dot"></span><span id="hero-status-text">Hapur</span>
+                        </span>
                     </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="toggle-haptic" checked class="sr-only peer">
-                        <div class="w-12 h-6 bg-white/10 peer-checked:bg-accent rounded-full transition-all"></div>
-                        <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all peer-checked:translate-x-6"></div>
-                    </label>
+                    <div>
+                        <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight text-white leading-none mb-2">
+                            Mirësevini
+                        </h2>
+                        <p class="text-white/70 text-sm font-medium max-w-sm leading-relaxed">
+                            Zbuloni marketin më të dashur në zemër të Ratkocit. Cilësi e zgjedhur, shërbim i përkushtuar.
+                        </p>
+                    </div>
                 </div>
             </div>
 
-            <div class="p-6 rounded-[2.5rem] bg-white/[0.03] border border-white/5 space-y-6">
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-2xl bg-yellow-500/10 flex items-center justify-center text-yellow-500">
-                            <i data-lucide="bell" class="w-5 h-5"></i>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="font-bold text-sm">Njoftimet Live</span>
-                            <span class="text-[9px] text-gray-500 font-bold uppercase">Ofertat & Produktet e reja</span>
-                        </div>
+            <!-- Feature Cards -->
+            <div class="grid grid-cols-2 gap-3 mb-8">
+                <div class="feature-card">
+                    <div class="feature-icon-wrap">
+                        <i data-lucide="award" class="w-5 h-5"></i>
                     </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="toggle-notifications" class="sr-only peer">
-                        <div class="w-12 h-6 bg-white/10 peer-checked:bg-yellow-500 rounded-full transition-all"></div>
-                        <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-all peer-checked:translate-x-6"></div>
-                    </label>
+                    <h4 class="font-bold text-sm text-balance">Kualitet në çdo produkt</h4>
+                    <p class="text-[11px] text-slate-500 mt-1.5 leading-relaxed">Cilësi e klasit të parë</p>
                 </div>
-            </div>
-
-            <button onclick="clearCache()" class="w-full p-5 rounded-[2rem] bg-red-500/5 border border-red-500/10 flex items-center justify-between active:scale-95 transition-all">
-                <div class="flex items-center gap-4">
-                    <i data-lucide="trash-2" class="w-5 h-5 text-red-500"></i>
-                    <span class="font-bold text-sm text-red-500/80 uppercase tracking-widest text-[10px]">Pastro Memorien (Cache)</span>
-                </div>
-                <i data-lucide="chevron-right" class="w-4 h-4 text-red-500/40"></i>
-            </button>
-
-            <button onclick="toggleSettings()" class="w-full py-6 bg-primary text-dark font-black rounded-[2.5rem] mt-6 shadow-2xl shadow-primary/30 active:scale-95 transition-all tracking-[0.2em] text-xs">
-                APLIKO NDRYSHIMET
-            </button>
-        </div>
-    </div>
-</div>
-
-    <main class="pt-28 safe-area-bottom">
-        
-
-        <div id="view-hyrja" class="view active px-6">
-
-
-
-
-            
-            <div class="rounded-[2.8rem] overflow-hidden relative h-56 mb-8 group glass border-none">
-                <div class="absolute inset-0 bg-gradient-to-t from-dark via-dark/40 to-transparent z-10"></div>
-                <img src="Images/ntpratkoci.jpg" class="absolute inset-0 w-full h-full object-cover" onerror="this.style.display='none'">
-                <div class="absolute inset-0 bg-primary/10 flex items-center justify-center text-gray-500 italic text-xs"></div>
-                <div class="absolute bottom-8 left-8 z-20">
-                    <span class="bg-primary px-3 py-1 rounded-full text-[9px] font-black text-dark uppercase mb-3 inline-block">Since 1989</span>
-                    <h2 class="text-3xl font-black leading-none">Mirësevini</h2>
-                    <p class="text-sm text-gray-400 mt-2">Zbuloni marketin në Ratkoc.</p>
-                </div>
-            </div>
-
-
-
-            <div class="grid grid-cols-2 gap-4 mb-10">
-                <div class="p-6 glass rounded-[2.5rem] border-primary/10">
-                    <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-                        <i data-lucide="award" class="text-primary w-5 h-5"></i>
+                <div class="feature-card">
+                    <div class="feature-icon-wrap">
+                        <i data-lucide="scan-line" class="w-5 h-5"></i>
                     </div>
-                    <h4 class="font-bold text-sm">Kualitet ne çdo produkt</h4>
-                    <p class="text-[10px] text-gray-500 mt-1">Cilësi e klasit të parë</p>
+                    <h4 class="font-bold text-sm text-balance">Shërbim korrekt</h4>
+                    <p class="text-[11px] text-slate-500 mt-1.5 leading-relaxed">Saktësi maksimale në arkë</p>
                 </div>
-
-               <div class="p-6 glass rounded-[2.5rem] relative overflow-hidden group">
-    <div class="absolute -right-2 -top-2 w-16 h-16 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-all"></div>
-    
-    <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-500">
-        <i data-lucide="scan-line" class="text-primary w-6 h-6"></i>
-    </div>
-    
-    <h4 class="font-bold text-sm tracking-tight text-white/90">Sherbim korrekt</h4>
-    <p class="text-[10px] text-gray-500 mt-1 leading-relaxed">
-        Procesim i menjëhershëm në arkë dhe saktësi maksimale.
-    </p>
-</div>
-
-                <style>
-                    /* Hero Horizontal Scroll - Premium Style */
-.trending-container {
-    display: flex;
-    overflow-x: auto;
-    gap: 20px;
-    padding: 10px 4px 20px 4px;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-}
-
-.trending-card {
-    flex: 0 0 280px; /* Madhësi serioze dhe profesionale */
-    scroll-snap-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.trending-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(2, 6, 23, 0.8), transparent);
-    z-index: 1;
-}
-
-.trending-badge {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: rgba(16, 185, 129, 0.2);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    color: #10b981;
-    padding: 4px 12px;
-    border-radius: 100px;
-    font-size: 9px;
-    font-weight: 900;
-    text-transform: uppercase;
-    z-index: 2;
-    letter-spacing: 1px;
-}
-                </style>
-                <section class="mt-4 mb-8">
-    <div class="flex items-center justify-between px-4 mb-4">
-        <div>
-            <h2 class="text-xl font-black text-white tracking-tight">Më të kërkuarat</h2>
-            <p class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.2em]">NTP Ratkoci</p>
-        </div>
-        <div class="flex gap-1">
-            <div class="h-1.5 w-1.5 rounded-full bg-primary"></div>
-            <div class="h-1.5 w-4 rounded-full bg-primary/30"></div>
-        </div>
-    </div>
-
-    <div id="trending-scroll" class="trending-container no-scrollbar px-4">
-        </div>
-</section>
-
-
-
-               
- <!-- Butoni kryesor me efekt aktiv -->
-<button onclick="toggleAI()" id="ai-btn" class="fixed bottom-8 right-6 z-[1000] bg-primary text-dark w-14 h-14 rounded-full shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] flex items-center justify-center active:scale-90 transition-all hover:scale-110">
-    <i data-lucide="sparkles"></i>
-</button>
-                
-
-                
+                <div class="feature-card">
+                    <div class="feature-icon-wrap">
+                        <i data-lucide="clock-4" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="font-bold text-sm text-balance">Orari i zgjeruar</h4>
+                    <p class="text-[11px] text-slate-500 mt-1.5 leading-relaxed">08:00 — 21:00 · çdo ditë</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-wrap">
+                        <i data-lucide="map-pin" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="font-bold text-sm text-balance">Lokacion qendror</h4>
+                    <p class="text-[11px] text-slate-500 mt-1.5 leading-relaxed">Rruga Safet Latifi · Ratkoc</p>
+                </div>
             </div>
-        </div>
 
-        <div id="view-pijet" class="view px-6">
-            <div class="flex gap-3 overflow-x-auto no-scrollbar mb-8 py-2" id="filter-pijet"></div>
+            <!-- Trending Section -->
+            <section class="-mx-5 mb-8">
+                <div class="flex items-end justify-between px-5 mb-4">
+                    <div>
+                        <span class="section-eyebrow">Premium Selection</span>
+                        <h2 class="section-title">Më të kërkuarat</h2>
+                    </div>
+                    <div class="flex items-center gap-1.5 pb-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                        <span class="w-6 h-1.5 rounded-full bg-primary/30"></span>
+                    </div>
+                </div>
+                <div id="trending-scroll" class="trending-container no-scrollbar"></div>
+            </section>
+
+            <!-- Category Quick Access -->
+            <section class="mb-10">
+                <span class="section-eyebrow">Eksploro</span>
+                <h2 class="section-title mb-5">Kategoritë</h2>
+                <div class="grid grid-cols-3 gap-3">
+                    <button onclick="App.navigate('pijet')" class="feature-card text-left">
+                        <div class="feature-icon-wrap"><i data-lucide="glass-water" class="w-5 h-5"></i></div>
+                        <h4 class="font-bold text-sm">Pijet</h4>
+                        <p class="text-[10px] text-slate-500 mt-0.5" id="count-pijet"></p>
+                    </button>
+                    <button onclick="App.navigate('snacks')" class="feature-card text-left">
+                        <div class="feature-icon-wrap"><i data-lucide="popcorn" class="w-5 h-5"></i></div>
+                        <h4 class="font-bold text-sm">Snacks</h4>
+                        <p class="text-[10px] text-slate-500 mt-0.5" id="count-snacks"></p>
+                    </button>
+                    <button onclick="App.navigate('sweets')" class="feature-card text-left">
+                        <div class="feature-icon-wrap"><i data-lucide="cookie" class="w-5 h-5"></i></div>
+                        <h4 class="font-bold text-sm">Sweets</h4>
+                        <p class="text-[10px] text-slate-500 mt-0.5" id="count-sweets"></p>
+                    </button>
+                </div>
+            </section>
+        </section>
+
+        <!-- ========== VIEW: PIJET ========== -->
+        <section id="view-pijet" class="view">
+            <div class="mb-5">
+                <span class="section-eyebrow">Refresh Collection</span>
+                <h2 class="section-title">Pijet</h2>
+            </div>
+            <div class="filter-row no-scrollbar" id="filter-pijet"></div>
             <div class="product-grid" id="grid-pijet"></div>
-        </div>
-        
-       <div id="view-snacks" class="view px-6">
-            <div class="flex gap-3 overflow-x-auto no-scrollbar mb-8 py-2" id="filter-snacks"></div>
+        </section>
+
+        <!-- ========== VIEW: SNACKS ========== -->
+        <section id="view-snacks" class="view">
+            <div class="mb-5">
+                <span class="section-eyebrow">Crunch & Crave</span>
+                <h2 class="section-title">Snacks</h2>
+            </div>
+            <div class="filter-row no-scrollbar" id="filter-snacks"></div>
             <div class="product-grid" id="grid-snacks"></div>
-        </div>
+        </section>
 
-        <div id="view-sweets" class="view px-6">
-            <div class="flex gap-3 overflow-x-auto no-scrollbar mb-8 py-2" id="filter-sweets"></div>
+        <!-- ========== VIEW: SWEETS ========== -->
+        <section id="view-sweets" class="view">
+            <div class="mb-5">
+                <span class="section-eyebrow">Sweet Dreams</span>
+                <h2 class="section-title">Sweets</h2>
+            </div>
+            <div class="filter-row no-scrollbar" id="filter-sweets"></div>
             <div class="product-grid" id="grid-sweets"></div>
-        </div>
+        </section>
 
-        <div id="view-orari" class="view px-6">
-    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        
-        <div class="group relative overflow-hidden rounded-[3.5rem] bg-slate-900/40 border border-white/10 p-1 backdrop-blur-3xl transition-all duration-500 hover:border-primary/50 shadow-2xl">
-            <div class="absolute -top-20 -left-20 w-64 h-64 bg-primary/20 rounded-full blur-[100px] transition-all group-hover:bg-primary/30"></div>
-            
-            <div class="relative z-10 bg-dark/40 rounded-[3.2rem] p-8 lg:p-10 h-full flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-start mb-10">
-                        <div class="w-16 h-16 rounded-[1.8rem] bg-gradient-to-br from-primary to-emerald-600 flex items-center justify-center shadow-lg shadow-primary/30">
-                            <i data-lucide="clock" class="text-dark w-8 h-8 stroke-[2.5]"></i>
+        <!-- ========== VIEW: WISHLIST ========== -->
+        <section id="view-wishlist" class="view">
+            <div class="mb-5">
+                <span class="section-eyebrow">Personal Selection</span>
+                <h2 class="section-title">Të preferuarat</h2>
+            </div>
+            <div id="wishlist-content"></div>
+        </section>
+
+        <!-- ========== VIEW: ORARI & LOKACIONI ========== -->
+        <section id="view-orari" class="view">
+            <div class="mb-5">
+                <span class="section-eyebrow">Visit Us</span>
+                <h2 class="section-title">Orari & Lokacioni</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+                <!-- ORARI CARD -->
+                <div class="relative overflow-hidden rounded-[36px] glass-strong p-7">
+                    <div class="absolute -top-20 -left-20 w-64 h-64 bg-primary/20 rounded-full blur-[100px]"></div>
+
+                    <div class="relative z-10 flex flex-col justify-between h-full min-h-[380px]">
+                        <div>
+                            <div class="flex items-center justify-between mb-8">
+                                <div class="w-14 h-14 rounded-2xl flex items-center justify-center"
+                                     style="background: linear-gradient(135deg, #10b981, #047857); box-shadow: 0 12px 28px rgba(16, 185, 129, 0.4);">
+                                    <i data-lucide="clock" class="w-7 h-7 text-white"></i>
+                                </div>
+                                <span id="orari-status" class="status-pill status-open">
+                                    <span class="dot"></span><span id="orari-status-text">Hapur</span>
+                                </span>
+                            </div>
+
+                            <h3 class="font-display text-4xl font-bold tracking-tight mb-2">ORARI</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed mb-8 max-w-xs">
+                                Shërbim i përkushtuar në çdo ditë të javës për komunitetin tonë.
+                            </p>
                         </div>
-                        <div class="text-right">
-                            <span id="status-indicator" class="px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[10px] font-black uppercase tracking-widest animate-pulse">
-                                Hapur
-                            </span>
-                        </div>
-                    </div>
 
-                    <h3 class="text-4xl font-black tracking-tighter text-white mb-2">ORARI <span class="text-primary/80 text-2xl block lg:inline lg:ml-2">24/7</span></h3>
-                    <p class="text-gray-400 text-sm font-medium max-w-[240px] leading-relaxed mb-8">
-                        Shërbim elitar në çdo ditë të javës, pa ndërprerje për komunitetin tonë.
-                    </p>
-                </div>
-
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between p-6 rounded-3xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
-                        <div class="flex items-center gap-4">
-                            <div class="w-2 h-10 bg-primary rounded-full"></div>
-                            <div>
-                                <span class="block text-[10px] font-black text-gray-500 uppercase tracking-widest">E Hënë — E Diel</span>
-                                <span class="text-xl font-bold text-white tracking-tight">Gjithë javën</span>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between p-5 rounded-3xl bg-white/[0.04] border border-white/5">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-1 h-10 rounded-full bg-primary"></div>
+                                    <div>
+                                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">E Hënë — E Diel</p>
+                                        <p class="text-base font-bold text-white">Gjithë javën</p>
+                                    </div>
+                                </div>
+                                <p class="font-display text-xl font-bold gradient-text tracking-tight">08:00 — 21:00</p>
+                            </div>
+                            <div class="px-5 py-3 rounded-2xl bg-primary/5 border border-primary/15 flex items-center justify-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                                <p id="live-countdown" class="text-[10px] font-bold text-primary uppercase tracking-[0.25em]">Duke u sinkronizuar…</p>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <span class="text-2xl font-black text-primary italic tracking-tighter">08:00 - 21:00</span>
-                        </div>
                     </div>
-                    
-                    <div class="px-6 py-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-center gap-3">
-                        <div class="w-1.5 h-1.5 bg-primary rounded-full"></div>
-                        <span id="live-countdown" class="text-[10px] font-bold text-primary uppercase tracking-[0.3em]">Duke u sinkronizuar...</span>
+                </div>
+
+                <!-- LOKACIONI CARD -->
+                <div class="relative overflow-hidden rounded-[36px] glass-strong p-7">
+                    <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-blue-500/15 rounded-full blur-[100px]"></div>
+
+                    <div class="relative z-10 flex flex-col justify-between h-full min-h-[380px]">
+                        <div>
+                            <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-8">
+                                <i data-lucide="map-pin" class="w-7 h-7 text-primary"></i>
+                            </div>
+
+                            <h3 class="font-display text-4xl font-bold tracking-tight mb-4">LOKACIONI</h3>
+                            <p class="text-base text-slate-300 leading-relaxed italic border-l-2 border-primary/40 pl-5 mb-8">
+                                "Në zemër të <span class="text-white font-bold not-italic">Ratkocit</span>, na vizitoni."
+                            </p>
+                        </div>
+
+                        <div class="space-y-5">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
+                                    <i data-lucide="navigation-2" class="w-5 h-5 text-primary"></i>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">Adresa</p>
+                                    <p class="text-white font-bold">Rruga Safet Latifi, Ratkoc</p>
+                                </div>
+                            </div>
+                            <a href="https://maps.app.goo.gl/vyBb7QVEyuMP94HF9" target="_blank" rel="noopener" class="btn-primary w-full">
+                                <i data-lucide="map" class="w-4 h-4"></i>
+                                <span>Hap në Google Maps</span>
+                                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================
+         FLOATING AI BUTTON
+         ============================================================ -->
+    <button id="ai-fab" class="ai-fab" onclick="AI.open()" aria-label="Asistenti AI">
+        <i data-lucide="sparkles" class="w-6 h-6"></i>
+    </button>
+
+    <!-- ============================================================
+         BOTTOM NAVIGATION DOCK
+         ============================================================ -->
+    <nav class="nav-dock" aria-label="Navigation">
+        <button onclick="App.navigate('hyrja')" class="nav-btn active" id="btn-hyrja">
+            <i data-lucide="home"></i>
+            <span>Hyrja</span>
+        </button>
+        <button onclick="App.navigate('pijet')" class="nav-btn" id="btn-pijet">
+            <i data-lucide="glass-water"></i>
+            <span>Pijet</span>
+        </button>
+        <button onclick="App.navigate('snacks')" class="nav-btn" id="btn-snacks">
+            <i data-lucide="popcorn"></i>
+            <span>Snacks</span>
+        </button>
+        <button onclick="App.navigate('sweets')" class="nav-btn" id="btn-sweets">
+            <i data-lucide="cookie"></i>
+            <span>Sweets</span>
+        </button>
+        <button onclick="App.navigate('orari')" class="nav-btn" id="btn-orari">
+            <i data-lucide="map-pinned"></i>
+            <span>Marketi</span>
+        </button>
+    </nav>
+
+    <!-- ============================================================
+         PRODUCT MODAL
+         ============================================================ -->
+    <div id="product-modal" class="modal-overlay" role="dialog" aria-modal="true">
+        <div class="modal-backdrop" onclick="App.closeProduct()"></div>
+        <div class="modal-panel w-full max-w-sm glass-ultra rounded-[40px] p-8">
+            <button onclick="App.closeProduct()" class="absolute top-5 right-5 icon-btn z-10" aria-label="Mbyll">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div id="modal-img-wrap" class="relative w-full aspect-square rounded-3xl mb-7 overflow-hidden bg-white/5 border border-white/5">
+                <img id="modal-img" alt="" class="w-full h-full object-cover" loading="lazy">
+                <button id="modal-wishlist" class="wishlist-btn" style="top: 16px; right: 16px; width: 40px; height: 40px;" onclick="App.toggleModalWishlist()">
+                    <i data-lucide="heart" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="text-center mb-6">
+                <p id="modal-cat" class="text-[10px] font-black tracking-[0.25em] uppercase text-primary mb-2"></p>
+                <h3 id="modal-title" class="font-display text-2xl font-bold tracking-tight mb-3"></h3>
+                <p id="modal-price" class="font-display text-3xl font-bold gradient-text tracking-tight"></p>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="App.shareProduct()" class="btn-ghost flex-1">
+                    <i data-lucide="share-2" class="w-4 h-4 inline mr-1.5"></i>
+                    Ndaj
+                </button>
+                <button onclick="App.closeProduct()" class="btn-primary flex-1">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                    Mbyll
+                </button>
+            </div>
         </div>
+    </div>
 
-        <div class="group relative overflow-hidden rounded-[3.5rem] bg-slate-900/40 border border-white/10 p-1 backdrop-blur-3xl transition-all duration-500 hover:border-primary/50 shadow-2xl">
-            <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-blue-500/10 rounded-full blur-[100px]"></div>
+    <!-- ============================================================
+         SETTINGS SHEET
+         ============================================================ -->
+    <div id="settings-modal" class="sheet-overlay" role="dialog" aria-modal="true">
+        <div class="sheet-backdrop" onclick="App.closeSettings()"></div>
+        <div class="sheet-panel glass-ultra">
+            <div class="sheet-handle"></div>
 
-            <div class="relative z-10 bg-dark/40 rounded-[3.2rem] p-8 lg:p-10 h-full flex flex-col justify-between">
-                <div>
-                    <div class="w-16 h-16 rounded-[1.8rem] bg-white/5 border border-white/10 flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-500">
-                        <i data-lucide="map-pin" class="text-primary w-8 h-8 stroke-[2.5]"></i>
+            <div class="text-center mb-8">
+                <h3 class="font-display text-3xl font-bold tracking-tight">Preferencat</h3>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em] mt-2">Personalizo eksperiencën</p>
+            </div>
+
+            <div class="max-w-lg mx-auto space-y-3">
+
+                <!-- Theme group -->
+                <div class="p-5 rounded-3xl bg-white/[0.03] border border-white/5 space-y-5">
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+                                <i data-lucide="moon" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-sm">Dark Mode Ultra</p>
+                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Kursim baterie</p>
+                            </div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="toggle-dark-mode" checked>
+                            <span class="toggle-track"></span>
+                        </label>
                     </div>
 
-                    <h3 class="text-4xl font-black tracking-tighter text-white mb-4">LOKACIONI</h3>
-                    <p class="text-lg text-gray-300 font-medium leading-relaxed italic border-l-2 border-primary/30 pl-6 mb-10">
-                        "Në zemër të <span class="text-white font-black not-italic border-b-2 border-primary">Ratkocit</span>,Na vizitoni."
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-400">
+                                <i data-lucide="smartphone" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-sm">Vibrime (Haptic)</p>
+                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Feedback fizik</p>
+                            </div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="toggle-haptic" checked>
+                            <span class="toggle-track"></span>
+                        </label>
+                    </div>
+
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+                                <i data-lucide="bell" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-sm">Njoftimet Live</p>
+                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Ofertat & produktet</p>
+                            </div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="toggle-notifications">
+                            <span class="toggle-track"></span>
+                        </label>
+                    </div>
+
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-400">
+                                <i data-lucide="zap" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold text-sm">Animacione</p>
+                                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Ekspresivitet visual</p>
+                            </div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="toggle-animations" checked>
+                            <span class="toggle-track"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- App Info -->
+                <div class="p-5 rounded-3xl bg-white/[0.03] border border-white/5">
+                    <div class="flex items-center justify-between mb-3">
+                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.25em]">Versioni</p>
+                        <p class="font-display text-sm font-bold">2026.5.0</p>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.25em]">Build</p>
+                        <p class="font-display text-sm font-bold">Premium PWA</p>
+                    </div>
+                </div>
+
+                <!-- Clear Cache -->
+                <button onclick="App.clearCache()" class="w-full p-5 rounded-3xl bg-red-500/[0.05] border border-red-500/15 flex items-center justify-between transition-all active:scale-[0.98]">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-400">
+                            <i data-lucide="trash-2" class="w-5 h-5"></i>
+                        </div>
+                        <span class="font-bold text-sm text-red-400">Pastro Memorien</span>
+                    </div>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-red-400/50"></i>
+                </button>
+
+                <button onclick="App.closeSettings()" class="btn-primary w-full mt-4">
+                    APLIKO NDRYSHIMET
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         AI ASSISTANT MODAL
+         ============================================================ -->
+    <div id="ai-modal" class="modal-overlay" role="dialog" aria-modal="true">
+        <div class="modal-backdrop" onclick="AI.close()"></div>
+        <div class="modal-panel ai-panel">
+            <div id="voice-wave" class="voice-wave"></div>
+
+            <div class="flex-1 overflow-y-auto no-scrollbar p-8">
+                <!-- Header -->
+                <div class="flex items-start justify-between mb-8">
+                    <div class="flex items-center gap-4">
+                        <div class="ai-orb">
+                            <i data-lucide="sparkles" class="w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <h2 class="font-display text-2xl font-bold tracking-tight">Ratkoci AI</h2>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                                <p id="ai-status" class="text-[10px] text-slate-400 font-bold tracking-[0.25em] uppercase">Gati</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="AI.close()" class="icon-btn" aria-label="Mbyll">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-7">
+                    <button class="ai-chip" onclick="AI.executeAction('orari')">
+                        <i data-lucide="clock" class="w-5 h-5 text-primary mb-3"></i>
+                        <p class="text-xs font-bold uppercase tracking-wider">Orari</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Statusi Live</p>
+                    </button>
+                    <button class="ai-chip" onclick="AI.executeAction('lokacioni')">
+                        <i data-lucide="map-pin" class="w-5 h-5 text-primary mb-3"></i>
+                        <p class="text-xs font-bold uppercase tracking-wider">Lokacioni</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Gjej Marketin</p>
+                    </button>
+                    <button class="ai-chip" onclick="AI.executeAction('pijet')">
+                        <i data-lucide="cup-soda" class="w-5 h-5 text-primary mb-3"></i>
+                        <p class="text-xs font-bold uppercase tracking-wider">Pijet</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Freskohu</p>
+                    </button>
+                    <button class="ai-chip" onclick="AI.executeAction('snacks')">
+                        <i data-lucide="cookie" class="w-5 h-5 text-primary mb-3"></i>
+                        <p class="text-xs font-bold uppercase tracking-wider">Snacks</p>
+                        <p class="text-[10px] text-slate-500 mt-0.5">Shije unike</p>
+                    </button>
+                </div>
+
+                <!-- Output Box -->
+                <div class="ai-output-box">
+                    <p id="ai-output" class="text-base md:text-lg font-medium text-white/90 leading-relaxed">
+                        Përshëndetje! Jam asistenti i NTP Ratkoci. Si mund t'ju ndihmoj sot?
                     </p>
                 </div>
 
-                <div class="space-y-8">
-                    <div class="flex items-center gap-5 px-2">
-                        <div class="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                            <i data-lucide="navigation-2" class="text-primary w-6 h-6"></i>
-                        </div>
-                        <div>
-                            <span class="block text-[10px] font-black text-gray-500 uppercase tracking-widest">Adresa</span>
-                            <span class="text-white font-bold tracking-tight">Rruga Safet Latifi, Ratkoc</span>
-                        </div>
-                    </div>
+                <!-- Suggestions -->
+                <div class="mt-5 flex flex-wrap gap-2" id="ai-suggestions">
+                    <button class="px-3 py-1.5 text-[11px] font-bold rounded-full bg-white/5 border border-white/10 hover:border-primary/30 hover:bg-primary/5 hover:text-primary transition-all" onclick="AI.askSuggestion('A jeni hapur tani?')">A jeni hapur tani?</button>
+                    <button class="px-3 py-1.5 text-[11px] font-bold rounded-full bg-white/5 border border-white/10 hover:border-primary/30 hover:bg-primary/5 hover:text-primary transition-all" onclick="AI.askSuggestion('Çfarë pijesh keni?')">Çfarë pijesh keni?</button>
+                    <button class="px-3 py-1.5 text-[11px] font-bold rounded-full bg-white/5 border border-white/10 hover:border-primary/30 hover:bg-primary/5 hover:text-primary transition-all" onclick="AI.askSuggestion('Ku ndodheni?')">Ku ndodheni?</button>
+                    <button class="px-3 py-1.5 text-[11px] font-bold rounded-full bg-white/5 border border-white/10 hover:border-primary/30 hover:bg-primary/5 hover:text-primary transition-all" onclick="AI.askSuggestion('Sa kushton Coca Cola?')">Sa kushton Coca Cola?</button>
+                </div>
+            </div>
 
-                    <a href="https://maps.app.goo.gl/vyBb7QVEyuMP94HF9" target="_blank" 
-                       class="relative group/btn block w-full overflow-hidden rounded-[2rem] bg-white p-1 transition-all duration-300 hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] active:scale-95">
-                        <div class="relative z-10 bg-dark rounded-[1.8rem] py-5 px-8 flex items-center justify-center gap-3">
-                            <span class="text-white font-black uppercase text-xs tracking-[0.2em]">Hap në Google Maps</span>
-                            <i data-lucide="arrow-up-right" class="text-primary w-5 h-5 transition-transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1"></i>
-                        </div>
-                        <div class="absolute inset-0 bg-gradient-to-r from-primary to-emerald-500 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></div>
-                    </a>
+            <!-- Input -->
+            <div class="p-5 bg-white/[0.02] border-t border-white/5">
+                <div class="relative max-w-2xl mx-auto">
+                    <i data-lucide="message-circle" class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 pointer-events-none"></i>
+                    <input id="ai-input" type="text"
+                           placeholder="Pyete Ratkocin…"
+                           class="w-full h-14 rounded-2xl bg-white/[0.04] border border-white/10 pl-14 pr-16 text-white placeholder-slate-500 outline-none focus:border-primary/40 focus:bg-primary/[0.04] transition-all"
+                           onkeydown="if(event.key === 'Enter') AI.handleUserInput()">
+                    <button onclick="AI.handleUserInput()"
+                            class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-xl bg-primary text-dark flex items-center justify-center hover:scale-105 active:scale-95 transition-all"
+                            aria-label="Dërgo">
+                        <i data-lucide="arrow-up" class="w-5 h-5"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-</div>
-    </main>
 
-    <div id="product-modal" class="fixed inset-0 z-[70] hidden p-6 flex items-center justify-center">
-        <div class="absolute inset-0 bg-dark/95 backdrop-blur-2xl" onclick="closeProduct()"></div>
-        <div class="relative w-full max-w-sm glass rounded-[3.5rem] p-10 text-center transition-all scale-90 opacity-0 shadow-2xl border-white/10" id="modal-box">
-            <div id="modal-img-container" class="w-full aspect-square bg-white/5 rounded-[2.5rem] mb-8 flex items-center justify-center overflow-hidden border border-white/5">
+    <!-- ============================================================
+         SEARCH MODAL
+         ============================================================ -->
+    <div id="search-modal" class="modal-overlay" role="dialog" aria-modal="true">
+        <div class="modal-backdrop" onclick="App.closeSearch()"></div>
+        <div class="modal-panel w-full max-w-xl glass-ultra rounded-[32px] p-6">
+            <div class="relative mb-5">
+                <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none"></i>
+                <input id="search-input" type="text" class="search-input"
+                       placeholder="Kërko produkte, kategori..."
+                       oninput="App.runSearch(this.value)"
+                       autocomplete="off">
+                <button onclick="App.closeSearch()" class="absolute right-3 top-1/2 -translate-y-1/2 icon-btn" aria-label="Mbyll" style="width: 38px; height: 38px;">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <div id="search-results" class="space-y-2 max-h-[60vh] overflow-y-auto no-scrollbar">
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i data-lucide="search" class="w-6 h-6"></i>
+                    </div>
+                    <p class="text-sm font-bold mb-1">Filloni të kërkoni</p>
+                    <p class="text-xs">Provo: "Coca Cola", "chips", "kek"</p>
                 </div>
-            <h3 id="modal-title" class="text-3xl font-black mb-2 tracking-tight"></h3>
-            <p id="modal-price" class="text-primary font-black text-2xl mb-10 tracking-tighter"></p>
-            <button onclick="closeProduct()" class="w-full py-5 bg-primary text-dark font-black rounded-[2rem] shadow-xl shadow-primary/20 active:scale-95 transition-transform">MBYLL</button>
+            </div>
         </div>
     </div>
 
-    <nav class="fixed bottom-0 w-full z-50 bg-dark/60 backdrop-blur-2xl border-t border-white/5 px-6 h-[86px]">
-        <div class="max-w-md mx-auto h-full flex items-center justify-between">
-            <button onclick="navigate('hyrja')" class="nav-btn flex flex-col items-center gap-1.5 w-1/5 text-gray-500 nav-active transition-all" id="btn-hyrja">
-                <i data-lucide="home" class="w-6 h-6"></i>
-                <span class="text-[9px] font-black uppercase tracking-tighter">Hyrja</span>
-            </button>
-            <button onclick="navigate('pijet')" class="nav-btn flex flex-col items-center gap-1.5 w-1/5 text-gray-500 transition-all" id="btn-pijet">
-                <i data-lucide="glass-water" class="w-6 h-6"></i>
-                <span class="text-[9px] font-black uppercase tracking-tighter">Pijet</span>
-            </button>
-            <button onclick="navigate('snacks')" class="nav-btn flex flex-col items-center gap-1.5 w-1/5 text-gray-500 transition-all" id="btn-snacks">
-                <i data-lucide="popcorn" class="w-6 h-6"></i>
-                <span class="text-[9px] font-black uppercase tracking-tighter">Snacks</span>
-            </button>
-            <button onclick="navigate('sweets')" class="nav-btn flex flex-col items-center gap-1.5 w-1/5 text-gray-500 transition-all" id="btn-sweets">
-                <i data-lucide="cookie" class="w-6 h-6"></i>
-                <span class="text-[9px] font-black uppercase tracking-tighter">Sweets</span>
-            </button>
-            <button onclick="navigate('orari')" class="nav-btn flex flex-col items-center gap-1.5 w-1/5 text-gray-500 transition-all" id="btn-orari">
-                <i data-lucide="map-pinned" class="w-6 h-6"></i>
-                <span class="text-[9px] font-black uppercase tracking-tighter">Lokacioni</span>
-            </button>
-        </div>
-    </nav>
-
+    <!-- ============================================================
+         SCRIPT MODULES
+         ============================================================ -->
     <script>
-        // --- DATA ENGINE ---
-        const data = {
-            pijet: {
-                filters: ["Të gjitha", "Energjike", "Lëngje", "Ujë", "Gazuara"],
-                items: [
-                    { name: "Coca Cola", price: "0.70€", cat: "Gazuara", img: "Images/cocacola.jpg" },
-                    { name: "Fanta Orange", price: "0.70€", cat: "Gazuara", img: "Images/fantaorange1.png" },
-                    { name: "Fanta Exotic", price: "0.70€", cat: "Gazuara", img: "Images/fantaexotic1.png" },
-                    { name: "Fanta Tropical", price: "0.70€", cat: "Gazuara", img: "Images/fantatropical2.png" },
-                    { name: "Schweppes", price: "0.70€", cat: "Gazuara", img: "Images/schweppes1.jpg" },
-                    { name: "Lemon Soda", price: "0.70€", cat: "Gazuara", img: "Images/lemonsoda.jpg" },
-                    { name: "Golden Eagle", price: "0.50€", cat: "Energjike", img: "Images/goldeneagle.jpg" },
-                    { name: "Lynx", price: "0.50€", cat: "Energjike", img: "Images/lynx.jpg" },
-                    { name: "Jaffa Pjeshk", price: "0.60€", cat: "Lëngje", img: "Images/jaffapjeshke.jpg" },
-                    { name: "Jaffa Boronice", price: "0.60€", cat: "Lëngje", img: "Images/jaffaboronice1.jpg" },
-                    { name: "Sola Multivitamin", price: "0.80€", cat: "Lëngje", img: "Images/sola.jpg" },
-                    { name: "Sola Icetea", price: "0.70€", cat: "Lëngje", img: "Images/solaicetea.jpg" },
-                    { name: "Frostea", price: "0.60€", cat: "Lëngje", img: "Images/frostea.jpg" },
-                    { name: "Jaffa 0.33l", price: "0.60€", cat: "Lëngje", img: "Images/jaffa0.60.jpg" },
-                    { name: "Relax", price: "0.60€", cat: "Lëngje", img: "Images/relax0.60.jpg" },
-                    { name: "Ujë Ana 0.5", price: "0.25€", cat: "Ujë", img: "Images/ujeana.jpg" },
-                    { name: "Ujë Sharri 0.5", price: "0.25€", cat: "Ujë", img: "Images/ujesharri.jpg" },
-                    { name: "Ujë Miros 0.5", price: "0.25€", cat: "Ujë", img: "Images/ujemiros.jpg" },
-                    { name: "Ujë Mineral", price: "0.40€", cat: "Ujë", img: "Images/ujeanamineral.jpg" },
-                    { name: "Frutti Pjeshkë", price: "0.40€", cat: "Lëngje", img: "Images/fruttipjeshke.jpg" },
-                    { name: "Jaffa", price: "0.25", cat: "Lëngje", img: "Images/jaffa0.25.jpg" },
-                    { name: "Rc Cola", price: "0.40€", cat: "Gazuara", img: "Images/rccola.jpg" },
-                    { name: "Red Rain", price: "0.30€", cat: "Energjike", img: "Images/redrain.jpg" },
-                    { name: "Big Eagle", price: "0.30€", cat: "Energjike", img: "Images/bigeagle1.png" }, 
-                    { name: "Coca Cola 2l", price: "1.70€", cat: "Gazuara", img: "Images/cocacola2-l.png" },
-                    { name: "Fanta 2l", price: "1.70€", cat: "Gazuara", img: "Images/fanta1-2l.png" },
-                    { name: "Jaffa 1l", price: "1.30€", cat: "Lëngje", img: "Images/jaffa1.5l.jpg" },
-                    { name: "Sola 1.5l", price: "1.40€", cat: "Lëngje", img: "Images/sola2l.jpg" },
-                    { name: "Relax 1.5l", price: "1.10€", cat: "Lëngje", img: "Images/relax2l.png" },
-                    { name: "Ujë Ana 1.5l", price: "0.50€", cat: "Ujë", img: "Images/uje1.5lana.jpg" },
-                    { name: "Birrë Peja", price: "0.80€", cat: "Gazuara", img: "Images/birrapeja.jpg" },
-                    { name: "Birrë Peja Kanaçe", price: "1€", cat: "Gazuara", img: "Images/kanaqe.jpg" },
-                ]
-            },
-            snacks: {
-                filters: ["Të gjitha", "Chips", "Smoka", "Kikirika", "Sticks"],
-                items: [
-                     { name: "Vipa Chips", price: "0.30€", cat: "Chips", img: "Images/vipachips.jpg" },
-                    { name: "Vipa Maxxi", price: "0.30€", cat: "Chips", img: "Images/vipamaxi.jpg" },            
-                    { name: "Fripsy", price: "0.30€", cat: "Sticks", img: "Images/fripsychicken.jpg" },
-                    { name: "Patos Rolls", price: "0.30€", cat: "Chipsa", img: "Images/patosrolls.jpg" },
-                    { name: "Patos Tacos", price: "0.30€", cat: "Chipsa", img: "Images/patostaco.jpg" },
-                    { name: "Patos", price: "0.40€", cat: "Chips", img: "Images/patostacos.jpg" },
-                    { name: "Vipa Dinos", price: "0.30€", cat: "Chips", img: "Images/vipadinos.jpg" },
-                    { name: "Vipa Sticks Chicken", price: "0.20€", cat: "Sticks", img: "Images/vipasticks.jpg" },
-                    { name: "Vipa Sticks Hot Dog", price: "0.20€", cat: "Sticks", img: "Images/vipahotdog.jpg" },
-                    { name: "Vipa Kikirik", price: "0.15€", cat: "Sticks", img: "Images/vipakikirik.jpg" },
-                    { name: "Vipa Smoka", price: "0.15€", cat: "Smoka", img: "Images/vipa0.15.jpg" },
-                    { name: "Fripsy", price: "0.30€", cat: "Chips", img: "Images/funkyrotate.png" },
-                    { name: "Kikirika", price: "0.30€", cat: "Kikirika", img: "Images/gonuts.png" },
-                    { name: "Eti Crax Sticks", price: "0.50€", cat: "Sticks", img: "Images/eticrax.jpg" },
-                    { name: "Bambusa", price: "1.30€", cat: "Kikirika", img: "Images/funkykikirik.png" },
-                    { name: "Opps BBQ", price: "0.30€", cat: "Sticks", img: "Images/opps bbq.png" },
-                    { name: "Opps Hot", price: "0.30€", cat: "Sticks", img: "Images/oppshot.png" },
-                    { name: "Gold Snacks", price: "0.10€", cat: "Smoka", img: "Images/goldysnacks1.png" },
-                ]
-            },
-            sweets: {
-                filters: ["Të gjitha", "Çokollata", "Biskota", "Kek"],
-                items: [
-                  { name: "Pop Kek Çokolladë", price: "0.30€", cat: "Çokollata", img: "Images/popkekqokollade.jpg" },
-                    { name: "Pop Kek Banane", price: "0.30€", cat: "Çokollata", img: "Images/popkekbanane.jpg" },
-                    { name: "Pop Kek Kokos", price: "0.30€", cat: "Çokollata", img: "Images/popkekcocos.jpg" },
-                    { name: "Alpella Çokolladë", price: "0.30€", cat: "Çokollata", img: "Images/alpellaqokollad.jpg" },
-                    { name: "Alpella Cokolladë e bardhë", price: "0.30€", cat: "Çokollata", img: "Images/alpellawhite.png" },
-                    { name: "Alpella Kek", price: "0.40€", cat: "Kek", img: "Images/alpellacake.jpg" },
-                    { name: "Today Snowball", price: "0.30€", cat: "Çokollata", img: "Images/todaysnowball.jpg" },
-                    { name: "Today Snowball White", price: "0.40€", cat: "Çokollata", img: "Images/todaywhite.jpg" },
-                    { name: "Today Snowball Black", price: "0.30€", cat: "Çokollata", img: "Images/todayblack.jpg" },
-                    { name: "Today Çokolladë", price: "0.30€", cat: "Çokollata", img: "Images/todaycake.jpg" },
-                    { name: "Today Tiramisu", price: "0.40€", cat: "Çokollata", img: "Images/todaytiramisu.jpg" },
-                    { name: "Today Panda", price: "0.30€", cat: "Çokollata", img: "Images/todaypanda.jpg" },
-                    { name: "Today Pistachio", price: "0.40€", cat: "Çokollata", img: "Images/todaypistachio.jpg" },
-                    { name: "Today Gusto", price: "0.40€", cat: "Çokollata", img: "Images/todaygusto.jpg" },
-                    { name: "Today Souffle", price: "0.40€", cat: "Çokollata", img: "Images/todaysuffle.jpg" },
-                    { name: "Today Goldies", price: "0.30€", cat: "Çokollata", img: "Images/todaygoldies.jpg" },
-                    { name: "Today Cup of cake", price: "0.20€", cat: "Kek", img: "Images/todaycupcake.jpg" },
-                    { name: "Today Cherry", price: "0.30€", cat: "Çokollata", img: "Images/todaycherry.jpg" },
-                    { name: "Today Aloha", price: "0.20€", cat: "Kek", img: "Images/todayaloha.jpg" },
-                    { name: "Topsa Love You", price: "0.70€", cat: "Biskota", img: "Images/loveyou.jpg" },
-                    { name: "Today Roll", price: "0.20€", cat: "Biskota", img: "Images/todayroll.png" },
-                    { name: "Figaro", price: "0.30€", cat: "Biskota", img: "Images/figaro1.jpg" },
-                    { name: "Nuss", price: "0.20€", cat: "Çokollada", img: "Images/nuss.jpg" }
-                ]
+    'use strict';
+
+    /* ============================================================
+       MODULE 01 · DATA STORE (PRESERVED FROM ORIGINAL)
+       ============================================================ */
+    const DATA = {
+        pijet: {
+            label: "Pijet",
+            filters: ["Të gjitha", "Energjike", "Lëngje", "Ujë", "Gazuara"],
+            items: [
+                { name: "Coca Cola", price: "0.70€", cat: "Gazuara", img: "Images/cocacola.jpg" },
+                { name: "Fanta Orange", price: "0.70€", cat: "Gazuara", img: "Images/fantaorange1.png" },
+                { name: "Fanta Exotic", price: "0.70€", cat: "Gazuara", img: "Images/fantaexotic1.png" },
+                { name: "Fanta Tropical", price: "0.70€", cat: "Gazuara", img: "Images/fantatropical2.png" },
+                { name: "Schweppes", price: "0.70€", cat: "Gazuara", img: "Images/schweppes1.jpg" },
+                { name: "Lemon Soda", price: "0.70€", cat: "Gazuara", img: "Images/lemonsoda.jpg" },
+                { name: "Golden Eagle", price: "0.50€", cat: "Energjike", img: "Images/goldeneagle.jpg" },
+                { name: "Lynx", price: "0.50€", cat: "Energjike", img: "Images/lynx.jpg" },
+                { name: "Jaffa Pjeshk", price: "0.60€", cat: "Lëngje", img: "Images/jaffapjeshke.jpg" },
+                { name: "Jaffa Boronice", price: "0.60€", cat: "Lëngje", img: "Images/jaffaboronice1.jpg" },
+                { name: "Sola Multivitamin", price: "0.80€", cat: "Lëngje", img: "Images/sola.jpg" },
+                { name: "Sola Icetea", price: "0.70€", cat: "Lëngje", img: "Images/solaicetea.jpg" },
+                { name: "Frostea", price: "0.60€", cat: "Lëngje", img: "Images/frostea.jpg" },
+                { name: "Jaffa 0.33l", price: "0.60€", cat: "Lëngje", img: "Images/jaffa0.60.jpg" },
+                { name: "Relax", price: "0.60€", cat: "Lëngje", img: "Images/relax0.60.jpg" },
+                { name: "Ujë Ana 0.5", price: "0.25€", cat: "Ujë", img: "Images/ujeana.jpg" },
+                { name: "Ujë Sharri 0.5", price: "0.25€", cat: "Ujë", img: "Images/ujesharri.jpg" },
+                { name: "Ujë Miros 0.5", price: "0.25€", cat: "Ujë", img: "Images/ujemiros.jpg" },
+                { name: "Ujë Mineral", price: "0.40€", cat: "Ujë", img: "Images/ujeanamineral.jpg" },
+                { name: "Frutti Pjeshkë", price: "0.40€", cat: "Lëngje", img: "Images/fruttipjeshke.jpg" },
+                { name: "Jaffa", price: "0.25", cat: "Lëngje", img: "Images/jaffa0.25.jpg" },
+                { name: "Rc Cola", price: "0.40€", cat: "Gazuara", img: "Images/rccola.jpg" },
+                { name: "Red Rain", price: "0.30€", cat: "Energjike", img: "Images/redrain.jpg" },
+                { name: "Big Eagle", price: "0.30€", cat: "Energjike", img: "Images/bigeagle1.png" },
+                { name: "Coca Cola 2l", price: "1.70€", cat: "Gazuara", img: "Images/cocacola2-l.png" },
+                { name: "Fanta 2l", price: "1.70€", cat: "Gazuara", img: "Images/fanta1-2l.png" },
+                { name: "Jaffa 1l", price: "1.30€", cat: "Lëngje", img: "Images/jaffa1.5l.jpg" },
+                { name: "Sola 1.5l", price: "1.40€", cat: "Lëngje", img: "Images/sola2l.jpg" },
+                { name: "Relax 1.5l", price: "1.10€", cat: "Lëngje", img: "Images/relax2l.png" },
+                { name: "Ujë Ana 1.5l", price: "0.50€", cat: "Ujë", img: "Images/uje1.5lana.jpg" },
+                { name: "Birrë Peja", price: "0.80€", cat: "Gazuara", img: "Images/birrapeja.jpg" },
+                { name: "Birrë Peja Kanaçe", price: "1€", cat: "Gazuara", img: "Images/kanaqe.jpg" }
+            ]
+        },
+        snacks: {
+            label: "Snacks",
+            filters: ["Të gjitha", "Chips", "Smoka", "Kikirika", "Sticks"],
+            items: [
+                { name: "Vipa Chips", price: "0.30€", cat: "Chips", img: "Images/vipachips.jpg" },
+                { name: "Vipa Maxxi", price: "0.30€", cat: "Chips", img: "Images/vipamaxi.jpg" },
+                { name: "Fripsy", price: "0.30€", cat: "Sticks", img: "Images/fripsychicken.jpg" },
+                { name: "Patos Rolls", price: "0.30€", cat: "Chipsa", img: "Images/patosrolls.jpg" },
+                { name: "Patos Tacos", price: "0.30€", cat: "Chipsa", img: "Images/patostaco.jpg" },
+                { name: "Patos", price: "0.40€", cat: "Chips", img: "Images/patostacos.jpg" },
+                { name: "Vipa Dinos", price: "0.30€", cat: "Chips", img: "Images/vipadinos.jpg" },
+                { name: "Vipa Sticks Chicken", price: "0.20€", cat: "Sticks", img: "Images/vipasticks.jpg" },
+                { name: "Vipa Sticks Hot Dog", price: "0.20€", cat: "Sticks", img: "Images/vipahotdog.jpg" },
+                { name: "Vipa Kikirik", price: "0.15€", cat: "Sticks", img: "Images/vipakikirik.jpg" },
+                { name: "Vipa Smoka", price: "0.15€", cat: "Smoka", img: "Images/vipa0.15.jpg" },
+                { name: "Fripsy", price: "0.30€", cat: "Chips", img: "Images/funkyrotate.png" },
+                { name: "Kikirika", price: "0.30€", cat: "Kikirika", img: "Images/gonuts.png" },
+                { name: "Eti Crax Sticks", price: "0.50€", cat: "Sticks", img: "Images/eticrax.jpg" },
+                { name: "Bambusa", price: "1.30€", cat: "Kikirika", img: "Images/funkykikirik.png" },
+                { name: "Opps BBQ", price: "0.30€", cat: "Sticks", img: "Images/opps bbq.png" },
+                { name: "Opps Hot", price: "0.30€", cat: "Sticks", img: "Images/oppshot.png" },
+                { name: "Gold Snacks", price: "0.10€", cat: "Smoka", img: "Images/goldysnacks1.png" }
+            ]
+        },
+        sweets: {
+            label: "Sweets",
+            filters: ["Të gjitha", "Çokollata", "Biskota", "Kek"],
+            items: [
+                { name: "Pop Kek Çokolladë", price: "0.30€", cat: "Çokollata", img: "Images/popkekqokollade.jpg" },
+                { name: "Pop Kek Banane", price: "0.30€", cat: "Çokollata", img: "Images/popkekbanane.jpg" },
+                { name: "Pop Kek Kokos", price: "0.30€", cat: "Çokollata", img: "Images/popkekcocos.jpg" },
+                { name: "Alpella Çokolladë", price: "0.30€", cat: "Çokollata", img: "Images/alpellaqokollad.jpg" },
+                { name: "Alpella Cokolladë e bardhë", price: "0.30€", cat: "Çokollata", img: "Images/alpellawhite.png" },
+                { name: "Alpella Kek", price: "0.40€", cat: "Kek", img: "Images/alpellacake.jpg" },
+                { name: "Today Snowball", price: "0.30€", cat: "Çokollata", img: "Images/todaysnowball.jpg" },
+                { name: "Today Snowball White", price: "0.40€", cat: "Çokollata", img: "Images/todaywhite.jpg" },
+                { name: "Today Snowball Black", price: "0.30€", cat: "Çokollata", img: "Images/todayblack.jpg" },
+                { name: "Today Çokolladë", price: "0.30€", cat: "Çokollata", img: "Images/todaycake.jpg" },
+                { name: "Today Tiramisu", price: "0.40€", cat: "Çokollata", img: "Images/todaytiramisu.jpg" },
+                { name: "Today Panda", price: "0.30€", cat: "Çokollata", img: "Images/todaypanda.jpg" },
+                { name: "Today Pistachio", price: "0.40€", cat: "Çokollata", img: "Images/todaypistachio.jpg" },
+                { name: "Today Gusto", price: "0.40€", cat: "Çokollata", img: "Images/todaygusto.jpg" },
+                { name: "Today Souffle", price: "0.40€", cat: "Çokollata", img: "Images/todaysuffle.jpg" },
+                { name: "Today Goldies", price: "0.30€", cat: "Çokollata", img: "Images/todaygoldies.jpg" },
+                { name: "Today Cup of cake", price: "0.20€", cat: "Kek", img: "Images/todaycupcake.jpg" },
+                { name: "Today Cherry", price: "0.30€", cat: "Çokollata", img: "Images/todaycherry.jpg" },
+                { name: "Today Aloha", price: "0.20€", cat: "Kek", img: "Images/todayaloha.jpg" },
+                { name: "Topsa Love You", price: "0.70€", cat: "Biskota", img: "Images/loveyou.jpg" },
+                { name: "Today Roll", price: "0.20€", cat: "Biskota", img: "Images/todayroll.png" },
+                { name: "Figaro", price: "0.30€", cat: "Biskota", img: "Images/figaro1.jpg" },
+                { name: "Nuss", price: "0.20€", cat: "Çokollada", img: "Images/nuss.jpg" }
+            ]
+        }
+    };
+
+    /* ============================================================
+       MODULE 02 · STATE
+       ============================================================ */
+    const State = {
+        currentView: 'hyrja',
+        currentProduct: null,
+        wishlist: new Set(JSON.parse(localStorage.getItem('ratkoci.wishlist') || '[]')),
+        settings: {
+            darkMode: localStorage.getItem('ratkoci.darkMode') !== 'false',
+            haptic: localStorage.getItem('ratkoci.haptic') !== 'false',
+            notifications: localStorage.getItem('ratkoci.notifications') === 'true',
+            animations: localStorage.getItem('ratkoci.animations') !== 'false'
+        },
+        activeFilters: { pijet: 'Të gjitha', snacks: 'Të gjitha', sweets: 'Të gjitha' }
+    };
+
+    /* ============================================================
+       MODULE 03 · UTILS
+       ============================================================ */
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => document.querySelectorAll(sel);
+    const renderIcons = () => { if (window.lucide) lucide.createIcons(); };
+
+    const haptic = (force = 12) => {
+        if (State.settings.haptic && navigator.vibrate) navigator.vibrate(force);
+    };
+
+    const productId = (item) => `${item.name}__${item.price}`;
+    const escapeHtml = (str) => String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+    /* ============================================================
+       MODULE 04 · TOAST SYSTEM
+       ============================================================ */
+    const Toast = {
+        show(message, type = 'success', duration = 3000) {
+            const container = $('#toast-container');
+            const icons = { success: 'check-circle-2', info: 'info', warn: 'alert-triangle' };
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <div class="toast-icon"><i data-lucide="${icons[type] || 'info'}" class="w-4 h-4"></i></div>
+                <span class="flex-1">${escapeHtml(message)}</span>
+            `;
+            container.appendChild(toast);
+            renderIcons();
+            requestAnimationFrame(() => toast.classList.add('show'));
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, duration);
+        }
+    };
+
+    /* ============================================================
+       MODULE 05 · WISHLIST
+       ============================================================ */
+    const Wishlist = {
+        toggle(item) {
+            const id = productId(item);
+            if (State.wishlist.has(id)) {
+                State.wishlist.delete(id);
+                Toast.show(`${item.name} u hoq nga të preferuarat`, 'info');
+            } else {
+                State.wishlist.add(id);
+                Toast.show(`${item.name} u shtua tek të preferuarat`, 'success');
             }
-        };
-
-   // --- APP ENGINE ---
-
-        document.addEventListener('DOMContentLoaded', () => {
-
-            initIntro();
-
-            lucide.createIcons();
-
-            renderAllSections();
-
-        });
-
-
-
-        function initIntro() {
-
-            const tl = gsap.timeline({ onComplete: () => {
-
-                gsap.to("#intro-screen", { opacity: 0, duration: 1, ease: "power4.out", pointerEvents: 'none' });
-
-            }});
-
-            tl.to("#intro-logo", { opacity: 1, scale: 1, duration: 1.2, ease: "elastic.out(1, 0.5)" })
-
-              .to("#intro-text", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.6")
-
-              .to("#intro-sub", { opacity: 1, duration: 0.8 }, "-=0.4");
-
-        }
-
-
-
-        function renderAllSections() {
-
-            ["pijet", "snacks", "sweets"].forEach(section => {
-
-                renderFilters(section);
-
-                renderItems(section, "Të gjitha");
-
+            this.save();
+            this.updateBadge();
+            this.updateButtons();
+            haptic(15);
+        },
+        save() {
+            localStorage.setItem('ratkoci.wishlist', JSON.stringify([...State.wishlist]));
+        },
+        has(item) { return State.wishlist.has(productId(item)); },
+        updateBadge() {
+            const badge = $('#wishlist-badge');
+            if (State.wishlist.size > 0) {
+                badge.textContent = State.wishlist.size;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        },
+        updateButtons() {
+            $$('.wishlist-btn').forEach(btn => {
+                const id = btn.dataset.productId;
+                if (id && State.wishlist.has(id)) btn.classList.add('active');
+                else btn.classList.remove('active');
             });
-
+        },
+        getItems() {
+            const all = [...DATA.pijet.items, ...DATA.snacks.items, ...DATA.sweets.items];
+            return all.filter(i => State.wishlist.has(productId(i)));
         }
+    };
 
+    /* ============================================================
+       MODULE 06 · APP NAVIGATION & RENDERING
+       ============================================================ */
+    const App = {
 
+        navigate(viewId) {
+            const target = $(`#view-${viewId}`);
+            if (!target) return;
 
-        function renderFilters(section) {
+            $$('.view').forEach(v => v.classList.remove('active'));
+            target.classList.add('active');
 
-            const container = document.getElementById(`filter-${section}`);
+            $$('.nav-btn').forEach(b => b.classList.remove('active'));
+            const btn = $(`#btn-${viewId}`);
+            if (btn) btn.classList.add('active');
 
-            data[section].filters.forEach(f => {
+            State.currentView = viewId;
+            if (viewId === 'wishlist') this.renderWishlist();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            haptic(10);
+            renderIcons();
+        },
 
-                const btn = document.createElement('button');
-
-                btn.className = `category-pill filter-btn-${section} px-6 py-3 rounded-2xl glass text-[10px] font-black uppercase tracking-widest whitespace-nowrap transition-all ${f === "Të gjitha" ? 'bg-primary text-dark border-primary' : 'text-gray-400'}`;
-
-                btn.innerText = f;
-
-                btn.onclick = () => {
-
-                    document.querySelectorAll(`.filter-btn-${section}`).forEach(b => {
-
-                        b.classList.remove('bg-primary', 'text-dark', 'border-primary');
-
-                        b.classList.add('text-gray-400');
-
-                    });
-
-                    btn.classList.add('bg-primary', 'text-dark', 'border-primary');
-
-                    btn.classList.remove('text-gray-400');
-
-                    
-
-                    // Smooth re-render animation
-
-                    gsap.to(`#grid-${section}`, { opacity: 0, y: 10, duration: 0.2, onComplete: () => {
-
-                        renderItems(section, f);
-
-                        gsap.to(`#grid-${section}`, { opacity: 1, y: 0, duration: 0.3 });
-
-                    }});
-
-                };
-
-                container.appendChild(btn);
-
-            });
-
-        }
-
-
-
-        function renderItems(section, filter) {
-
-            const container = document.getElementById(`grid-${section}`);
-
+        renderFilters(section) {
+            const container = $(`#filter-${section}`);
+            if (!container) return;
             container.innerHTML = '';
 
-            
+            DATA[section].filters.forEach(filter => {
+                const pill = document.createElement('button');
+                pill.className = `filter-pill ${filter === State.activeFilters[section] ? 'active' : ''}`;
+                pill.textContent = filter;
+                pill.dataset.filter = filter;
+                pill.onclick = () => {
+                    State.activeFilters[section] = filter;
+                    container.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+                    haptic(8);
+                    if (window.gsap && State.settings.animations) {
+                        gsap.to(`#grid-${section}`, { opacity: 0, y: 8, duration: 0.2,
+                            onComplete: () => {
+                                this.renderItems(section, filter);
+                                gsap.to(`#grid-${section}`, { opacity: 1, y: 0, duration: 0.4 });
+                            }
+                        });
+                    } else {
+                        this.renderItems(section, filter);
+                    }
+                };
+                container.appendChild(pill);
+            });
+        },
 
-            const filteredItems = filter === "Të gjitha" 
+        renderItems(section, filter) {
+            const container = $(`#grid-${section}`);
+            if (!container) return;
+            container.innerHTML = '';
 
-                ? data[section].items 
+            const items = filter === "Të gjitha"
+                ? DATA[section].items
+                : DATA[section].items.filter(i => i.cat === filter);
 
-                : data[section].items.filter(i => i.cat === filter);
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full empty-state">
+                        <div class="empty-state-icon"><i data-lucide="package-x" class="w-6 h-6"></i></div>
+                        <p class="text-sm font-bold mb-1">Nuk u gjet asnjë produkt</p>
+                        <p class="text-xs">Provo një kategori tjetër</p>
+                    </div>`;
+                renderIcons();
+                return;
+            }
 
+            items.forEach((item, idx) => {
+                container.appendChild(this.buildProductCard(item, idx));
+            });
 
+            renderIcons();
+            Wishlist.updateButtons();
+        },
 
-            filteredItems.forEach(item => {
+        buildProductCard(item, idx = 0) {
+            const id = productId(item);
+            const card = document.createElement('div');
+            card.className = "product-card gpu";
+            card.style.animationDelay = `${Math.min(idx, 10) * 30}ms`;
 
-                const div = document.createElement('div');
+            card.innerHTML = `
+                <div class="product-img-wrap">
+                    <img class="product-img" loading="lazy" alt="${escapeHtml(item.name)}"
+                         src="${item.img || ''}"
+                         onerror="this.onerror=null;this.style.display='none';this.parentNode.classList.add('img-fallback');">
+                    <button class="wishlist-btn ${Wishlist.has(item) ? 'active' : ''}" data-product-id="${id}" aria-label="Shto te të preferuarat">
+                        <i data-lucide="heart" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <div class="px-2 pb-1">
+                    <p class="text-[9px] font-black tracking-[0.2em] uppercase text-slate-500 mb-0.5">${escapeHtml(item.cat || '')}</p>
+                    <h4 class="font-bold text-[13px] truncate mb-0.5">${escapeHtml(item.name)}</h4>
+                    <p class="font-display text-sm font-bold gradient-text tracking-tight">${escapeHtml(item.price)}</p>
+                </div>
+            `;
 
-                div.className = "product-card glass p-4 rounded-[2.5rem] cursor-pointer border-white/5";
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                card.style.setProperty('--mx', x + '%');
+                card.style.setProperty('--my', y + '%');
+            });
 
-                div.onclick = () => openProduct(item);
+            card.querySelector('.wishlist-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                Wishlist.toggle(item);
+            });
 
-                div.innerHTML = `
+            card.addEventListener('click', () => this.openProduct(item));
+            return card;
+        },
 
-                    <div class="w-full aspect-square bg-white/5 rounded-[1.8rem] mb-4 flex items-center justify-center overflow-hidden">
+        renderAllSections() {
+            ['pijet', 'snacks', 'sweets'].forEach(section => {
+                this.renderFilters(section);
+                this.renderItems(section, State.activeFilters[section]);
+                const countEl = $(`#count-${section}`);
+                if (countEl) countEl.textContent = `${DATA[section].items.length} produkte`;
+            });
+        },
 
-                        <img src="${item.img || ''}" class="w-full h-full object-cover" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%23ffffff10%22/></svg>'">
+        renderTrending() {
+            const container = $('#trending-scroll');
+            if (!container) return;
 
+            const trending = [
+                DATA.pijet.items[0], DATA.snacks.items[0], DATA.sweets.items[0],
+                DATA.pijet.items[6], DATA.snacks.items[5], DATA.sweets.items[3],
+                DATA.pijet.items[10], DATA.sweets.items[10]
+            ].filter(Boolean);
+
+            container.innerHTML = '';
+            const tags = ['Trending', 'Best Seller', 'Klasik', 'Premium', 'Trending', 'Best Seller', 'Top Pick', 'Klasik'];
+
+            trending.forEach((item, i) => {
+                const card = document.createElement('div');
+                card.className = 'trending-card gpu';
+                card.style.opacity = '0';
+                card.style.transform = 'translateX(40px)';
+                card.innerHTML = `
+                    <img src="${item.img}" class="trending-img" loading="lazy" alt="${escapeHtml(item.name)}" onerror="this.style.display='none'">
+                    <div class="trending-badge">${tags[i] || 'Premium'}</div>
+                    <div class="trending-info">
+                        <p class="text-[10px] font-black tracking-[0.25em] uppercase text-primary mb-2">${escapeHtml(item.cat || 'Premium')}</p>
+                        <h3 class="font-display text-xl font-bold text-white leading-tight mb-1">${escapeHtml(item.name)}</h3>
+                        <p class="font-display text-lg font-bold gradient-text tracking-tight">${escapeHtml(item.price)}</p>
                     </div>
-
-                    <div class="px-2">
-
-                        <h4 class="font-bold text-[12px] truncate mb-1">${item.name}</h4>
-
-                        <p class="text-primary font-black text-sm tracking-tighter">${item.price}</p>
-
-                    </div>
-
                 `;
-
-                container.appendChild(div);
-
+                card.onclick = () => { haptic(15); this.openProduct(item); };
+                container.appendChild(card);
             });
 
-        }
+            if (window.gsap && State.settings.animations) {
+                gsap.to('.trending-card', {
+                    opacity: 1, x: 0, duration: 0.9, stagger: 0.08, ease: 'power3.out'
+                });
+            } else {
+                $$('.trending-card').forEach(c => { c.style.opacity = '1'; c.style.transform = 'translateX(0)'; });
+            }
+        },
 
+        renderWishlist() {
+            const container = $('#wishlist-content');
+            const items = Wishlist.getItems();
+            container.innerHTML = '';
 
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="padding: 80px 20px;">
+                        <div class="empty-state-icon" style="width: 80px; height: 80px;">
+                            <i data-lucide="heart" class="w-8 h-8"></i>
+                        </div>
+                        <p class="font-display text-xl font-bold mb-2">Lista juaj është bosh</p>
+                        <p class="text-sm max-w-xs mx-auto leading-relaxed mb-6">
+                            Shtoni produkte tek të preferuarat duke klikuar ikonën e zemrës.
+                        </p>
+                        <button onclick="App.navigate('pijet')" class="btn-primary">Eksploro Produktet</button>
+                    </div>`;
+                renderIcons();
+                return;
+            }
 
-        // --- NAVIGATION ---
+            const grid = document.createElement('div');
+            grid.className = 'product-grid';
+            items.forEach((item, idx) => grid.appendChild(this.buildProductCard(item, idx)));
+            container.appendChild(grid);
+            renderIcons();
+            Wishlist.updateButtons();
+        },
 
-        function navigate(viewId) {
+        /* ----- PRODUCT MODAL ----- */
+        openProduct(item) {
+            State.currentProduct = item;
+            const modal = $('#product-modal');
+            $('#modal-img').src = item.img || '';
+            $('#modal-img').alt = item.name;
+            $('#modal-img').onerror = function() { this.style.display = 'none'; };
+            $('#modal-img').style.display = '';
+            $('#modal-title').textContent = item.name;
+            $('#modal-price').textContent = item.price;
+            $('#modal-cat').textContent = item.cat || '';
+            const wb = $('#modal-wishlist');
+            wb.dataset.productId = productId(item);
+            wb.classList.toggle('active', Wishlist.has(item));
 
-            const views = document.querySelectorAll('.view');
+            modal.classList.add('open');
+            requestAnimationFrame(() => modal.classList.add('visible'));
+            renderIcons();
+            haptic(10);
+        },
 
-            const targetView = document.getElementById(`view-${viewId}`);
+        closeProduct() {
+            const modal = $('#product-modal');
+            modal.classList.remove('visible');
+            setTimeout(() => modal.classList.remove('open'), 400);
+        },
 
-            
+        toggleModalWishlist() {
+            if (State.currentProduct) {
+                Wishlist.toggle(State.currentProduct);
+                $('#modal-wishlist').classList.toggle('active', Wishlist.has(State.currentProduct));
+            }
+        },
 
-            views.forEach(v => {
-
-                v.classList.remove('active');
-
-            });
-
-            
-
-            targetView.classList.add('active');
-
-            
-
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
-
-            document.getElementById(`btn-${viewId}`).classList.add('nav-active');
-
-            
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            
-
-            // Re-trigger lucide for safety
-
-            lucide.createIcons();
-
-        }
-
-// --- KONFIGURIMI I SETTINGS ---
-const appSettings = {
-    darkMode: document.getElementById('toggle-dark-mode'),
-    haptic: document.getElementById('toggle-haptic'),
-    notifications: document.getElementById('toggle-notifications')
-};
-
-/** 
- * 1. Dark Mode - Ndryshimi i temës
- * Përdorim 'dark' si klasë në elementin rrënjë (html)
- */
-function updateDarkMode() {
-    if (!appSettings.darkMode) return;
-    const isDark = appSettings.darkMode.checked;
-    document.documentElement.classList.toggle('dark', isDark);
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-}
-
-/**
- * 2. Haptic Feedback - Feedback fizik
- */
-function triggerHaptic(force = 15) {
-    if (appSettings.haptic?.checked && navigator.vibrate) {
-        navigator.vibrate(force);
-    }
-    if (appSettings.haptic) {
-        localStorage.setItem('haptic', appSettings.haptic.checked);
-    }
-}
-
-/**
- * 3. Notifications - Statusi i njoftimeve
- */
-function updateNotifications() {
-    if (!appSettings.notifications) return;
-    localStorage.setItem('notifications', appSettings.notifications.checked);
-    if (appSettings.notifications.checked) {
-        console.info("NTP Ratkoci: Njoftimet u aktivizuan.");
-    }
-}
-
-// --- EVENT LISTENERS (LIVE UPDATE) ---
-// Shtojmë kontrolle sigurie (?.) në rast se një element mungon në HTML
-appSettings.darkMode?.addEventListener('change', () => {
-    updateDarkMode();
-    triggerHaptic(10);
-});
-
-appSettings.haptic?.addEventListener('change', () => {
-    triggerHaptic(20);
-});
-
-appSettings.notifications?.addEventListener('change', () => {
-    updateNotifications();
-    triggerHaptic(10);
-});
-
-// --- INITIALIZE (NGARKIMI I PREFERENCAVE) ---
-window.addEventListener('DOMContentLoaded', () => {
-    // Ngarko Temën
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    const isDark = savedTheme === 'dark';
-    if (appSettings.darkMode) {
-        appSettings.darkMode.checked = isDark;
-        document.documentElement.classList.toggle('dark', isDark);
-    }
-
-    // Ngarko Haptic
-    const savedHaptic = localStorage.getItem('haptic');
-    if (appSettings.haptic) {
-        appSettings.haptic.checked = savedHaptic === null ? true : savedHaptic === 'true';
-    }
-
-    // Ngarko Notifications
-    const savedNotif = localStorage.getItem('notifications');
-    if (appSettings.notifications) {
-        appSettings.notifications.checked = savedNotif === 'true';
-    }
-});
-
-// --- MODAL CONTROL (SETTINGS & PRODUCTS) ---
-function toggleSettings() {
-    const modal = document.getElementById('settings-modal');
-    const content = document.getElementById('settings-content');
-    if (!modal || !content) return;
-
-    triggerHaptic(10);
-
-    if (modal.classList.contains('hidden')) {
-        modal.classList.remove('hidden');
-        requestAnimationFrame(() => content.classList.remove('translate-y-full'));
-    } else {
-        content.classList.add('translate-y-full');
-        setTimeout(() => modal.classList.add('hidden'), 300);
-    }
-}
-
-function openProduct(item) {
-    const modal = document.getElementById('product-modal');
-    const box = document.getElementById('modal-box');
-    const imgContainer = document.getElementById('modal-img-container');
-    
-    if (!modal || !box) return;
-
-    document.getElementById('modal-title').innerText = item.name || 'Produkti';
-    document.getElementById('modal-price').innerText = item.price || '--';
-    
-    // Optimizim: Pastrim i kontejnerit para shtimit të imazhit të ri
-    imgContainer.innerHTML = '';
-    if (item.img) {
-        const img = new Image();
-        img.src = item.img;
-        img.className = "w-full h-full object-cover";
-        img.onerror = () => img.style.display = 'none';
-        imgContainer.appendChild(img);
-    }
-    
-    modal.classList.remove('hidden');
-    triggerHaptic(5);
-    setTimeout(() => box.classList.remove('scale-90', 'opacity-0'), 10);
-}
-
-function closeProduct() {
-    const modal = document.getElementById('product-modal');
-    const box = document.getElementById('modal-box');
-    if (!box || !modal) return;
-
-    box.classList.add('scale-90', 'opacity-0');
-    setTimeout(() => modal.classList.add('hidden'), 300);
-}
-
-// --- MAINTENANCE ---
-function clearCache() {
-    if (navigator.vibrate) navigator.vibrate([30, 50, 30, 50, 30]);
-    
-    if (confirm("A jeni të sigurt? Të gjitha preferencat do të fshihen.")) {
-        localStorage.clear();
-        location.reload();
-    }
-}
-
-// --- PWA SERVICE WORKER ---
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-            .then(() => console.log('NTP Ratkoci: App Offline Ready'))
-            .catch(err => console.error('PWA Error:', err));
-    });
-}
-
-
-
-
-
-
-        // --- MODULI I TRANZICIONIT TË HYRJES ---
-function initIntro() {
-    const tl = gsap.timeline({ 
-        onComplete: () => {
-            // Hiq ekranin intro
-            gsap.to("#intro-screen", { 
-                opacity: 0, 
-                duration: 0.8, 
-                ease: "power2.inOut", 
-                onComplete: () => {
-                    document.getElementById('intro-screen').style.pointerEvents = 'none';
-                    // Pas intros, nisim shfaqjen e produkteve më të shitura
-                    revealBestSellers();
+        async shareProduct() {
+            if (!State.currentProduct) return;
+            const item = State.currentProduct;
+            const text = `${item.name} · ${item.price} · NTP Ratkoci`;
+            if (navigator.share) {
+                try { await navigator.share({ title: item.name, text }); } catch(e) {}
+            } else {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    Toast.show('Produkti u kopjua në clipboard', 'success');
+                } catch(e) {
+                    Toast.show('Nuk mund të ndahet aktualisht', 'warn');
                 }
+            }
+        },
+
+        /* ----- SETTINGS ----- */
+        openSettings() {
+            const modal = $('#settings-modal');
+            modal.classList.add('open');
+            requestAnimationFrame(() => modal.classList.add('visible'));
+            haptic(10);
+        },
+
+        closeSettings() {
+            const modal = $('#settings-modal');
+            modal.classList.remove('visible');
+            setTimeout(() => modal.classList.remove('open'), 400);
+        },
+
+        /* ----- SEARCH ----- */
+        openSearch() {
+            const modal = $('#search-modal');
+            modal.classList.add('open');
+            requestAnimationFrame(() => {
+                modal.classList.add('visible');
+                $('#search-input').focus();
             });
+            haptic(10);
+        },
+
+        closeSearch() {
+            const modal = $('#search-modal');
+            modal.classList.remove('visible');
+            setTimeout(() => {
+                modal.classList.remove('open');
+                $('#search-input').value = '';
+                $('#search-results').innerHTML = '';
+            }, 400);
+        },
+
+        runSearch(query) {
+            const results = $('#search-results');
+            query = (query || '').trim().toLowerCase();
+
+            if (!query) {
+                results.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><i data-lucide="search" class="w-6 h-6"></i></div>
+                        <p class="text-sm font-bold mb-1">Filloni të kërkoni</p>
+                        <p class="text-xs">Provo: "Coca Cola", "chips", "kek"</p>
+                    </div>`;
+                renderIcons();
+                return;
+            }
+
+            const all = [
+                ...DATA.pijet.items.map(i => ({...i, section: 'pijet'})),
+                ...DATA.snacks.items.map(i => ({...i, section: 'snacks'})),
+                ...DATA.sweets.items.map(i => ({...i, section: 'sweets'}))
+            ];
+
+            const found = all.filter(i =>
+                i.name.toLowerCase().includes(query) ||
+                (i.cat || '').toLowerCase().includes(query)
+            ).slice(0, 20);
+
+            if (found.length === 0) {
+                results.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon"><i data-lucide="package-x" class="w-6 h-6"></i></div>
+                        <p class="text-sm font-bold mb-1">Asnjë rezultat për "${escapeHtml(query)}"</p>
+                        <p class="text-xs">Provoni një term tjetër</p>
+                    </div>`;
+                renderIcons();
+                return;
+            }
+
+            results.innerHTML = found.map(item => `
+                <div class="search-result" onclick="App.closeSearch(); setTimeout(()=>App.openProduct(${JSON.stringify(item).replace(/"/g,'&quot;')}), 300)">
+                    <div class="w-12 h-12 rounded-2xl bg-white/5 border border-white/5 overflow-hidden flex-shrink-0">
+                        <img src="${item.img}" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[9px] font-black uppercase tracking-[0.2em] text-primary">${escapeHtml(item.section)} · ${escapeHtml(item.cat || '')}</p>
+                        <p class="font-bold text-sm truncate">${escapeHtml(item.name)}</p>
+                    </div>
+                    <p class="font-display font-bold text-sm gradient-text">${escapeHtml(item.price)}</p>
+                </div>
+            `).join('');
+            renderIcons();
+        },
+
+        /* ----- MAINTENANCE ----- */
+        clearCache() {
+            if (confirm("A jeni të sigurt? Të gjitha preferencat dhe lista e zemrës do të fshihen.")) {
+                localStorage.clear();
+                haptic(30);
+                Toast.show('Memoria u pastrua. Po rifreskojmë...', 'info', 2000);
+                setTimeout(() => location.reload(), 1200);
+            }
         }
-    });
+    };
 
-    tl.to("#intro-logo", { opacity: 1, scale: 1, duration: 1.2, ease: "elastic.out(1, 0.6)" })
-      .to("#intro-text", { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, "-=0.6")
-      .to("#intro-sub", { opacity: 1, duration: 0.8 }, "-=0.4");
-}
+    /* ============================================================
+       MODULE 07 · SETTINGS ENGINE
+       ============================================================ */
+    const Settings = {
+        init() {
+            // Restore values
+            $('#toggle-dark-mode').checked = State.settings.darkMode;
+            $('#toggle-haptic').checked = State.settings.haptic;
+            $('#toggle-notifications').checked = State.settings.notifications;
+            $('#toggle-animations').checked = State.settings.animations;
+            this.applyTheme();
 
+            $('#toggle-dark-mode').addEventListener('change', e => {
+                State.settings.darkMode = e.target.checked;
+                localStorage.setItem('ratkoci.darkMode', e.target.checked);
+                this.applyTheme();
+                haptic(15);
+            });
+            $('#toggle-haptic').addEventListener('change', e => {
+                State.settings.haptic = e.target.checked;
+                localStorage.setItem('ratkoci.haptic', e.target.checked);
+                if (e.target.checked) haptic(25);
+            });
+            $('#toggle-notifications').addEventListener('change', e => {
+                State.settings.notifications = e.target.checked;
+                localStorage.setItem('ratkoci.notifications', e.target.checked);
+                if (e.target.checked) Toast.show('Njoftimet u aktivizuan', 'success');
+                haptic(15);
+            });
+            $('#toggle-animations').addEventListener('change', e => {
+                State.settings.animations = e.target.checked;
+                localStorage.setItem('ratkoci.animations', e.target.checked);
+                haptic(15);
+            });
+        },
+        applyTheme() {
+            const root = document.documentElement;
+            if (State.settings.darkMode) {
+                root.classList.add('dark');
+                root.classList.remove('light');
+                $('meta[name="theme-color"]').setAttribute('content', '#020617');
+            } else {
+                root.classList.remove('dark');
+                root.classList.add('light');
+                $('meta[name="theme-color"]').setAttribute('content', '#f8fafc');
+            }
+        }
+    };
 
-        // --- TRENDING ENGINE (Advanced Transition) ---
+    /* ============================================================
+       MODULE 08 · LIVE STATUS (Open/Closed Clock)
+       ============================================================ */
+    const LiveStatus = {
+        init() {
+            this.update();
+            setInterval(() => this.update(), 30000);
+        },
+        update() {
+            const now = new Date();
+            const h = now.getHours();
+            const m = now.getMinutes();
+            const isOpen = (h >= 8 && h < 21);
 
-function initIntro() {
-    const tl = gsap.timeline({ 
-        onComplete: () => {
-            gsap.to("#intro-screen", { 
-                opacity: 0, 
-                duration: 1, 
-                ease: "expo.inOut", 
-                onComplete: () => {
-                    document.getElementById('intro-screen').style.display = 'none';
-                    // Startojmë tranzicionin e shiritit pas intros
-                    renderTrendingSection();
+            const setStatus = (pillId, textId, open) => {
+                const pill = $(pillId);
+                const text = $(textId);
+                if (!pill || !text) return;
+                if (open) {
+                    pill.classList.remove('status-closed');
+                    pill.classList.add('status-open');
+                    text.textContent = 'Hapur';
+                } else {
+                    pill.classList.remove('status-open');
+                    pill.classList.add('status-closed');
+                    text.textContent = 'Mbyllur';
                 }
-            });
+            };
+
+            setStatus('#hero-status', '#hero-status-text', isOpen);
+            setStatus('#orari-status', '#orari-status-text', isOpen);
+
+            const countdown = $('#live-countdown');
+            if (countdown) {
+                if (isOpen) {
+                    const minsLeft = (21 - h) * 60 - m;
+                    const hLeft = Math.floor(minsLeft / 60);
+                    const mLeft = minsLeft % 60;
+                    countdown.textContent = `Mbyllet pas ${hLeft}h ${mLeft}min`;
+                } else if (h < 8) {
+                    const minsLeft = (8 - h) * 60 - m;
+                    const hLeft = Math.floor(minsLeft / 60);
+                    const mLeft = minsLeft % 60;
+                    countdown.textContent = `Hapet pas ${hLeft}h ${mLeft}min`;
+                } else {
+                    const minsLeft = (24 - h + 8) * 60 - m;
+                    const hLeft = Math.floor(minsLeft / 60);
+                    const mLeft = minsLeft % 60;
+                    countdown.textContent = `Hapet pas ${hLeft}h ${mLeft}min`;
+                }
+            }
         }
+    };
+
+    /* ============================================================
+       MODULE 09 · AI ASSISTANT
+       ============================================================ */
+    const AI_RESPONSES = {
+        greeting: "Mirësevini në NTP Ratkoci. Jam asistenti juaj inteligjent. Si mund t'ju ndihmoj sot?",
+        orari: "NTP Ratkoci është i hapur çdo ditë nga ora 08:00 deri në 21:00 — pa ndërprerje gjatë gjithë javës.",
+        lokacioni: "Ne ndodhemi në Rrugën Safet Latifi në Ratkoc, saktësisht përballë xhamisë. Mund të hapni Google Maps për të na vizituar.",
+        pijet: "Kemi koleksion premium pijesh: Coca Cola, Fanta, Schweppes, Sola, Jaffa, Golden Eagle dhe shumë opsione natyrale. Çfarë preferoni?",
+        snacks: "Nga Patos te Vipa, Fripsy, Eti Crax — kemi çdo lloj snack-u për çdo shije!",
+        sweets: "Çokollata Alpella, Today, Pop Kek, Topsa dhe shumë biskota premium. Provoni Today Tiramisu ose Pistachio për një shije unike.",
+        cmim: "Çmimet tona variojnë nga 0.10€ deri 1.70€. Coca Cola 0.5l është 0.70€, ndërsa formati 2L kushton 1.70€.",
+        cocacola: "Coca Cola e madhësisë 0.5l kushton 0.70€, ndërsa Coca Cola 2l kushton 1.70€.",
+        falenderim: "Faleminderit juve! Ju mirëpresim përsëri në NTP Ratkoci.",
+        fallback: "Kjo është një pyetje interesante! Për detaje më specifike, ju mirëpresim në dyqanin tonë në Ratkoc, ose mund të shfletoni produktet direkt në aplikacion."
+    };
+
+    const AI = {
+        typingTimer: null,
+        isOpen: false,
+
+        open() {
+            const modal = $('#ai-modal');
+            modal.classList.add('open');
+            requestAnimationFrame(() => modal.classList.add('visible'));
+            this.isOpen = true;
+            renderIcons();
+            haptic(15);
+            setTimeout(() => $('#ai-input').focus(), 400);
+        },
+
+        close() {
+            const modal = $('#ai-modal');
+            modal.classList.remove('visible');
+            setTimeout(() => modal.classList.remove('open'), 400);
+            this.isOpen = false;
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+        },
+
+        updateStatus(text) {
+            $('#ai-status').textContent = text.toUpperCase();
+        },
+
+        speak(text) {
+            if (!window.speechSynthesis) return;
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'sq-AL';
+            utterance.rate = 0.95;
+            utterance.pitch = 1;
+            utterance.onstart = () => {
+                $('#voice-wave').classList.add('active');
+                this.updateStatus('Duke folur…');
+            };
+            utterance.onend = () => {
+                $('#voice-wave').classList.remove('active');
+                this.updateStatus('Gati');
+            };
+            try { window.speechSynthesis.speak(utterance); } catch(e) {}
+        },
+
+        typeEffect(text) {
+            clearInterval(this.typingTimer);
+            const output = $('#ai-output');
+            output.innerHTML = '';
+            let i = 0;
+            this.updateStatus('Duke shkruar…');
+
+            const cursor = '<span class="ai-cursor"></span>';
+            const speed = 18;
+
+            this.typingTimer = setInterval(() => {
+                if (i < text.length) {
+                    output.innerHTML = escapeHtml(text.substring(0, i + 1)) + cursor;
+                    i++;
+                } else {
+                    output.innerHTML = escapeHtml(text);
+                    clearInterval(this.typingTimer);
+                    this.updateStatus('Gati');
+                }
+            }, speed);
+        },
+
+        executeAction(key) {
+            const response = AI_RESPONSES[key] || AI_RESPONSES.fallback;
+            this.typeEffect(response);
+            this.speak(response);
+            haptic(12);
+        },
+
+        askSuggestion(question) {
+            $('#ai-input').value = question;
+            this.handleUserInput();
+        },
+
+        handleUserInput() {
+            const input = $('#ai-input');
+            const raw = input.value.trim();
+            if (!raw) return;
+            const val = raw.toLowerCase();
+
+            let response = AI_RESPONSES.fallback;
+
+            if (/\b(përshëndetje|tung|mirëdita|hello|hi|tunge)\b/.test(val)) response = AI_RESPONSES.greeting;
+            else if (/\b(orar|hapur|mbyllur|ora|kohë)\b/.test(val)) response = AI_RESPONSES.orari;
+            else if (/\b(ku|lokacion|adres|maps|hartë)\b/.test(val)) response = AI_RESPONSES.lokacioni;
+            else if (/\b(coca|cola)\b/.test(val)) response = AI_RESPONSES.cocacola;
+            else if (/\b(pij|coca|fanta|lëng|ujë|birrë|sola|jaffa)\b/.test(val)) response = AI_RESPONSES.pijet;
+            else if (/\b(çokollat|kek|biskot|sweet|alpella|today)\b/.test(val)) response = AI_RESPONSES.sweets;
+            else if (/\b(chips|snack|patos|vipa|fripsy|kikirik)\b/.test(val)) response = AI_RESPONSES.snacks;
+            else if (/\b(çmim|sa|kushton|euro|€)\b/.test(val)) response = AI_RESPONSES.cmim;
+            else if (/\b(faleminderit|flm|merci)\b/.test(val)) response = AI_RESPONSES.falenderim;
+
+            // Smart product search
+            const allProducts = [...DATA.pijet.items, ...DATA.snacks.items, ...DATA.sweets.items];
+            const match = allProducts.find(p => val.includes(p.name.toLowerCase()));
+            if (match) response = `${match.name} kushton ${match.price}. Kategoria: ${match.cat}. Mund ta gjeni në seksionin përkatës.`;
+
+            this.typeEffect(response);
+            this.speak(response);
+            input.value = '';
+        }
+    };
+
+    /* ============================================================
+       MODULE 10 · INTRO ANIMATION (Single Source of Truth)
+       ============================================================ */
+    function initIntro() {
+        if (!window.gsap) {
+            $('#intro-screen').style.display = 'none';
+            return;
+        }
+        const tl = gsap.timeline({
+            onComplete: () => {
+                gsap.to('#intro-screen', {
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: 'power3.inOut',
+                    onComplete: () => {
+                        $('#intro-screen').style.display = 'none';
+                        App.renderTrending();
+                    }
+                });
+            }
+        });
+
+        tl.to('#intro-logo', { opacity: 1, scale: 1, duration: 1, ease: 'back.out(1.7)' })
+          .to('#intro-text', { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, '-=0.5')
+          .to('#intro-sub', { opacity: 1, duration: 0.6 }, '-=0.3')
+          .to('#intro-loader', { opacity: 1, duration: 0.4 }, '-=0.2')
+          .to('#intro-loader-bar', { width: '100%', duration: 1.4, ease: 'power2.inOut' }, '-=0.2');
+    }
+
+    /* ============================================================
+       MODULE 11 · PWA SERVICE WORKER
+       ============================================================ */
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(() => console.info('NTP Ratkoci · Offline Ready'))
+                .catch(() => {});
+        });
+    }
+
+    /* ============================================================
+       MODULE 12 · INITIALIZE
+       ============================================================ */
+    document.addEventListener('DOMContentLoaded', () => {
+        Settings.init();
+        renderIcons();
+        App.renderAllSections();
+        Wishlist.updateBadge();
+        LiveStatus.init();
+        initIntro();
     });
 
-    tl.to("#intro-logo", { opacity: 1, scale: 1.1, duration: 1, ease: "back.out(1.7)" })
-      .to("#intro-text", { opacity: 1, y: 0, duration: 0.8 }, "-=0.4");
-}
-
-function renderTrendingSection() {
-    const container = document.getElementById('trending-scroll');
-    if (!container) return;
-
-    // Filtrojmë produktet më të kërkuara (psh. 6 produktet e para)
-    const trendingItems = [
-        ...data.pijet.items.slice(0, 2),
-        ...data.snacks.items.slice(0, 2),
-        ...data.sweets.items.slice(0, 2)
-    ];
-
-    container.innerHTML = '';
-
-    trendingItems.forEach((item, index) => {
-        const card = document.createElement('div');
-        card.className = "trending-card glass rounded-[2.5rem] h-48 opacity-0";
-        card.style.transform = "translateX(50px)"; // Startojnë nga e djathta
-        
-        card.onclick = () => {
-            triggerHaptic(15);
-            openProduct(item);
-        };
-
-        card.innerHTML = `
-            <div class="trending-badge">Top i kërkuar</div>
-            <img src="${item.img}" class="absolute inset-0 w-full h-full object-cover opacity-60">
-            <div class="absolute bottom-6 left-6 z-10">
-                <p class="text-[10px] text-primary font-black uppercase mb-1 tracking-widest">${item.cat || 'Premium'}</p>
-                <h3 class="text-lg font-bold text-white leading-tight">${item.name}</h3>
-                <p class="text-white/60 text-sm font-medium mt-1">${item.price}</p>
-            </div>
-        `;
-        container.appendChild(card);
-    });
-
-    // --- TRANZICIONI I AVANCUAR ---
-    // Produktet "rrëshqasin" në shirit me efekt shkallëzues
-    gsap.to(".trending-card", {
-        opacity: 1,
-        x: 0,
-        duration: 1.2,
-        stagger: 0.15,
-        ease: "power4.out",
-        onStart: () => triggerHaptic(5)
-    });
-}
-
+    // Expose for inline handlers
+    window.App = App;
+    window.AI = AI;
+    window.Wishlist = Wishlist;
     </script>
 </body>
 </html>
