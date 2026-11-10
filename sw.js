@@ -4,9 +4,9 @@
    - Fotot dhe fontet: cache i pari (ndryshojnë rrallë)
    Rrite VERSION sa herë që ndryshon çmimet ose kodin, që telefonat të marrin versionin e ri.
    ========================================================================== */
-const VERSION = '2026.11.1';
+const VERSION = '2026.11.2';
 const SHELL = `ntp-shell-${VERSION}`;
-const MEDIA = 'ntp-media-v1';
+const MEDIA = 'ntp-media-v2';
 
 const APP_SHELL = [
   './',

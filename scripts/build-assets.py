@@ -137,38 +137,67 @@ def load_font(size, wdth=125, wght=850):
     return font
 
 
+def fit_font(d, text, max_w, start, wdth=125, wght=850):
+    size = start
+    while size > 6:
+        font = load_font(size, wdth, wght)
+        tb = d.textbbox((0, 0), text, font=font)
+        if tb[2] - tb[0] <= max_w:
+            return font, tb
+        size -= max(1, size // 40)
+    return font, tb
+
+
 def draw_icon(size: int, maskable: bool) -> Image.Image:
+    """Ikona: etiketa e verdhë "NTP" sipër dhe "Ratkoci" e madhe poshtë, mbi blu."""
     s = size * 4  # supersampling
     img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     if maskable:
         d.rectangle((0, 0, s, s), fill=COBALT)
-        inset = int(s * 0.22)
+        safe = 0.62   # zona e sigurt e ikonave maskable (rreth 80% diametri)
     else:
         d.rounded_rectangle((0, 0, s - 1, s - 1), radius=int(s * 0.22), fill=COBALT)
-        inset = int(s * 0.14)
-    # etiketa e verdhë e raftit me vrimë
-    x0, y0, x1, y1 = inset, int(s * 0.30), s - inset, s - int(s * 0.30)
-    if maskable:
-        y0, y1 = int(s * 0.34), s - int(s * 0.34)
-    r = int((y1 - y0) * 0.16)
-    d.rounded_rectangle((x0, y0, x1, y1), radius=r, fill=YELLOW)
-    hole = int((y1 - y0) * 0.10)
-    hx, hy = x0 + int((y1 - y0) * 0.24), (y0 + y1) // 2
-    d.ellipse((hx - hole, hy - hole, hx + hole, hy + hole), fill=COBALT)
-    text = "NTP"
-    avail = (x1 - int((y1 - y0) * 0.12)) - (hx + hole + int((y1 - y0) * 0.12))
-    fs = int((y1 - y0) * 0.62)
-    while True:
-        font = load_font(fs)
-        tb = d.textbbox((0, 0), text, font=font)
-        if tb[2] - tb[0] <= avail or fs < 10:
-            break
-        fs -= max(1, fs // 30)
+        safe = 0.80
+    box_w = int(s * safe)
+    cx = s // 2
+
+    # "Ratkoci" — emri, sa më i madh brenda zonës
+    word, wb = fit_font(d, "Ratkoci", box_w, int(s * 0.3))
+    ww, wh = wb[2] - wb[0], wb[3] - wb[1]
+
+    # etiketa "NTP"
+    tag_h = int(wh * 1.05)
+    tfont, tb = fit_font(d, "NTP", 10 ** 6, int(tag_h * 0.62))
     tw, th = tb[2] - tb[0], tb[3] - tb[1]
-    tx = hx + hole + (x1 - (hx + hole) - tw) // 2 - tb[0]
-    ty = (y0 + y1) // 2 - th // 2 - tb[1]
-    d.text((tx, ty), text, font=font, fill=INK)
+    hole_r = int(tag_h * 0.10)
+    pad_l, pad_r = int(tag_h * 0.52), int(tag_h * 0.26)
+    tag_w = pad_l + tw + pad_r
+
+    gap = int(wh * 0.32)
+    total_h = tag_h + gap + wh
+    top = (s - total_h) // 2
+
+    tx0 = cx - tag_w // 2
+    d.rounded_rectangle((tx0, top, tx0 + tag_w, top + tag_h), radius=int(tag_h * 0.18), fill=YELLOW)
+    hx, hy = tx0 + int(tag_h * 0.26), top + tag_h // 2
+    d.ellipse((hx - hole_r, hy - hole_r, hx + hole_r, hy + hole_r), fill=COBALT)
+    d.text((tx0 + pad_l - tb[0], top + (tag_h - th) // 2 - tb[1]), "NTP", font=tfont, fill=INK)
+
+    wy = top + tag_h + gap
+    d.text((cx - ww // 2 - wb[0], wy - wb[1]), "Ratkoci", font=word, fill=(255, 255, 255))
+    return img.resize((size, size), Image.LANCZOS)
+
+
+def draw_favicon(size: int) -> Image.Image:
+    """Favicon i vogël: vetëm etiketa, që lexohet edhe në 16 px."""
+    s = size * 4
+    img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle((0, 0, s - 1, s - 1), radius=int(s * 0.22), fill=COBALT)
+    font, tb = fit_font(d, "R", int(s * 0.6), int(s * 0.8))
+    tw, th = tb[2] - tb[0], tb[3] - tb[1]
+    d.text(((s - tw) // 2 - tb[0], (s - th) // 2 - tb[1]), "R", font=font, fill=YELLOW)
     return img.resize((size, size), Image.LANCZOS)
 
 
@@ -178,7 +207,7 @@ def build_icons():
     draw_icon(512, False).save(ICONS / "icon-512.png")
     draw_icon(512, True).save(ICONS / "maskable-512.png")
     draw_icon(180, True).convert("RGB").save(ICONS / "apple-touch-icon.png")
-    draw_icon(64, False).save(ICONS / "favicon-64.png")
+    draw_favicon(64).save(ICONS / "favicon-64.png")
 
 
 if __name__ == "__main__":
